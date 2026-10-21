@@ -1,0 +1,5295 @@
+# Changelog
+
+## v0.2.3-beta.6 (2026-08-15)
+
+更新日志(ChangeLog)
+
+[更改] 版本号 0.2.3-beta.6，versionCode 295
+[更改] 正式包 BiliPai-0.2.3-beta.6.apk，Dev 包 BiliPai-0.2.3-beta.6-dev.apk
+[更改] 基准 0.2.3-beta.5，比较区间见 GitHub Compare（包含 beta.5 之后的全部主线改动）
+
+### 首页顶栏、折叠与导航材质
+[更改] 首页搜索框与标签页改为统一折叠策略：离开列表顶部后一同收起，回到顶部、再次点击首页或双击状态栏时可靠展开
+[更改] 首页顶栏折叠状态在推荐、热门、追番、直播与分区间共享，回顶期间加入展开锁，避免列表动画反向写回折叠状态
+[修复] 追番、直播等首页嵌入页在搜索框和标签页折叠后仍保留完整顶栏高度，导致内容上方出现大面积空白；现在占位随折叠进度释放并保留状态栏安全区
+[更改] 首页浮动底栏与分段控件复用同一导航 Dock 实现，删除重复的 Backdrop、lens、vibrancy、拖动和指示器绘制链路
+[更改] 顶部渐变高光移除；液态玻璃复用范围收敛到首页顶栏、搜索与底部导航等真正的导航 Chrome
+
+### 动态发布、投票与详情
+[添加] 动态发布支持图片、投票和预约内容，补齐发布模型、仓库、编辑器、投票/预约对话框及导航入口
+[添加] 动态卡片支持原生投票交互和直播附加卡，详情加载、附加卡点击与登录态回退链路同步完善
+[更改] 动态顶栏取消液态玻璃复用与顶部淡出高光，详情首屏加载及错误状态对齐当前页面结构
+[修复] 动态详情身份/游客回退、投票状态映射与附加卡点击路由，降低空数据和错误落地页概率
+
+### 番剧影视与长评
+[添加] 番剧详情新增原生长评列表与阅读入口，包含加载、重试、分页和评论数据仓库
+[更改] 首页追番页优化频道导航、索引、追番管理与推荐布局；时间表可在设置中独立显示或隐藏
+[更改] 番剧频道切换改用原生标签组件，减少与页面内容竞争的液态采样层
+
+### UP 主空间
+[更改] 空间主导航收敛为「主页 / 动态 / 投稿」，视频、图文、合集、收藏与追番作为投稿区二级切换，窄屏与大字体下保持可横向访问
+[更改] 投稿视频下方的播放全部、单双列切换和排序操作移入右上角三点菜单，释放内容区纵向空间；排序保留独立选择菜单
+[添加] 空间粉丝数、关注数可直接进入对应列表，私信接入会话导航；查看自己的空间时不再显示关注与私信操作
+[修复] 空间聚合数据、收藏夹去重、首页内容映射、播放定位索引和二级标签恢复状态
+
+### 视频、搜索与界面稳定性
+[修复] 分区横向视频卡片统计信息在窄宽度下被裁切，播放量与弹幕量现在保持完整可见
+[更改] 视频详情 Tab 增大有效高度并优化窄屏排列；评论排序、评论输入、历史筛选、搜索输入和听视频控制不再错误复用首页液态导航 Dock
+[更改] 搜索与设置搜索恢复稳定的原生容器色和形状，局部控件不再为无共享导航关系创建额外 Backdrop
+[更改] 补充首页折叠、嵌入页占位、动态发布/投票、番剧长评、空间导航与局部 Chrome 边界相关策略和结构测试
+
+格式规范见 [docs/wiki/CHANGELOG_GUIDE.md](docs/wiki/CHANGELOG_GUIDE.md)。比较：[`0.2.3-beta.5...main`](https://github.com/jay3-yy/BiliPai/compare/0.2.3-beta.5...main)。
+
+---
+
+## v0.2.3-beta.5 (2026-08-15)
+
+更新日志(ChangeLog)
+
+[更改] 版本号 0.2.3-beta.5，versionCode 294
+[更改] 正式包 BiliPai-0.2.3-beta.5.apk，Dev 包 BiliPai-0.2.3-beta.5-dev.apk
+[更改] 基准 0.2.3-beta.4，比较区间见 GitHub Compare（包含 beta.4 之后的全部主线改动）
+
+### Miuix、液态玻璃与自适应界面
+[更改] 首页顶栏、底栏、设置分段控件与业务 Tab 统一使用 Miuix 液态分段控件；移动指示器共用几何策略、阻尼拖动、交互高亮、按压缩放与暗色/亮色角色
+[更改] 搜索、动态、番剧、直播、分区、空间、历史列表、视频详情、评论、听视频等页面迁移到统一 Miuix Backdrop 采样链，移除旧 AndroidLiquidGlass / Backdrop 依赖与重复材质实现
+[更改] 动态顶部取消液态玻璃复用，不再创建、录制或消费 Miuix Backdrop 渲染层；顶部保留常规背景与可用的 Haze 可读性处理
+[更改] 分区侧栏重构拖动提交、隐藏采样层、指示器位置、RTL 位移与液态高亮；手机、平板和折叠屏继续复用同一交互策略
+[更改] 首页横向视频卡片的封面比例、信息布局与视觉角色统一；设置、播放器覆盖层和自适应控件同步收敛主题色与间距
+[修复] 液态指示器在按压、连续拖动、跨项移动、滚动采样和不同容器尺寸下的偏移、拉伸及命中范围不一致
+
+### 一键回顶、搜索与列表
+[添加] 新增全局「显示一键回顶」开关，默认开启，并与评论区等组件设置放在同一区域；按钮尺寸沿用现有小型浮动控件，不把 48dp 作为硬性视觉尺寸
+[添加] 搜索结果、直播搜索、直播分区、分区内容、动态、通用列表与评论区等长列表接入一键回顶；接近顶部时自动隐藏
+[更改] 长距离回顶先快速收敛到顶部附近再平滑滚动，短距离直接平滑滚动，降低超长列表动画耗时
+[更改] 搜索落地页的热搜、历史和发现开关始终可访问；搜索输入框、筛选标签与首页浮动控件统一形状和主题角色
+[修复] 分区等横向视频卡片在右侧信息栏较窄时播放量、弹幕量末尾的「万 / 亿」单位被裁切；统计项现在按可用宽度完整换行
+
+### 首页、导航与返回
+[添加] 首页内嵌直播与番剧/影视页面，补齐对应导航目的地、页面装配和标签再次点击行为
+[修复] 再次点击已选首页标签时回到正确列表顶部；浮动标签命中后稳定提交，避免只移动指示器或误触发抽屉手势
+[修复] 主导航保存状态持续增长、页面切换后状态重复保存，以及收藏页恢复位置异常
+[修复] 搜索页覆盖视频详情后播放状态错误；相关推荐进入子详情后父详情提前隐藏、返回层级不一致及返回目标错误
+[修复] 竖屏评论线程返回后评论状态未重置，避免继续显示上一个线程内容
+
+### 弹幕、视频与评论
+[进行中] 弹幕模块正在逐步重构：以中立引擎接口隔离具体渲染器，并按播放会话管理加载、释放、跳转和实时更新；迁移期间保留兼容与回退路径
+[更改] 弹幕实时更新改为批量提交，并加入设备能力门控，减少高频消息对渲染与主线程的压力
+[修复] 弹幕字体缩放、渲染器设置和播放会话切换未完整生效的问题
+[更改] 视频详情 Tab、评论排序筛选与评论半屏统一液态控件和 Backdrop 材质；评论区一键回顶跟随全局开关
+[修复] 视频详情嵌套导航、相关推荐返回和播放器可见性时序，降低返回过程中的空白、错层与重复播放风险
+
+### 动态、直播、诊断与工程维护
+[添加] 动态信息流补充更多卡片与评论交互，并完善侧栏、顶栏和不同窗口宽度下的状态策略
+[修复] 动态侧栏 `Live(数量)` 在窄栏中将右括号换到下一行；现在保持单行并按可用宽度自适应字号
+[修复] 直播播放源回退、房间消息传输和分区视觉状态，提升弱网及服务端返回异常时的可用性
+[添加] 隐私安全的增强诊断信息，限制敏感数据进入诊断链路
+[更改] 清理旧视觉依赖、无效 lint 基线和重复页面实现，补充液态控件、列表、搜索、动态、直播、分区与评论相关策略/结构测试
+
+格式规范见 [docs/wiki/CHANGELOG_GUIDE.md](docs/wiki/CHANGELOG_GUIDE.md)。比较：[`0.2.3-beta.4...main`](https://github.com/jay3-yy/BiliPai/compare/0.2.3-beta.4...main)。
+
+---
+
+## v0.2.3-beta.4 (2026-08-13)
+
+更新日志(ChangeLog)
+
+[更改] 版本号 0.2.3-beta.4，versionCode 293
+[更改] 正式包 BiliPai-0.2.3-beta.4.apk，Dev 包 BiliPai-0.2.3-beta.4-dev.apk
+[更改] 基准 0.2.3-beta.3，比较区间见 GitHub Compare
+
+### 首页底栏与默认配置
+[更改] 首页底栏重建为浮动 Miuix 导航：外层 Dock、隐藏采样层、移动指示器和内容层使用统一材质栈，普通、模糊、液态玻璃三种模式共用同一布局
+[更改] 底栏首项文案由「首页」调整为「推荐」；首页视觉默认值迁移到 v3，一次性恢复推荐为第一项及默认可见项顺序
+[更改] 新默认值同时开启浮动底栏、顶/底栏液态玻璃、首页搜索液态玻璃和顶部模糊；迁移完成后不再覆盖用户后续设置
+[更改] 底栏宽度按标签显示模式、圆角和最小槽位动态计算，搜索展开态、平板侧栏入口、徽标和换肤图标继续沿用统一槽位
+[更改] Miuix 底栏图标统一走共享语义图标解析，选中与未选中状态由移动指示器承担，不再维护重复的逐项选中资源
+[修复] 底栏点按切页后页面已经切换、指示器仍停在原位的问题
+[修复] 从动态等相邻标签拖回推荐时只移动指示器、页面没有提交切换的问题
+[修复] 连续拖动期间动画协程尚未更新目标值导致部分位移增量被吞；现在同步累计最新拖动目标，弹簧仍异步跟随
+[修复] 指示器拖动命中边界、RTL 位移、松手取整、取消手势、回弹和页面提交链路
+
+### 首页顶栏与液态材质
+[更改] 首页顶栏标签统一为「外层浮动 Dock + 内层移动指示器」，Miuix 不再为每个选中标签额外绘制独立色块
+[更改] 顶栏、搜索框和标签指示器统一跟随「安卓原生液态玻璃」总开关，移除互相分离的顶部玻璃判断路径
+[更改] 首页浮动控件收敛为单一 Miuix Backdrop 渲染链，移除旧的双渲染器回退和重复材质实现
+[更改] 顶栏标签与底栏共用采样层、重力高光、按压缩放和移动指示器材质，暗色/亮色表面角色同步
+[修复] 搜索框和顶部 Dock 预裁切造成的玻璃边缘亮线，以及速度形变重复应用导致的指示器拉伸异常
+[修复] 顶部移动指示器透明交互层只负责点按回顶，横向滑动继续交由页面 Pager，避免标签拖动层抢占翻页手势
+
+### 主导航与分页
+[更改] 底栏跨页动画改由 Pager 的 `UserInput` mutation 接管，按目标距离逐帧滚动并在尾帧校准到目标页
+[修复] 快速反向点按或连续切换时旧分页任务取消新任务、选中状态回写错误的问题
+[修复] 同级底栏切换不再重复清空并重建主导航宿主，保留各主页签的组合、列表位置和页面状态
+[修复] 主页面非推荐标签执行系统返回时，稳定回到推荐标签而不是直接退出应用
+
+### 视频详情、相关推荐与预测返回
+[更改] 详情跳转详情不再等待整屏 `PixelCopy` 位图；改为保存父详情 Tab/列表位置，并直接使用仍在导航栈中的真实父页面参与返回预览
+[更改] 父详情的 UI 位置在子详情完全覆盖期间提前恢复，返回手势开始时即可呈现点击前的列表几何位置
+[更改] 详情压详情使用实时父页景深变换，保留模糊、缩放、圆角和遮罩，同时避免独立播放器 Surface 被快照为黑块
+[更改] 每次嵌套详情转场只允许目标 entry 消费对应的封面、源卡布局和转场时钟，父详情预览不再误用子详情快照
+[修复] 相关推荐返回时静止卡片容器残留黑色底板、飞行卡与列表卡双层叠影的问题
+[修复] 父详情播放器在返回预览落地后切回 SurfaceView 造成的一帧封面闪烁；已使用预览纹理的详情会保持稳定表面类型，HDR 输出仍保留优先级
+[修复] 详情返回取消、播放器会话恢复和相关父页预览激活时序，避免父子详情同时播放或父页画面提前失活
+
+### 主题、设置与工程维护
+[更改] Material 3 自定义主题色预览改为展示最终 `MaterialTheme.colorScheme` 角色，不再直接用种子色绘制与实际主题不一致的渐变卡
+[更改] Miuix 顶部标签策略与当前移动指示器视觉统一，主题色板、动态配色函数和经典返回样式存储名改用项目自身命名
+[更改] 设置页继续使用不透明 grouped 表面，避免全局壁纸在多级 push/pop 时叠色闪烁
+[更改] 清理源码、测试、构建脚本和文档中的外部应用品牌引用，不新增致谢条目
+[添加] 补充底栏点按/拖动、顶部标签材质、主分页状态、嵌套详情转场、播放器表面和版本策略的结构与回归测试
+
+格式规范见 [docs/wiki/CHANGELOG_GUIDE.md](docs/wiki/CHANGELOG_GUIDE.md)。比较：[`0.2.3-beta.3...main`](https://github.com/jay3-yy/BiliPai/compare/0.2.3-beta.3...main)。
+
+---
+
+## v0.2.3-beta.3 (2026-08-12)
+
+更新日志(ChangeLog)
+
+[更改] 版本号 0.2.3-beta.3，versionCode 292
+[更改] 正式包 BiliPai-0.2.3-beta.3.apk，Dev 包 BiliPai-0.2.3-beta.3-dev.apk
+[更改] 基准 0.2.3-beta.2，比较区间见 GitHub Compare（含 beta.2 之后全部主线提交）
+
+### 门禁与协议
+[添加] 全量用户协议门禁（新老用户均需确认），勾选条款后「我已知晓」可用；默认「我不同意」/系统返回退出应用
+[添加] 崩溃统计同意改为原生对话框组件，与协议门禁顺序衔接
+
+### 播放器与竖屏
+[添加] 播放器折叠时自动暂停（默认开启，设置可关；折叠浏览相关视频不再继续出声）
+[添加] 竖屏「竖屏视频流」改为首页推荐取流，内容更丰富
+[添加] 竖屏 UP 半屏预览：打开时视频上缩、下拉跟手回位；半屏高度与缩放贴合顶区可用高度
+[添加] 竖屏横屏片上下黑边动态模糊（设置「竖屏黑边动态模糊」，默认开启）
+[添加] 听视频播放器标题与强调色跟随主题色，暗色下对比度提高
+[修复] 竖屏全屏滑动恢复；UP 预览支持下拉关闭；去掉重复全屏回调状态
+[修复] 竖屏切横屏时封面错用入口首个视频封面（同步当前页封面）
+[修复] 合集切换后播放器 Surface 绑定重试；自动连播下一集与自适应自动旋转恢复
+[修复] 倍速变更时弹幕不再整表刷新
+
+### 评论
+[修复] 最热评论有概率「暂无评论」：空成功 payload 增加 guest / 身份 / legacy 多级兜底，WBI 签错 -403 可回退
+[修复] 评论总数仍大于 0 时不再误报「暂无评论」
+[修复] 评论半屏边缘返回与手势桥接，避免与详情返回冲突
+
+### 卡片返回与预测返回（主线持续落地）
+[添加] Miuix 返回手势实时背景模糊
+[更改] 视频卡片共享返回改为完整源卡落地：飞行层绘制源卡 chrome，列表静止卡全程透明，IDLE 再揭开
+[更改] 点击时冻结标题/UP/播放数据/发布时间与主题色信息底等展示标志，落地不再靠详情页 ViewInfo 拼假信息条
+[更改] 首页双列/玻璃/电影/Story/单列、分区横卡、相关推荐侧栏、动态/历史/收藏/稍后再看/空间等入口统一源布局与封面锚点
+[修复] 折叠态播放器参与返回时强制展开视口，避免封面被 Crop 裁切
+[修复] 双层落地跳变：飞行卡与列表卡不再叠影；按导航布局宽度做反缩放与封面条裁切
+[修复] 分区/相关 SIDE_BY_SIDE 横卡落地黑条、左封面右文案整段不透明；相关卡关闭不成熟的整卡 morph 路径
+[修复] 详情正文与源卡 chrome 按 morph 深度做尺寸感知交接，避免预测返回 HELD 阶段硬切
+[修复] 返回时间轴、源快照与背景深度策略加固；父页 freeze-frame 支持详情跳详情
+
+### 设置、主题与图标
+[修复] 设置项尾部数值截断（最大宽度 200dp、最多两行，MD3/Miuix 统一）
+[修复] 设置底栏与文案换行重叠；插件选择布局与图标
+[修复] 系统亮度权限申请流程恢复
+[修复] 半透明容器对比度；动态配色与开关角色统一；全局对比度审计补充
+[修复] 空状态不再使用信封图标（改为搜索语义）
+[更改] 启动器图标多套风格重建：女仆自适应壳、Monet/品牌/公告/深浅色回退与启动 splash 取色对齐
+
+### 其它
+[修复] 自动连播/自动旋转等播放偏好读写恢复
+v0.2.3-beta.3(cc49271ed)
+
+格式规范见 [docs/wiki/CHANGELOG_GUIDE.md](docs/wiki/CHANGELOG_GUIDE.md)。社群：频道 [t.me/bilipai666](https://t.me/bilipai666) / 群 [t.me/bilipai888](https://t.me/bilipai888/1)。比较：[`0.2.3-beta.2...0.2.3-beta.3`](https://github.com/jay3-yy/BiliPai/compare/0.2.3-beta.2...0.2.3-beta.3)。
+
+---
+
+## v0.2.3-beta.2 (2026-08-10)
+
+更新日志(ChangeLog)
+
+[更改] 版本号 0.2.3-beta.2，versionCode 291
+[更改] 正式包 BiliPai-0.2.3-beta.2.apk，Dev 包 BiliPai-0.2.3-beta.2-dev.apk
+[更改] 基准 v0.2.3-beta.1，比较区间见 GitHub Compare
+[修复] 满级用户（6 级）next_exp 返回 "--" 导致首页/登录解析崩溃，level_info 全字段容错
+[修复] 直播分区互跳后同一分区重复入栈崩溃（LiveAreaDetail 增加实例标识）
+[修复] 后台保存导航栈时 SeasonSeriesDetail 与 JSON discriminator 冲突闪退
+[修复] 历史/收藏/稍后再看搜索页进入时「未注册导航目的地」闪退
+[修复] Miuix 主题下顶栏标题被截断（如「历史记录」只显示「历史…」），按钮间距与标题宽度重排
+[修复] 官方单色图标预设下侧边栏/列表图标透明消失，恢复 MD3 单色图标
+[修复] 番剧页顶部频道切换均分并 pill 化，时间表「今天 8/10」文字不再截断，骨架屏圆角统一
+[修复] 拖动进度条后弹幕重复且不跟随进度（seek 重同步前先清空渲染队列）
+[修复] 预测性返回手势中播放器画面实时消失；相关推荐宽卡返回尾段画面提前淡出被源卡色块替换
+[修复] 预测返回背景模糊随手势（恢复 0.2.2 链路，导航迁移回归）
+[添加] 视频详情页状态栏顶部实时 haze 模糊回归（「播放页沉浸状态栏」开关，默认关闭=纯黑）
+[更改] 详情页内联播放器始终沉浸，开关仅切换状态栏背景样式
+v0.2.3-beta.2(1cbaca498)
+
+格式规范见 [docs/wiki/CHANGELOG_GUIDE.md](docs/wiki/CHANGELOG_GUIDE.md)。社群：频道 [t.me/bilipai666](https://t.me/bilipai666) / 群 [t.me/bilipai888](https://t.me/bilipai888/1)。比较：[`v0.2.3-beta.1...main`](https://github.com/jay3-yy/BiliPai/compare/v0.2.3-beta.1...main)。
+
+---
+
+## v0.2.3-beta.1 (2026-08-10)
+
+更新日志(ChangeLog)
+
+[更改] 版本号 0.2.3-beta.1，versionCode 290
+[更改] 正式包 BiliPai-0.2.3-beta.1.apk，Dev 包 BiliPai-0.2.3-beta.1-dev.apk
+[更改] 基准 v0.2.2，比较区间见 GitHub Compare
+[添加] 设置新增「更新检测渠道」，可切换正式版 / 测试版（默认正式版）
+[添加] 新增推荐流过滤插件
+[添加] 番剧页以原生 Compose 重建，番剧与评论区加载骨架屏
+[添加] 收藏夹完整分类管理，收藏、历史、稍后再看管理体验对齐
+[添加] 个人主页与个人列表导航体验对齐
+[添加] 听视频资料库页头部压缩与卡片层级区分，播放器页排版与沉浸体验优化
+[添加] 横屏弹幕设置改为分区 Tab，竖屏弹幕设置统一设计语言
+[添加] 长按倍速提示尺寸与透明度可调
+[更改] 导航与设置迁移到 Miuix 组件体系，搜索页信息层级与组件语言统一
+[更改] 目前建议使用 Material 3 主题，Miuix 主题尚未完善
+[更改] 界面预设的 Material 3 选项更名「Google Material 3」
+[更改] MD3 主题下顶部 tab 统一绘制长胶囊背景，单选设置图标统一主题色
+[修复] 全屏滑动返回改为设置开关（默认关闭），播放器、详情与网页页不受影响
+[修复] 检测渠道与官方渠道图标跟随 MD3 预设单色，与其他设置条目一致
+[修复] 预发布版 APK 文件名不再带 -release 后缀（如 BiliPai-0.2.3-beta.1.apk）
+[修复] 底栏指示器点按/拖拽动画与选中态同步
+[修复] 首页顶部标签滚动恢复与滑动路由，分页手势优先级与跟手性
+[修复] 竖屏长按倍速提示被状态栏遮挡，评论楼中楼不再盖住播放器上方阴影
+[修复] 关闭过渡动画后首页与播放页改用安卓原生横滑返回
+[修复] 首页与播放页卡片形变、返回交接与预测性返回过渡恢复
+[修复] 直播页卡片返回交接
+[修复] 个人列表边缘手势冲突，搜索页返回行为
+[修复] 重复播放后封面遮罩，首页信息流滚动热路径性能
+v0.2.3-beta.1(c1c8b22cc)
+
+格式规范见 [docs/wiki/CHANGELOG_GUIDE.md](docs/wiki/CHANGELOG_GUIDE.md)。社群：频道 [t.me/bilipai666](https://t.me/bilipai666) / 群 [t.me/bilipai888](https://t.me/bilipai888/1)。比较：[`v0.2.2...main`](https://github.com/jay3-yy/BiliPai/compare/v0.2.2...main)。
+
+---
+
+## v0.2.2 (2026-08-09)
+
+更新日志(ChangeLog)
+
+[更改] 版本号 0.2.2，versionCode 287
+[更改] 视频详情页的评论排序控件移至“评论”标签右侧
+[更改] 正式包 BiliPai-0.2.2.apk，Dev 包 BiliPai-0.2.2-dev.apk
+[更改] 基准 v0.2.1，比较区间见 GitHub Compare
+[修复] 直播首页网游、手游等一级分区标签可正确切换，兼容分区接口字段
+[修复] 插件开关与注册并发时的闪退
+[更改] 首页顶部标签最多显示 5 项，Dock 在图标、图文、文字模式下均保持居中
+[修复] 首页顶栏和底栏手势、反向滚动与选中态同步
+[修复] 视频详情中评论、关联推荐与播放器切换后的弹幕和画面交接
+[更改] 设置页、播放页的转场减少视差并修复黑屏，设置补充播放与应用图标偏好
+[更改] 空间投稿视频排版对齐首页信息流，长按倍速提示更紧凑
+[修复] 首页 App + Web 合并 Feed 取流和翻页重复问题 @qyo123oyq
+v0.2.2(82627cc3e)
+
+格式规范见 [docs/wiki/CHANGELOG_GUIDE.md](docs/wiki/CHANGELOG_GUIDE.md)。社群：频道 [t.me/bilipai666](https://t.me/bilipai666) / 群 [t.me/bilipai888](https://t.me/bilipai888/1)。比较：[`v0.2.1...main`](https://github.com/jay3-yy/BiliPai/compare/v0.2.1...main)。
+
+---
+
+## v0.2.1 (2026-08-07)
+
+更新日志(ChangeLog)
+
+[更改] 版本号 0.2.1，versionCode 285
+[更改] 正式包 BiliPai-0.2.1.apk，Dev 包 BiliPai-0.2.1-dev.apk
+[更改] 基准 v0.2.0，比较区间见 GitHub Compare
+[修复] 切集/相关推荐后弹幕自动上屏，弹幕引擎按播放意图启动 @Jay3-yy
+[修复] 恢复评论上滑缩小播放器并修复回竖屏铺满 @Jay3-yy
+[修复] 退出后保持小窗播放与音量 @Jay3-yy
+[修复] 打开视频详情页期间抑制父级列表刷新 @Jay3-yy
+[更改] 相关推荐卡片排版紧凑化，标题/作者/播放量/弹幕间距收紧并对齐首页 token 体系 @Jay3-yy
+[添加] 动态图片查看原图支持全分辨率解码（上限 8192px）@Jay3-yy
+[修复] 顶部「追番」标签点击直接进入番剧独立页 @Jay3-yy
+[更改] 顶部液态玻璃默认关闭；新增「下滑自动隐藏顶部栏」开关（默认开启）@Jay3-yy
+[修复] 首页顶栏标签去除玻璃边缘，各主题保持可读 @Jay3-yy
+[更改] 顶栏控件与液态玻璃解耦 @piracola
+[更改] 首页卡片「已关注」紧跟 UP 名，时长移入统计行 @Jay3-yy @piracola
+[更改] 竖屏视频流推荐改用 Story 接口提升多样性 @Jay3-yy
+[更改] 默认顶栏标签改为 5 项（移除分区），Story 页与底栏分页同步 @Jay3-yy
+[更改] 搜索图标与清除按钮换位 @Jay3-yy
+[添加] 设置新增「列表条目样式」选项：自定义条目 / 原生组件 @Jay3-yy
+[修复] 开关浅色 thumb 不再变黑，开关与条目振动跟随全局开关 @Jay3-yy
+[更改] 设置单一入口分类点击直接进入下一级，减少菜单层级 @Jay3-yy
+[更改] UP 主徽章与头像默认关闭并全局生效 @Jay3-yy
+[修复] 设置界面主题图标恢复 ColorLens @Jay3-yy
+[适配] MD3 下底栏可用项目图标跟随主题色 @Jay3-yy
+[更改] 全 app primary 填充按钮浅色主题统一用 primaryContainer @Jay3-yy
+[适配] 对齐 MD3 官方 ColorScheme 全角色与 surface 层级 @Jay3-yy
+[更改] 全局图标样式两套：主题色容器 / MD3 官方推荐 @Jay3-yy
+[更改] 移除 iOS/Cupertino 视觉路径，主题收敛为 Miuix / Material 两值化策略 @piracola
+[修复] 投票/打分弹幕与 BAS 解析器缺陷 @piracola
+[修复] WebDAV 恢复/备份卡在创建远端目录 —— 改为探测优先 @Jay3-yy
+[修复] DLNA 发现兼容 Android XML 解析器与 SSDP 1900 端口 @MuonChaser
+[添加] DLNA 远程播放控制与路由缓存 @MuonChaser
+v0.2.1(72d7e97b)
+
+格式规范见 [docs/wiki/CHANGELOG_GUIDE.md](docs/wiki/CHANGELOG_GUIDE.md)。社群：频道 [t.me/bilipai666](https://t.me/bilipai666)，群 [t.me/bilipai888](https://t.me/bilipai888/1)。比较：[`v0.2.0...main`](https://github.com/jay3-yy/BiliPai/compare/v0.2.0...main)。
+
+---
+
+## v0.2.0 (2026-08-06)
+
+更新日志(ChangeLog)
+
+[更改] 版本号 0.2.0，versionCode 284
+[更改] 恢复语义化 MAJOR.MINOR.PATCH，不再使用日期型 versionName
+[更改] 正式包 BiliPai-0.2.0.apk，Dev 包 BiliPai-0.2.0-dev.apk
+[更改] 基准 v26.0805.1，比较区间见 GitHub Compare
+[更改] 实时画面转场默认关闭
+[更改] 转场背景模糊默认关闭
+[更改] 底栏模糊默认关闭
+[更改] 播放器洞察默认关闭
+[添加] 首页推荐 App+Web 合并模式
+[添加] 搜索落地热搜/历史/发现布局
+[添加] 搜索排序芯片与时间时长分区筛选表
+[修复] 搜索 Tab 与胶囊选中文字对比度
+[修复] 搜索筛选圆形 ripple 与 iOS 底部表弹出
+[修复] 搜索进出结果时键盘与光标状态
+[修复] 发现区芯片误用主题主色
+[添加] 实时画面转场开关（SDR 可 morph，HDR 不降画质）
+[修复] 关闭实时画面时返回走封面/黑壳低成本路径
+[修复] 预测返回落位错位与顶底栏模糊恢复
+[修复] 整卡 sharedBounds 落位与叠层盖住实时画面
+[修复] 收藏合集返回与首页整卡 morph 一致
+[修复] HDR/杜比优先 SurfaceView 避免洗成 SDR
+[更改] 清晰度与倍速菜单触控高度至少 48dp
+[修复] 听视频浅色模式按钮与文案可读性
+[修复] 听视频更多/队列/歌词弹层深浅色对比度
+[更改] 长按倍速默认隐藏关闭按钮降低误触
+[修复] 动态评论头像与昵称可进空间
+[适配] 评论粉丝装扮与头像框尺寸
+[更改] 顶栏直播与底栏统一进入直播列表
+[修复] 直播列表过滤广告横幅与空卡
+[添加] 直播 App 推荐流与分页排序
+[添加] 直播清晰度底部芯片选择
+[添加] 直播 SC 倒计时到期自动移除
+[适配] 直播分区与搜索可选芯片样式
+[修复] 收藏夹请求参数与 Referer 对齐接口文档
+[修复] 收藏夹 ps 限制 1–20 降低风控
+[修复] 个人页收藏封面预览限并发
+[适配] 平板默认侧栏与评论输入区尺寸
+[修复] 平板设置滑块弹窗过高
+[适配] 大屏自定义对话框最大宽度
+[修复] DLNA 双网卡机型 SSDP 发现
+v0.2.0(7631b93)
+
+格式规范见 [docs/wiki/CHANGELOG_GUIDE.md](docs/wiki/CHANGELOG_GUIDE.md)。社群：频道 [t.me/bilipai666](https://t.me/bilipai666)，群 [t.me/bilipai888](https://t.me/bilipai888/1)。比较：[`v26.0805.1...main`](https://github.com/jay3-yy/BiliPai/compare/v26.0805.1...main)。
+
+---
+
+
+## v26.0805.1 (2026-08-05)
+
+### 版本信息
+
+- 启用日历构建号 `YY.MMDD.N`：`26.0805.1`，`versionCode` 为 `283`。
+- `YY` 为两位年，`MMDD` 为月日，`N` 为当日第几次正式构建；新旧比较仍以 `versionCode` 为准。
+- 正式产物：`app/build/outputs/bilipai/release/BiliPai-26.0805.1.apk`（禁止使用 `app-release.apk` 默认名）。
+- Dev 验证包：`BiliPai-26.0805.1-dev.apk`。
+- 规范见 [docs/wiki/VERSIONING.md](docs/wiki/VERSIONING.md)。
+- 官方社群：频道 [t.me/bilipai666](https://t.me/bilipai666)，交流群 [t.me/bilipai888](https://t.me/bilipai888/1)。
+
+### 更新范围
+
+- 基准版本：`v0.1.0`。
+- 主要变更覆盖导航返回、视频详情、列表骨架、液态玻璃、设置搜索/分享、登录国际号、版本与 APK 命名。
+
+### 完整更新
+
+#### 导航与标签页
+
+- 底栏预测性返回对齐参考实现的绝对 seek / `animateScrollBy` 模型，避免自研 seek 卡死远标签返回。
+- 内容就绪后保持底栏各页完整组合，远距离标签切换更顺。
+
+#### 视频详情与播放
+
+- 简介 / 评论 Tab 栏支持评论区滚动时手指跟手折叠与打断展开（NestedScroll，非硬切动画）。
+- 16:9 播放器按真实布局宽度填满，减少两侧黑边。
+- 相关推荐 UP 与播放/弹幕信息间距收紧。
+- 外置播放列表「UP 主视频」折叠条圆角裁剪后再做模糊。
+- AI 总结时间戳列固定满宽芯片 + 表格式数字，多行标题时时钟列对齐。
+
+#### 列表加载与 UI
+
+- 搜索/分区/直播/空间等列表首屏由主题 Loading 改为形状匹配骨架，并改为首页式软脉冲，减少闪烁。
+- 设置搜索结果：偏好行标题单行省略、右侧分区限宽；结果列表包 `Column`，去掉与顶栏重复的「搜索结果」小节标题，修复标题「果」字压在第一行图标上的叠层。
+- 设置分享：导入导出状态改 subtitle 防换行；导出 JSON 默认附带设备/UI 调试信息。
+- 顶部分类 Dock soft shell lens：保留上下滑液态折射，强度低于底栏，降低边沿虾线；搜索小胶囊仍关 lens。
+
+#### 登录
+
+- 短信登录对接 passport 国际冠字码列表（`cid` = 列表 `id`，拨号显示 `country_id`）。
+- Material 底部表 + 搜索选择国家/地区；离线兜底列表与官方 id 对齐。
+
+#### 版本与交付
+
+- 版本纪元改为 `YY.MMDD.N`（如 `26.0805.1`），`versionCode` 单调递增。
+- `assembleRelease` / `assembleDev` 自动导出 `BiliPai-*` 规范名到 `outputs/bilipai/`。
+
+#### 社群与文档
+
+- 官方 Telegram 频道改为 `t.me/bilipai666`，交流群改为 `t.me/bilipai888`；应用内设置入口同步。
+- 移除 README/Wiki 中「发布渠道临时调整 / 仅 Telegram 发版」类公告文案，改为正常频道与群组链接说明。
+
+---
+
+## v0.1.0 (2026-08-04)
+
+### 版本信息
+
+- BiliPai 从本版本开始启用全新的 `0.x` 语义化版本纪元，当前 `versionCode` 为 `282`。
+- 应用 ID、签名、配置数据和历史发布记录保持不变；`versionCode` 继续单调递增。
+- 正式发布产物统一命名为 `BiliPai-0.1.0.apk`，现阶段仅通过官方 Telegram 群组分发。
+
+### 更新范围
+
+- 基准版本：GitHub 上一个正式发布版 `v9.9.9.8.6`。
+- 提交范围：[`v9.9.9.8.6...main`](https://github.com/jay3-yy/BiliPai/compare/v9.9.9.8.6...main)。
+
+### 完整更新
+
+#### 设置界面
+
+- 重写设置布局：首页改为搜索加八个直接分类入口，详情页使用更清晰的扁平分组，手机和平板保持同一信息结构。
+- 单选项改为居中弹窗并在点选后立即生效；滑块移入带取消、确认的弹窗，减少页面中的大块控件和嵌套卡片。
+- 重新归类外观、动画、首页、导航、播放等历史设置，修复进入详情页跳到错误位置、搜索空结果错位及旧导航恢复问题。
+- 主题色面板默认收起；设置图标统一连续圆角，Material 3 使用主题色，Miuix 与 iOS 继续保留多彩图标。
+- 文案补充功能结果和关闭后的影响，降低首次使用成本；新增首页视频卡片“显示 UP 主头像”开关。
+
+#### 首页、卡片与导航
+
+- 统一首页顶部 Dock 和底栏图标体系，修复液态玻璃指示器滑动、填色不完整、插件中心图标选中态及上下指示器不一致。
+- 持续修复视频卡片进入和预测性返回：保留封面或实时画面、稳定列表位置与头像布局，减少黑帧、错卡、跳变和双影。
+- 优化 4:3 与单列视频卡片的高度和间距；关闭 UP 主头像时，普通卡片、故事卡片和今日看点不再预留头像空间。
+- 首页和动态加载补充骨架卡片；个人页将旋转加载改为与实际内容结构对应的骨架动画。
+
+#### 播放器与画质
+
+- 新增本地 FSR 1.0 画质增强，普通视频和番剧均可使用；补充锐度等参数，并修复首次选择、配置记忆和菜单状态问题。
+- 合并 PR #699，增加 E-AC-3 软件音频解码回退，设备硬解不支持时可尝试软件解码。
+- 新增互动投票与打分弹幕的解析、展示和提交能力，异常数据会安全降级为普通文本。
+- 长按倍速提示新增关闭按钮，用户可直接退出临时倍速状态；播放器覆盖层、状态栏雾色及返回画面继续收敛。
+
+#### 直播
+
+- 扩充直播控制栏、线路/清晰度选择和流来源面板，切换播放源时保留明确的状态反馈与失败回退。
+- 改进直播弹幕发送、表情与实时消息处理，补充醒目的 Super Chat 闪现提示。
+- 修复直播状态栏配色、播放画面返回和部分交互面板遮挡问题。
+
+#### 动态、评论与个人空间
+
+- 动态卡片支持更多附加模块和轻量未读状态，新增瀑布流/列表布局选择及纯文本动态发布入口。
+- 重构动态评论与管理流程，完善评论面板、楼中楼预览、菜单操作、欺诈提示和加载状态。
+- 个人空间页支持随滚动折叠的头图和吸顶标签栏，并修复加载占位与返回状态。
+- 统一评论与楼中楼头像框尺寸，减少不同入口的视觉跳变。
+
+#### 搜索、启动与视觉
+
+- 搜索页统一加载、空结果和失败状态，修复新关键词残留旧结果、分页失败及设置搜索空状态布局。
+- 新增并完善“女仆公告”应用图标，适配自适应图标安全区、深浅色外壳和启动画面。
+- 加固启动动画和图标飞出过程，减少闪烁、尺寸错位及特定图标导致的启动异常。
+
+#### 版本与发布
+
+- 更新检查优先使用 `build-metadata.json` 中的 `versionCode`，并按发布时间识别跨版本纪元的最新稳定版。
+- Release 与 Dev 构建分别导出 `BiliPai-0.1.0.apk` 和 `BiliPai-0.1.0-dev.apk`；GitHub 暂时只同步源码，不再上传 APK Artifact 或 Release 附件。
+- 历史 9.x 安装首次迁移至 0.x 时需要手动下载安装；最新 APK 统一从[官方 Telegram 群组](https://t.me/bilipai888/1)获取。
+
+---
+
+## v9.9.9.8.7 (2026-08-02，未公开主线记录)
+
+### 版本信息
+
+- 版本号从 `9.9.9.8.6` 升级到 `9.9.9.8.7`，`versionCode` 升级至 `281`。
+- 更新范围：`v9.9.9.8.6` 之后的播放器本地 FSR 增强、互动投票/打分弹幕、动态页、个人空间页与导航改进。
+
+### 完整更新
+
+#### 播放器画质增强（本地 FSR）
+
+- 新增本地 FSR 1.0 画质增强支持，通过本地着色器管线（FSR 1.0 shader）直接生效，普通视频与番剧播放均可使用。
+- 增强详情面板开放锐度等参数控制，锐度步进统一为 0.1 并归一化，避免档位错乱。
+- 修复首次切换 FSR 时选中项被覆盖、增强菜单不可用、控制抖动等问题；video enhancement 插件发布 0.4.0。
+
+#### 互动投票与打分弹幕
+
+- 新增互动投票弹幕（`#VOTE#` / `VIDEO_VOTE_MSG`）与打分弹幕（`#GRADE#` / `GRADE_MSG` / `VIDEO_GRADE_MSG`）支持。
+- 投票/打分弹幕以独立卡片 UI 展示，展示时间延长至 8 秒便于点选；结构化数据解析失败时降级为文本提示。
+- 新增打分弹幕提交通道（`x/v2/dm/command/grade/post`），分数为偶数、最大 10 分。
+
+#### 动态
+
+- 补充动态卡片附加模块解析与轻量未读接口，卡片可展示模块化附加内容并携带未读状态。
+- 新增「动态 Feed 布局」设置：瀑布流（多列自适应，默认）或列表（单列居中）。
+- 动态页新增发布入口，支持发布纯文本动态。
+- 精修动态评论与管理：重构评论仓库与欺诈检测策略、新增评论底部面板、菜单操作策略与骨架卡片，评论区加载与交互更稳定。
+
+#### 个人空间
+
+- 重构个人空间页：header 随滚动视差折叠（320dp 折叠范围，按密度换算），完全滚出后主 tab overlay 吸顶显示。
+
+#### 首页与导航
+
+- 修复从播放返回时视频卡片封面保持可见，移除卡片不透明共享外壳，导航形变更平滑。
+- 播放器恢复纹理 Surface 用于导航形变，导航返回时保留直播画面帧。
+- 底部 Tab 返回手势支持预测性返回（predictive back）。
+
+#### 启动与图标
+
+- 加固启动闪屏 flyout 渲染，减少启动阶段的闪烁与错位。
+- 新增居中的「女仆公告」应用图标，适配自适应图标安全区与深色底壳，并修复图标过大、启动崩溃、外观细节等问题。
+
+#### 其他修复
+
+- 修复直播页面状态栏雾色（haze）错误配色。
+- 统一楼中楼回复的头像框样式。
+- 新增首页骨架卡片，优化首页加载占位体验。
+
+---
+
+## v9.9.9.8.6 (2026-08-02)
+
+### 版本信息
+
+- 版本号从 `9.9.9.8.5` 升级到 `9.9.9.8.6`，`versionCode` 升级至 `278`。
+- 更新范围：`v9.9.9.8.5` 之后的播放器、番剧、平板侧边栏与横屏评论体验改进。
+
+### 完整更新
+
+#### 首页侧边栏与多账号
+
+- 平板首页侧边栏新增底部「切换账号」按钮，直接复用「账号与播放」面板，可切换主账号、设置/取消用于播放的账号、移除非当前账号或添加账号。
+- 新增「侧边栏账号切换」开关；默认开启，关闭后隐藏该按钮，不影响现有的侧边栏导航与个人页账号管理。
+- 切换成功后会刷新首页和个人页账号会话，避免推荐流或账号资料继续显示旧账号状态。
+
+#### 平板、折叠屏与全屏播放
+
+- 修复普通平板横屏点击最大化时可能被误导向竖屏沉浸窗口的问题；平板全屏保持横屏，竖屏全屏体验仅限完全展开的折叠屏内屏。
+- 稳定横竖屏播放器、评论面板和系统栏的状态交接，减少全屏切换、打开评论或返回详情时的跳变。
+- 竖屏与横屏分别保留弹幕显示配置，避免切换全屏后错误沿用另一方向的弹幕档案。
+
+#### 横屏互动与评论
+
+- 横屏全屏新增可交互侧边面板，支持在不中断播放的情况下查看评论和楼中楼回复。
+- 评论面板默认停靠右侧，为播放器预留稳定视口；可在面板中切换停靠侧，并正确接入转场、输入框和返回逻辑。
+
+#### 番剧播放
+
+- 恢复番剧直接视频输出，修复部分场景下只有声音没有画面的问题。
+- 番剧播放支持根据设备能力与播放账号权益优先选择 HDR / HEVC 流；不支持时安全回退到可解码的 AVC 或服务端可用档位。
+
+---
+
+## v9.9.9.8.5 (2026-08-02)
+
+### 版本信息
+
+- 版本号从 `9.9.9.8` 升级到 `9.9.9.8.5`；补丁构建将 `versionCode` 升级至 `277`。
+
+### 完整更新
+
+#### 平板全屏修复
+
+- 修复平板端进入全屏后横竖屏无限切换的问题：全屏目标方向改用稳定设备宽度判定，不再随屏幕方向翻转导致 `LANDSCAPE` / `PORTRAIT` 反复振荡。
+
+#### 播放账号（另一个账号的大会员）
+
+- 「用于播放」账号的会员状态与画质决策全面生效：普通视频、番剧、小窗/后台播放、竖屏 story 的自动最高画质、默认画质与会员判断均跟随播放账号，主账号非会员时也能用播放账号的大会员权益观看。
+- 竖屏 story 播放请求同步切换到播放账号，补齐此前遗漏的播放链路。
+
+#### 上手体验
+
+- 「我的 - 账号切换」对话框重做为「账号与播放」：文案通俗易懂，已设置播放账号时显示当前生效账号，主账号非会员且有大会员账号时给出设置引导，VIP 账号带大会员徽标。
+- 大会员视频播放受限时，错误页直接提供「使用 XX 的大会员播放」一键引导，自动设置并重试。
+- 全屏播放时在左上角显示当前播放账号徽章（含大会员标记），便于确认会员已生效。
+
+#### 番剧播放
+
+- 修复看番只有声音没有画面的问题：番剧播放器在未启用 Anime4K 时不再绑定播放器到 `PlayerView`，导致视频无输出。现恢复直出绑定，Anime4K 接管期间由输出路由保持互斥，互不争抢 Surface。
+- 番剧支持 HDR 播放：首次加载自动上探 HDR 画质（播放账号有大会员且设备支持 HDR/HEVC 时请求 HDR 档，无权限时服务端自然降档）；视频编码偏好跟随设备，支持 HEVC 时优先 HEVC 流（HDR/杜比视界轨道基本为 HEVC），不支持时回退 AVC 保证可解码。
+
+## v9.9.9.8 (2026-08-02)
+
+### 版本信息
+
+- 版本号从 `9.9.9.7` 升级到 `9.9.9.8`；补丁构建将 `versionCode` 升级至 `275`。
+- 更新范围：自已发布版本 **`v9.9.9.7`** 至本版本，包含其后的 36 个提交及本次折叠屏、动态转发交互修复。
+
+### 完整更新
+
+#### 折叠屏与全屏播放
+
+- 修复折叠屏展开后进入全屏时默认横屏的问题：内屏处于展开的大屏状态且选择「自动」全屏方向时，默认采用竖屏，与原版行为一致。
+- 手动选择横屏、竖屏或关闭方向锁定的设置保持原有优先级；分屏模式仍不强制请求方向。
+- 恢复 `SurfaceView` 的 HDR 直通输出，避免 `TextureView` 合成导致 HDR / HLG 视频以 SDR 显示。
+- 修复播放器初始化闪退，播放会话按当前账号隔离，避免切换账号后串用播放状态。
+
+#### 动态
+
+- 动态操作栏的「转发」按钮现在始终在图标右侧显示官方接口返回的转发数量，不再因窄屏隐藏数字。
+- 转发成功后立即将当前卡片、动态详情和空间动态页的转发数加一；下次刷新仍以服务端 `module_stat.forward.count` 为准。
+- 修复动态评论区域滚动误触发内容标签页切换的问题。
+
+#### 评论区装饰
+
+- 完整解析并展示评论用户的头像挂件、粉丝勋章装饰与舰队/编号卡。
+- 装饰素材按原始尺寸请求、裁除透明留白后等比显示，修复尺寸过小、比例失真和模糊的问题。
+- 舰队卡补齐官方格式的 `NO.` 与编号文案。
+
+#### 播放器、详情页与转场
+
+- 优化视频详情页进出场：共享卡片回退时保留封面、圆角、顶栏图标与状态栏设置，减少跳变和 chrome 闪烁。
+- 详情页内嵌播放进度条贴齐视频底部；沉浸式全屏进度条固定在视频边缘。
+- 顶部分类标签在拖拽时保持可见、颜色正确；修复音乐播放页分页指示颜色与歌词控制栏圆角。
+- 调整详情页模糊与系统栏同步，移除残留壁纸 haze 来源与已废弃的卡片玻璃设置。
+
+#### 插件与网络
+
+- 重做内置插件控制页，扩展 SponsorBlock 社区分段、贡献操作与分段组展示能力。
+- CDN 增加签名候选路由基础与安全 DASH 分段预取，改善候选地址切换与首段加载体验。
+- 对齐弹幕标签栏控制布局。
+
+#### 首页、外观与稳定性
+
+- 首页卡片回退交接与 chrome 对齐更稳定，详情回退期间正确隐藏详情 chrome。
+- 自定义 Material 3 颜色能够持久化保存。
+- 修复 Miuix 主题打开「查看更新日志」时的 `NavigationBackHandler` ABI 崩溃。
+- 修复更新弹窗编译问题、旧版 `NavigationBackHandler` 兼容性，以及 CI 性能守卫相关问题。
+
+#### 致谢
+
+- CDN 签名候选、分片级选线与预取设计参考 [Bili Pilot](https://github.com/siwei-yuan/bili-pilot)；BiliPai 为独立 Kotlin 实现，未复制其 JavaScript 代码。
+- 空降助手的数据与 API 来自 [BilibiliSponsorBlock](https://github.com/hanydd/BilibiliSponsorBlock)，浏览与控制 UI 参考 [PiliPlus](https://github.com/bggRGjQaUbCoE/PiliPlus)。
+
+---
+
+## v9.9.9.6 (2026-07-31)
+
+### 版本信息
+
+- 版本号从 `9.9.9.5` 升级到 `9.9.9.6`，`versionCode` 从 `270` 升级到 `271`。
+- 更新范围：自最近已发布基线 **`v9.9.8.9`** 至本版本（含中间 `9.9.9.1` 等未单独发版迭代）。
+- 提交规模：约 **184** 个非合并提交；主要作者 **@piracola（约 106）**、**@Jay3-yy（约 79）**。
+
+### 特别致谢：UI 系统重构（Piracola / BiliPai-miuix）
+
+**衷心感谢 [Piracola/BiliPai-miuix](https://github.com/Piracola/BiliPai-miuix)（@piracola）对本期 UI 体系的大体量重构与持续贡献。**
+
+本周期 UI 重构是主线最大体量变更，覆盖 design-system 模块建立、中性组件门面、全 feature 迁移与合入，并在主仓通过多次 merge 落地：
+
+- `merge: integrate Piracola UI enhancements`
+- `merge: integrate Piracola component facade migration`
+- `merge: integrate Piracola facade completion`
+- `merge: integrate UI enhancements` / 与上游 `v9.9.9.1` 同步合入
+
+#### 重构做了什么（完整摘要）
+
+1. **新建 design-system 模块**  
+   将主题 primitive、语义视觉、共享 chrome 几何、动效 / 交互 policy、运行时视觉 profile、分段控件、pull-refresh、自适应加载 / tooltip、导航视觉 policy 等从 app 散落实现抽到独立模块。
+
+2. **中性组件 facade（App* 控件）**  
+   统一并集中：
+   - 按钮：Primary / Text / Icon / Outlined  
+   - 表面与卡片、Chip / SuggestionChip、Badge、FAB  
+   - Tab、进度指示、滑条、Checkbox / 选择控件  
+   - OutlinedTextField、下拉菜单、对话框、BottomSheet、导航抽屉  
+   - 自适应 Loading、首页刷新指示器、视频重试按钮等  
+
+3. **按模块完成 feature facade 迁移**  
+   bangumi、dynamic、settings、profile、video（含播放器与 overlay）、home / list、messaging、collection、download、live、onboarding、story / article 等逐步迁到中性 API；移除遗留 brand button、过时 preference renderer 与无效 style 入参。
+
+4. **Chrome / 导航 / 设置能力边界**  
+   Scaffold、TopBar、侧栏、分段设置、drawer、pull-refresh 等收敛到共享 capability / semantic policy；设置页 pilot 与 preference 模型统一。
+
+5. **液态玻璃（liquid glass）复用**  
+   底栏 liquid chrome 抽取共享；顶栏 dock 图标对齐、折射与指示器 parity；分段玻璃中心伪影与复用面渲染修复；文档约定与 parity 测试门禁。
+
+6. **质量门禁**  
+   架构边界、迁移阶段、颜色 / 间距 / 字号 / 已迁移模块检查进入 CI / PR 门禁；补齐 final architecture 与 stage gate 测试。
+
+没有上述工作，主题变体（Material / Miuix / iOS）、跨页视觉一致与后续动效优化将难以维持。**再次向 Piracola 与 [BiliPai-miuix](https://github.com/Piracola/BiliPai-miuix) 致谢。**  
+README 致谢表已加入该仓库链接。
+
+---
+
+### 相对 v9.9.8.9 的完整更新
+
+#### 1. 构建、工程与导航运行时
+
+- 升级 **AGP 9.3.1 / Gradle 9.5**，移除过时 R8 钉扎与随 Shimmer 废弃的 ProGuard keep。
+- 修复 release APK 重命名在 configuration-cache 下的安全性。
+- Navigation3 对齐 **1.2.0-alpha07** 运行时；预测返回目标 scene 解析与 NO_OP shared 路径加固。
+- CI：恢复 quality / Compose report 守卫；颜色、间距、字号与已迁移模块检查纳入 PR 门禁。
+- 文档：清理过时文档、同步项目现状、发布路线图 / wiki 基线；补充液态玻璃复用 parity 约定与性能静态审计说明。
+
+#### 2. 视频卡片过渡、景深、预测返回与一镜到底
+
+- **进场**：卡片 sharedBounds / 壳 morph、封面预加载、进场播放意图与封面层级修正；首页过渡景深缩放与源页缩小分层。
+- **单时钟与景深 Host**：景深冻结层由 Host 持有，与 SinglePane 源 dispose 解耦；settled 隐藏层策略、帧同步与 release 采样加固。
+- **预测返回**：live progress 驱动景深糊↔清；源页在预测返回时重新露出；始终优先 live surface 预览；可选 live return preview 开关。
+- **提交返回**：deferred 停播、live surface 保活至提交落位；末段封面接管；settled 播放态返回运动预算（弹幕/次要内容减负）。
+- **问题修复轮次**：返回黑屏、空冻结层、HELD 满糊预热丢失（「中断开场有糊、看完再返回无糊」）、返回壳直角/播放器圆角、shared morph 提前清糊、hero 轮播统计文案与返回模糊曲线等。
+- **连续播放器 morph** 能力合入与加固；尊重首页视频过渡设置。
+
+#### 3. 液态玻璃与首页 / 导航 chrome
+
+- 共享底栏 liquid chrome，并推广到可复用表面。
+- 顶栏 dock：图标对齐、折射、指示器与底栏 parity。
+- 分段 liquid glass 中心伪影、复用渲染伪影修复。
+- 分区页液态玻璃背景修复。
+- 底栏玻璃在页面切换时保持连续。
+- 首页导航 motion 精简；过渡帧成本与导航转场性能优化。
+
+#### 4. 播放器、详情与列表
+
+- 全屏 FILL 滑动强制视口重测；全屏切换刷新视口；切换全屏保留当前帧。
+- 预测返回 / 提交返回过程中保留实时画面，直至 committed landing。
+- 收藏夹：打开视频不再等待完整队列加载完成；点击收藏统一打开收藏夹选择面板，可多选到自己的收藏夹（本版提示文案）。
+- 稍后再看：morph 过程 crossfade 卡片；Miuix 顶栏标题可见与标题区域保留。
+- 列表体验：稍后再看与收藏列表改进（`feat(lists)`）。
+- 听视频导航图标增强与字重修正。
+
+#### 5. 空间、动态、搜索与其它功能
+
+- 空间：按请求定位最近观看的投稿；卡片高亮动画 import 修正；已播定位提示修复。
+- 动态：表情图渲染；转发动态从正文打开原文；重新打开时重载转发评论。
+- 搜索：顶部搜索框保持固定高度。
+- 播放与推荐稳定性修复（`fix(video): stabilize playback and recommendations`）。
+
+#### 6. 性能与可观测
+
+- 首页滚动路径去掉未使用的全屏层；去掉主线程阻塞读与被压制的性能债。
+- 启用 Compose stability 配置、metrics 门禁与 strict mode；运行时 visual guard 接到模糊管线。
+- 统一 feed / live design tokens；减少过渡帧成本。
+- 增加 release 首页滚动 / 卡片过渡采样脚本与输出说明；部分 Baseline Profile 接线曾因未验证回退。
+- 动画 / 过渡相关 unit 与 perf 门禁扩展（frozen session、transition gates 等）。
+
+#### 7. 本版（9.9.9.6）用户可见小改动
+
+- 点击收藏 → 打开「添加到收藏夹」面板，并提示：  
+  **「可勾选一个或多个收藏夹，将视频收藏到自己的收藏夹」**。
+- 版本号与发布说明更新。
+
+---
+
+### 作者与提交线索
+
+#### @piracola（约 106 个提交；UI 系统重构主力）
+
+代表提交（节选，完整列表见 `git log v9.9.8.9..HEAD --author=piracola`）：
+
+- `0bfe0c0cc` introduce neutral primitive controls  
+- `41587fa12` route feature surfaces through design system  
+- `ee51b6f2a` / `c6b87fd23` scaffolds & top bars through app chrome  
+- `48aaf1640`…`bd581e06d` 将 preference / motion / interaction / navigation / chrome 等 policy 迁入 design-system  
+- `d1c8f6ccf`…`e69411095` 各 feature facade 迁移与收尾抛光  
+- 以及对话框、Sheet、Chip、Tab、按钮族、播放器 surface 等数十次 `refactor(ui): centralize / migrate …`
+
+#### @Jay3-yy（约 79 个提交；主线整合、动画、导航、发布）
+
+代表方向：
+
+- 视频卡片 / 景深 / 预测返回 / 一镜到底多轮修复与性能预算  
+- 液态玻璃底栏 / 顶栏 dock 与复用 parity  
+- Navigation3 alpha07、AGP/Gradle 升级与工程修复  
+- 空间已播定位、动态表情、搜索栏、收藏/稍后再看细节  
+- 与 Piracola fork 的 merge 整合、文档与发布（含 9.9.9.1 / 9.9.9.6）
+
+#### 合并记录（节选）
+
+- `3e4cc3170` merge: integrate Piracola UI enhancements  
+- `8a7f80bb3` merge: integrate Piracola component facade migration  
+- `c3b767395` merge: integrate Piracola facade completion  
+- `9e7d66107` merge: integrate UI enhancements  
+- `fc43907fa` merge: sync upstream v9.9.9.1  
+- `5805d68b4` merge: harden continuous player morph  
+
+### 说明
+
+- 中间版本号 `9.9.9.1` 曾在主线 bump，但 CHANGELOG 以 **`v9.9.8.9` 标签** 为上一正式发版基线做完整汇总。  
+- 更细的逐提交列表可用：  
+  `git log v9.9.8.9..v9.9.9.6 --oneline`  
+  （若尚未打 `v9.9.9.6` 标签，则用 `v9.9.8.9..HEAD`。）
+
+---
+
+## v9.9.8.9 (2026-07-26)
+
+### 版本信息
+
+- 版本号从 `9.9.8.8` 升级到 `9.9.8.9`，`versionCode` 从 `263` 升级到 `264`。
+- 更新范围：自最近已发布基线 `v9.9.8.7` 至本版本发布前的 72 个提交。
+
+### 相对 v9.9.8.7 的完整更新
+
+#### 播放器、画质与插件
+
+- 新增 Anime4K CNN 视频增强插件，提供适配帧预算的预设、Kazumi 对齐、稳定切换与 surface 重绑；插件版本升级到 `0.2.2`，并支持番剧播放与显示比例保持。
+- 新增严格自定义 CDN 模式，IP 刷新后仍保留用户自定义规则。
+- 修复 TextureView 下 HDR 视频仅以 SDR 渲染、`hvc1` HEVC 流识别和实验性 DASH 忽略编码偏好；CDN fallback 保留原编码，超时保持 `2.5s`。
+- 修复章节跳转、弹幕开关、长按倍速平滑度与全屏播放队列保持；预测返回时继续保留视频画面。
+
+#### 首页、列表与卡片过渡
+
+- 首页封面请求增加尺寸约束并取消过期加载，隔离 Feed 与顶部标签动效状态。
+- 支持单列视频列表，并对齐单列、横向卡片 chrome、源页面缩放、景深分层与 shared-card 过渡。
+- 优化视频卡片过渡时序与开销，返回首页时保持当前分区，列表设置下首页顶栏继续可见。
+
+#### 空间、动态与图标
+
+- 空间资料支持复制 UP 主简介、名称、UID 与空间链接；富文本中的空间链接可在应用内打开。
+- 动态转发评论按文档目标加载，修复评论分页重复请求。
+- 女仆图标继续完善 Pixel 自适应图标兼容、深色模式、系统启动页、前景尺寸与圆角；保留主题化加载反馈与空间观看记录等此前未发布改动。
+
+### Pull Requests
+
+- [#639](https://github.com/jay3-yy/BiliPai/pull/639) **@maxzrb** — `fix(player): 继续修复 TextureView 导致 HDR 视频只能以 SDR 渲染到屏幕`。
+- [#645](https://github.com/jay3-yy/BiliPai/pull/645) **@maxzrb** — `fix(player): 修正HEVC视频流获取能力漏洞`。
+- [#648](https://github.com/jay3-yy/BiliPai/pull/648) **@Kurarion** — `feat(cdn): 保留自定义规则并新增严格自定义 CDN 模式`。
+- [#655](https://github.com/jay3-yy/BiliPai/pull/655) **@maxzrb** — `feat(player): Anime4K超分辨率插件支持`。
+- [#657](https://github.com/jay3-yy/BiliPai/pull/657) **@maxzrb** — `fix(player): 修复偶发的CDN fallback导致视频编码意外降级`。
+- [#658](https://github.com/jay3-yy/BiliPai/pull/658) **@maxzrb** — `fix(player): 完善 Anime4K 播放场景接入并修复画面比例`。
+
+### 作者与提交清单
+
+#### @Jay3-yy（48 个提交）
+
+- `1c0942c30` feat(ui): theme-aware loading indicators for MD3, Miuix, and iOS
+- `c06b04653` feat(ui): extend theme-aware loading to refresh and content spinners
+- `9a4da3c4c` feat: add blue snow maid app icon
+- `6211b6d1d` fix: preserve white shell around maid icons
+- `5161f8cdb` fix: enlarge maid adaptive icon artwork
+- `25f7cead8` feat: add dark mode maid app icons
+- `16bd1845b` fix: refresh dark launcher icon and splash corners
+- `f1a329558` fix: round maid system splash icons
+- `dc62c8c38` feat: add selectable maid icon appearance
+- `9d69c51f1` fix: keep maid splash corners stable
+- `30d1fe42f` fix: stabilize video card return depth effect
+- `759501622` fix(player): apply exact HDR quality upgrades
+- `ee7803b04` feat(player): model reliable playback insights
+- `1f3b1d027` feat(player): add playback insight experience
+- `29935dd24` refactor(player): compact playback insight glass
+- `e46abf311` fix(dynamic): auto-open comments when entering dynamic detail
+- `8c0014cb8` fix(home): preserve feed position after space return
+- `f50a197c2` fix(detail): inline dynamic comments and smooth related scroll
+- `9f32a081d` fix(video): restore related card transitions after scroll
+- `cf8b553a7` fix(video): return unit from related card click
+- `969544e67` fix(player): move md3 level feedback to edges
+- `751c83460` fix(video): keep current frame during fullscreen switch
+- `efc4d6b7f` fix(favorite): isolate collection playback queue
+- `ebe112179` feat(space): remember watched videos
+- `6736685d5` fix(video): move UP preview to portrait player
+- `861fc230c` fix(player): defer long-press lock hint
+- `b083d2173` fix(dynamic): load complete plain text detail
+- `e81691d21` fix(video): block pager while UP preview is open
+- `42cb9c0bd` chore(release): bump version to 9.9.8.8
+- `56175c894` fix(comment): route rich space links in app
+- `0cd2340df` fix(player): repair chapter seeking and danmaku toggle
+- `7a6c881ac` perf(ui): streamline video card transitions
+- `a2373304b` fix(video): keep live frame during predictive return
+- `da263e44f` feat(ui): use single-column video lists
+- `8cecf052c` fix(ui): align single-column video card transitions
+- `6f4b1b53e` fix(ui): sync horizontal card chrome motion
+- `239c91b41` feat(ui): add card transition depth separation
+- `0d117aaa6` fix(ui): shrink source page behind shared card
+- `cd9955865e` fix(ui): shrink video elements behind shared card
+- `9fa7909f1` perf(home): isolate feed and tab motion state
+- `e5d49d57d` perf(home): size covers and cancel stale feed loads
+- `cf2145514` fix: smooth long press speed and preserve fullscreen queue
+- `85d065aa4` fix: keep home header visible with list setting
+- `c68aecfb4` fix(icon): keep adaptive maid icons on Pixel
+- `0cc25c20d` fix(dynamic): load forwarded comments by documented target
+- `9edf3c5e6` fix(dynamic): stop repeated comment pagination
+- `fb941651b` Fix home tab restore after video return
+- `fc5c41b26` Add copy actions to UP spaces
+
+#### @maxzrb（16 个提交；含 PR #639、#645、#655、#657、#658）
+
+- `edf23e150` fix(player): 修复 TextureView 导致 HDR 视频只能以 SDR 渲染到屏幕
+- `c785edc1d` fix(player): recognize hvc1 as HEVC
+- `ca6bad51f` fix(player): 修复实验性 DASH 忽略编码偏好
+- `6d25d212c` feat(player): add Anime4K video enhancement plugin
+- `e4b28e70c` feat(player): adapt Anime4K preset to frame budget
+- `5d55e8cc2` fix(player): improve Anime4K switching and controls
+- `353cb760b` fix(player): rebind surface after Anime4K toggle
+- `cec1c8e76` feat(player): port Kazumi Anime4K CNN chains
+- `f2ce0d0ac` fix(player): align Anime4K presets with Kazumi
+- `753aba3e1` chore(plugin): bump Anime4K version to 0.2.1
+- `7ea3d7043` fix(player): preserve codec across CDN fallback
+- `98eff784c` fix(player): enable Anime4K for bangumi playback
+- `75a3219f4` fix(player): preserve bangumi Anime4K aspect ratio
+- `d85f5da4c` fix(player): preserve Anime4K display aspect ratio
+- `1067d247a` chore(plugin): bump Anime4K version to 0.2.2
+- `c22015361` fix(player): keep CDN fallback timeout at 2.5 seconds
+
+#### @Kurarion（2 个提交；PR #648）
+
+- `6e37d12b6` fix(cdn): preserve custom rules during IP refresh
+- `20978deca` feat(cdn): add strict custom CDN mode
+
+#### 合并记录（@Jay3-yy）
+
+- `f7e66449f` Merge pull request #639 from maxzrb/fix/hdr-two-stage-upgrade
+- `39d34e59f` Merge pull request #645 from maxzrb/fix/hvc1-hevc-selection
+- `fc3b4d3c6` Merge pull request #648 from Kurarion/feature/cdn-strict-custom-mode
+- `25bfd5e4e` Merge pull request #655 from maxzrb/feat/anime4k-cnn-plugin
+- `a2611791e` Merge pull request #657 from maxzrb/fix/cdn-fallback-preserve-codec
+- `3e1a607ce` Merge pull request #658 from maxzrb/fix/anime4k-0.2.2-playback
+
+## v9.9.8.8 (2026-07-23)
+
+### 版本信息
+- 版本号从 `9.9.8.7` 升级到 `9.9.8.8`，`versionCode` 从 `262` 升级到 `263`。
+
+### 相对 v9.9.8.7 的完整更新
+
+#### 加载反馈与应用图标
+- **主题化加载指示器**：MD3、Miuix 与 iOS 风格的加载反馈统一按主题呈现，并覆盖下拉刷新和内容加载场景。
+- **蓝雪女仆图标**：新增可选的蓝雪女仆应用图标；补齐深色模式、前景图、圆形图标及系统启动页适配，修复白色外壳、尺寸与圆角稳定性。
+
+#### 播放器、画质与返回过渡
+- **播放洞察**：新增并收敛播放状态洞察展示，玻璃面板更紧凑，数据模型与状态来源更可靠。
+- **HDR 画质升级**：画质切换按精确能力升级，避免高规格视频错误降级。
+- **手势反馈与全屏**：MD3 音量 / 亮度反馈移至边缘；横竖屏切换期间保持当前画面，减少黑帧与闪动。
+- **视频卡返回**：稳定卡片返回时的景深效果；相关推荐滚动后的卡片过渡恢复正常。
+- **长按倍速提示**：长按加速时不再遮挡画面，松手后再提示可锁定倍速。
+
+#### 空间、收藏与动态
+- **空间观看记录**：UP 空间视频支持记录已观看状态。
+- **收藏合集播放**：合集播放队列与外层列表隔离，避免互相污染。
+- **动态详情与评论**：进入动态详情自动展开评论；评论以内联形式展示并优化相关推荐滚动。
+- **纯文字动态全文**：按详情接口补取完整正文；富文本节点不完整时回退到完整 `desc.text`，避免内容被截断。
+- **返回位置**：从 UP 空间返回首页后保留原有 Feed 位置。
+
+#### 竖屏视频与 UP 预览
+- **UP 预览位置**：预览面板只在竖屏视频点击 UP 头像时打开，普通详情页保持原有跳转行为。
+- **手势冲突**：UP 预览打开时禁用底层竖屏 Pager 下滑切换，面板列表仍可正常滚动，关闭后恢复切换手势。
+- **相关推荐点击**：修复相关推荐卡片点击回调与过渡链路。
+
+#### 提交清单（自 v9.9.8.7 起，不含本版本发布提交）
+```
+feat(ui): theme-aware loading indicators for MD3, Miuix, and iOS
+feat(ui): extend theme-aware loading to refresh and content spinners
+feat: add blue snow maid app icon
+fix: preserve white shell around maid icons
+fix: enlarge maid adaptive icon artwork
+feat: add dark mode maid app icons
+fix: refresh dark launcher icon and splash corners
+fix: round maid system splash icons
+feat: add selectable maid icon appearance
+fix: keep maid splash corners stable
+fix: stabilize video card return depth effect
+fix(player): apply exact HDR quality upgrades
+feat(player): model reliable playback insights
+feat(player): add playback insight experience
+refactor(player): compact playback insight glass
+fix(dynamic): auto-open comments when entering dynamic detail
+fix(home): preserve feed position after space return
+fix(detail): inline dynamic comments and smooth related scroll
+fix(video): restore related card transitions after scroll
+fix(video): return unit from related card click
+fix(player): move md3 level feedback to edges
+fix(video): keep current frame during fullscreen switch
+fix(favorite): isolate collection playback queue
+feat(space): remember watched videos
+fix(video): move UP preview to portrait player
+fix(player): defer long-press lock hint
+fix(dynamic): load complete plain text detail
+fix(video): block pager while UP preview is open
+```
+
+## v9.9.8.7 (2026-07-22)
+
+### 版本信息
+- 版本号从 `9.9.8.6` 升级到 `9.9.8.7`，`versionCode` 从 `261` 升级到 `262`。
+
+### 相对 v9.9.8.6 的完整更新
+
+#### 首页进场动画与过渡协同
+- **进场 + 滚动**：列表滚动中挂载的卡片不再播放进场，避免 Lazy 复用反复 fade/scale 与快滑时多卡并发 spring。
+- **进场 + 过渡并存**：与共享元素过渡同时开启时，进场降为仅 alpha 淡入（无缩放 / 位移），避免污染 sharedBounds 源几何。
+- **实现升级**：`animateEnter` 改为 `Animatable` + `graphicsLayer` 内读 progress，去掉 `animateFloatAsState` 每帧重组。
+- **门控保留**：从详情返回、切分类仍不播进场；设置文案同步说明滚动不播与过渡协同。
+
+#### 视频卡片 shared 过渡 / 返回 morph
+- **统一时钟**：`VideoCardTransitionClock` 驱动 morph 与景深，返回 ownership 与 single-clock settle 收口。
+- **返回 live surface**：返回 morph 期间保持 live surface，pop 后 surface 不提前卸掉。
+- **进场优先 / 首帧 jank**：恢复完整进场后的返回 morph；点击首帧卡顿与落位闪烁修复；开场 blur 与 morph 同步清理。
+- **自适应过渡成本**：中低端设备下调卡片过渡开销。
+- **景深与遮罩**：打开时列表景深缩放与 scrim 加强；开场 blur 恢复满 20px（撤销按设备降档）。
+- **快速返回双标题**：消除 quick shared return 时双标题闪一下。
+
+#### 封面 / 进详情
+- **封面到 surface 显露**：详情再进时保持 cover→surface reveal 路径。
+- **封面粘住**：针对再进详情封面粘住做过修复与回退收敛（最终以当前 main 行为为准）。
+
+#### 竖屏全屏 / 横屏播放器
+- **竖屏全屏双击快进 / 快退**：恢复 portrait fullscreen 双击 seek。
+- **横屏弹幕面板**：收窄横屏弹幕侧栏宽度；更聪明的全屏退出。
+- **UP 预览 sheet**：主题感知的 UP 预览面板，并修横屏弹幕面板相关问题。
+
+#### 图片预览
+- **一键 dismiss morph**：图片预览关闭为 seamless one-shot morph，减少割裂感。
+
+#### 提交清单（自 v9.9.8.6 起，不含版本号提交本身）
+```
+perf(home): make card enter play well with scroll and shared transition
+Revert "fix(video): unstick autoplay cover on detail re-entry"
+fix(video): unstick autoplay cover on detail re-entry
+fix(video): stop cover from sticking when re-entering detail
+fix(video): keep cover-to-surface reveal on detail re-entry
+feat(video): theme-aware UP preview sheet and fix landscape danmaku panel
+fix(player): narrow landscape danmaku panel and smarter fullscreen exit
+fix(video): keep live surface during return morph
+fix(video): lock return ownership and single-clock settle
+fix(video): stop dual-title flash on quick shared return
+fix(preview): seamless one-shot image dismiss morph
+fix(video): restore double-tap seek in portrait fullscreen
+feat(video): stronger list depth scale and scrim on card open
+fix(video): keep surface alive during shared return morph after pop
+feat(video): single VideoCardTransitionClock for morph and depth
+fix(video): lockstep return blur clear with morph, open depth with first frame
+revert(video): restore full 20px open blur, drop device tier downgrade
+fix(video): kill click first-frame jank and return land flicker
+fix(video): restore return morph after full entry, prefer animation-first open
+perf(video): adaptive card transition cost for low/mid devices
+test: bump AppVersionPolicyTest to 9.9.8.6
+```
+
+## v9.9.8.6 (2026-07-21)
+
+### 版本信息
+- 版本号从 `9.9.8.5` 升级到 `9.9.8.6`，`versionCode` 从 `260` 升级到 `261`。
+
+### 相对 v9.9.8.5 的完整更新
+
+#### 播放器手势与反馈
+- **音量 / 亮度 UI 重做**：按 MD3 / iOS / MIUIX 主题提供原生感反馈（竖条、胶囊、侧轨），动态图标随档位变化。
+- **音量 / 亮度可见性与步进触感**：恢复遮罩可见性，拖动过程步进震动。
+- **横屏左右滑动快进 / 快退**：抬高 Seek 预览层级，补齐步进振动；小窗全屏 Seek 秒数默认可用。
+- **字幕位置**：支持拖动调节字幕纵向位置并写入偏好。
+
+#### 竖屏 / 直达刷视频
+- **画质 / 比例 / 安全区**：对齐 pager 画质、fit 安全边与全屏方向。
+- **系统栏沉浸与多 P / 合集**：全屏沉浸、多 P / 合集跟进，Story 滑动连续。
+- **字幕宿主**：竖屏字幕层与比例模式修复。
+- **直达进场**：UP 名在直达进场时正确显示；自动最高画质策略更稳妥。
+- **HDR / Dolby / 8K**：恢复 playurl 尝试链中的高规格画质。
+
+#### 导航与卡片过渡
+- **左右退场方向**：卡片退出起点按左右列记录，morph 关闭时仍可用 L/R 退场。
+- **一镜到底**：整卡 morph、封面-only 路径、标题软淡入 / 返回落位与骨架抑制等多轮修复与回退收敛。
+- **下拉刷新指示器**：按屏顶部 inset 修正。
+
+#### 首页与壁纸卡片
+- **顶栏 / Dock**：多 Tab 指示器对齐与高度、浮动 Dock 宽度、搜索与顶栏垂直间距平衡。
+- **封面框三档**：16:9 / 粉版 4:3 / 均衡 16:10，官方双列 4:3 与 Crop 裁切修正。
+- **不感兴趣过滤**：分区 / UP 主负反馈本地过滤修复。
+- **卡片标签效果**：关闭 / 软玻璃 / 实时模糊（实时路径仍为实验）。
+- **卡片信息区玻璃（实验）**：独立选项「关闭 / 实时模糊 / 实时液态玻璃 / 模糊+液态」；**壁纸设置处已标注开发中，请勿使用**。采样仅用壁纸专用 Haze 源，避免主内容 Haze 栈溢出。
+
+#### 相关推荐
+- **⋮ 官方菜单**：稍后再看、反馈 chips、我不想看（UP / 无关 / 不感兴趣），不感兴趣会从列表移除并写入本地负反馈。
+
+#### 空间 / 动态
+- **空间搜索**：圆角、搜索后自动预取动态。
+- **动态正文 / 转发**：正文 rich-text 覆盖、转发 orig 映射与点击打开。
+- **@UP 进空间**：动态 @ 与转发场景进入 UP 空间修复。
+
+#### 说明
+- 卡片「实时模糊 / 实时液态玻璃」仍在开发中，默认关闭；请在壁纸相关设置中保持关闭，勿依赖实验选项。
+
+## v9.9.8.5 (2026-07-20)
+
+### 版本信息
+- 版本号从 `9.9.8.4` 升级到 `9.9.8.5`，`versionCode` 从 `259` 升级到 `260`。
+
+### 相对 v9.9.8.4 的完整更新
+
+#### 导航 / 预测返回 / 设置壳层
+- **预测返回收口**：回退多样式选择（AOSP / Miuix / 缩放 / 经典），恢复为原先单一 Default 跟手预览；设置页仅保留「预测性返回手势」开关。
+- **设置页不透明底**：设置页面用不透明底色，减轻叠色闪烁。
+- **详情取消退出恢复**：预测返回取消后恢复沉浸状态栏。
+- **收藏 / 合集 UP 进空间**：收藏与合集场景可进入 UP 主空间。
+- **合集 shared key 归一化**：合集详情与收藏列表使用 `LIGHT_SIBLING_POP`，减轻预测返回重叠。
+- **追更 / 搜索过渡**：完善追更入口与搜索相关导航过渡。
+
+#### 视频卡片一镜到底
+- **相关推荐进场**：相关推荐详情→详情路由层 `NO_OP`，并恢复列表来源 session，保证 shell morph。
+- **相关推荐 / 分区**：恢复整卡 shell 一镜到底（曾短暂改为封面位对称进退后已回退）。
+- **返回过渡观感**：完善视频卡返回时序与景深对齐。
+- **分区景深匹配**：内嵌分区来源可正确匹配首页景深背景。
+
+#### 竖屏直达刷视频
+- **直达 + 卡片过渡**：开启「竖屏视频直达刷视频」且开启卡片过渡时，走详情页 sharedBounds 逐渐放大，并以 `directPortraitEntry` 强制进入 standalone 全屏竖屏流（点赞 / 评论 / 发弹幕），避免停在内联竖屏详情页。
+- **关闭卡片过渡**：仍短路进入 Story 竖屏流。
+- **UP 主名显示**：全屏 overlay 优先使用已加载的 `Success.info.owner`，修复 seed 进场 `@` 后空白。
+
+#### 设置 / 搜索 / 侧栏修复
+- **MIUIX 隐私与存储弹窗**：下载位置、图片保存位置、清除缓存在 MIUIX 主题下改用窗口 Dialog 承载（不再依赖未挂载的 OverlayDialog host），点击可正常打开设置弹窗。
+- **视频详情标签跳转搜索**：修复标签上长按复制手势吞掉单击的问题，点击标签可进入对应搜索结果。
+- **搜索结果点 UP 名**：补齐 `onUpClick`，可进入对应空间。
+- **侧栏模糊**：修复点头像打开侧栏时模糊效果延迟生效。
+
+## v9.9.8.4 (2026-07-20)
+
+### 版本信息
+- 版本号从 `9.9.8.3` 升级到 `9.9.8.4`，`versionCode` 从 `258` 升级到 `259`。
+
+### 更新内容（相对 v9.9.8.3）
+
+#### 首页关注 / 分区刷新
+- **关注下拉刷新可见性**：新增内容插入列表顶部后强制回顶，避免 LazyGrid 锚住旧卡片导致“提示新增但画面不变”。
+- **关注新增计数校正**：整表刷新只统计旧列表中没有的条目；无新增时提示「暂无新内容」。
+- **关注新增提示对齐 API**：带 `update_baseline` 探测时用响应 `update_num` 作为新增数；未走基线的整表重载不再误报「暂无新内容」。
+- **分区 / 分类页下拉刷新**：分区页与分类详情接入下拉刷新，并可翻页换一批视频。
+- **首页分区类 Tab 刷新**：游戏 / 知识 / 科技等分页流手动刷新时前进页码，减少永远拉第 1 页的重复感；各 Tab 统一按当前页 `refresh(category)`。
+
+#### 动态与冷启动
+- **动态蓝色 @ 跳转**：解析 AT 节点 `rid`（用户 mid）并挂点击注解，可进入对应 UP 主页。
+- **动态九宫格对齐本家**：转发原动态图片预览上限从 4 张调整为 9 张，避免 UP 拼大图被裁成 2×2 错位。
+- **图片预览返回落位**：恢复轻微过冲 + Continuity 收缩 + soft spring 贴回；关闭遮罩改为近线性淡出，减少返回时「整页压暗」感。
+- **图片返回尺寸匹配缩略图**：返回从全屏容器缩回 `sourceRect`，尺寸过冲钳制在预览格大小；显示矩形改用窗口坐标，与动态九宫格对齐。
+- **图片上下滑退出**：单指竖滑优先判定为退出手势，避免被缩放噪声或横向 Pager 吞掉。
+- **返回圆角随进度插值**：全屏 0 → 缩略图圆角，贴回格子更自然。
+- **冷启动首页加速**：WBI 密钥改为启动早期从磁盘恢复；WEB 推荐流跳过多余 buvid SPI 预热，减少与首屏 feed 抢带宽。
+
+#### 播放器与详情
+- **默认稳定 DASH 播放路径**：降低非常规播放链路带来的兼容风险。
+- **视频详情结构拆分与性能**：拆分详情状态 / 渲染 / 浮层边界，延迟读动画状态，缩小收藏夹等 overlay 作用域。
+- **评论切分 P**：修复从评论跳转分 P 后无法正确切集的问题。
+- **合集播放与空间图文**：修复合集播放与空间 opus 相关异常。
+- **实时过渡模糊开关**：设置中可控制视频卡片过渡是否启用实时模糊。
+- **卡片过渡帧时**：收紧过渡时序与帧开销，补充 Android 16 framestats 解析修复。
+- **视频卡片返回过渡**：标准时长 320→360ms，返回 spring 更接近临界阻尼、刚度略降，景深返回与共享元素节奏对齐，降低「弹回过快」的突兀感。
+
+#### 外观与自适应 UI
+- **外观分段控件**：主题 / 深色样式 / 语言等分段使用短文案，改善窄屏显示。
+- **楼中楼回复展示**：完善子回复详情呈现策略。
+- **自适应 UI / Miuix 组件**：底栏、侧栏、对话框、设置面板与迷你播放器壳层等原生组件体验细化。
+
+## v9.9.5 (2026-07-11)
+
+### 版本信息
+- 版本号从 `9.9.4` 升级到 `9.9.5`，`versionCode` 从 `253` 升级到 `254`。
+
+### 更新内容
+- **听视频歌词体验**：歌词页补充进度、切歌控制与沉浸收起入口，提升底栏文字对比度；自动歌词匹配会同时尝试“歌手 - 歌名”顺序，减少手动搜索需求。
+- **DLNA 发现诊断**：保留活跃网络与网卡绑定日志；蜂窝或受限网络下会明确记录 SSDP 组播无法发送，便于区分“没有设备”与“发现请求未发出”。
+
+## v9.9.4 (2026-07-11)
+
+### 版本信息
+- 版本号从 `9.9.3` 升级到 `9.9.4`，`versionCode` 从 `252` 升级到 `253`。
+
+### 更新内容
+- **Apple Music 风格音乐播放器**：统一 AU 与视频音轨播放界面，加入动态封面背景、歌词高斯模糊、液态玻璃控制层、播放模式 Dock、歌词匹配与手动校正。
+- **听视频体验**：收藏夹使用文件夹内视频封面，修复“正在播放”入口，并改善拖动进度后的歌词跟随。
+- **歌词手动校正**：歌词页支持 `±0.25 秒`微调、显示当前偏移及一键归零，校正结果按歌曲持久化。
+- **多 P 听视频**：歌词匹配优先使用当前分 P 的歌名与歌手，并在播放器操作中提供“选集 / 合集”入口，支持直接切换分 P。
+
+### 致谢
+- 感谢 [bbplayer-app/BBPlayer](https://github.com/bbplayer-app/BBPlayer) 提供歌词匹配实现参考。
+
+## v9.9.3 (2026-07-10)
+
+### 版本信息
+- 版本号从 `9.9.2` 升级到 `9.9.3`，`versionCode` 从 `251` 升级到 `252`。
+
+### 更新内容
+- **液态玻璃稳定性**：修复个人空间等场景下分段控件自采样 backdrop 导致的 RenderThread 栈溢出；底栏指示器通过 CombinedBackdrop 合成，保持灰白磨砂观感。
+- **顶栏纯文字贴边**：MD3 / Miuix 纯文字模式下，收紧首个指示器相对左缘的留白（去掉多余 content/row/dock 水平内边距）。
+
+## v9.9.2 (2026-07-09)
+
+### 版本信息
+- 版本号从 `9.9.1` 升级到 `9.9.2`，`versionCode` 从 `250` 升级到 `251`。
+
+### 更新内容
+
+#### 液态玻璃与首页顶栏
+- **全局液态玻璃复用**：开启「安卓原生液态玻璃」后，顶部 Dock、搜索框、底栏、分段控件与评论区等可复用面统一走底栏材质配方，消除顶部独立调参路径与材质分裂。
+- **液态指示器动效对齐**：分段控件 / 顶栏 / 分区指示器改用与首页底栏相同的弹簧、全宽拖拽、panel offset、按压驱动 lens，以及无叠加 scale 的速度形变路径。
+- **滑动折射与主题色跟移**：滑动时保留 lens 与 capture 折射；可见标签中性化，选中色经 export 染色层透出；主题色采样层级与底栏对齐，并消除顶栏双列表异步滚动造成的颜色重影。
+- **顶栏尺度**：适度放大首页顶部指示器、图标与文字，收紧 dock 间隙并允许滑动放大时略超 dock。
+
+#### 动态与视频评论栏
+- **动态顶栏可选折叠**：默认固定 Tab 顶栏，设置中可开启下滑折叠；开启安卓原生液态玻璃时侧栏与横向模式统一复用底栏液态材质。
+- **详情评论底栏悬浮玻璃**：开启安卓原生液态玻璃后，评论 / 三连底栏对齐首页悬浮底栏材质，评论输入占位同步走液态玻璃渲染。
+- **评论区 chrome 收敛**：视频详情评论相关顶栏 / 筛选条视觉更紧凑。
+
+#### 设置与搜索稳定性
+- **搜索 Tab 与权限设置崩溃修复**：修复搜索页 Tab 相关异常，以及权限设置页崩溃。
+- **平板设置详情渲染修复**：修复平板设置详情内容渲染异常。
+
+#### 播放器交互与横屏抽屉
+- **播放队列返回关闭**：系统返回可关闭播放队列 / 稍后再看队列面板。
+- **横屏侧栏预留空间**：横屏端抽屉打开时为控制层预留宽度，避免控件与抽屉重叠。
+- **全屏分集入口修复**：无分P且只有推荐视频的稿件不再显示无效“分集”入口。
+- **收藏夹队列入口**：从收藏夹播放时，全屏“分集”入口可打开收藏夹播放队列。
+- **收藏夹分页优化**：收藏夹内容列表每页请求数量从默认 20 提升到 40，减少长列表翻页次数。
+
+#### 播放器后台内存与恢复
+- **短后台轻量模式**：切后台后约 15 秒内不立刻关闭视频轨、不清 surface、不清弹幕；超时后再进入重度省电路径。
+- **回前台少顿一下**：短后台返回时跳过视频轨重建与不必要的 surface rebind；长后台仍强制恢复，避免黑屏。
+- **后台内存编排**：`onTrimMemory` / `onLowMemory` 按压力等级统一决定裁图片、提前拆视频链路、清弹幕，以及闲置会话 `stop()`（保留 media item，回前台再 prepare）。
+- **暂停态也释放**：即使后台播放开关开着，进后台前已暂停的会话不再按“保留后台音频”处理，超时或临界压力时同样清 surface 并 `stop()`。
+
+#### 个人空间投稿
+- **我的页投稿补齐**：聚合接口只返回投稿数量、不带条目时，自动走 `arc/search` 补齐自己的视频列表，避免“有投稿数却显示暂无投稿”。
+- **充电专属 Tab 首屏补齐**：空间页默认落在充电专属子 Tab 时，也会触发投稿列表 hydrate，减少自己空间首屏空白。
+
+---
+
+## v9.9.1 (2026-07-07)
+
+### 版本信息
+- 版本号从 `9.9.0` 升级到 `9.9.1`，`versionCode` 从 `249` 升级到 `250`。
+
+### 更新内容
+
+#### 全屏与过渡修复
+- **回退横竖屏 morph**：全屏/播放器呈现恢复至 9.8.9 行为，移除 9.9.0 引入的全屏 morph 与 Compose surface 路径。
+- **返回封面占位**：预测式/按钮返回时首页卡片封面不再误显示灰色占位。
+- **首页背景过渡**：取消 OPENING 阶段横向位移，保留轻微缩放；手势取消复原期间冻结 scale。
+
+#### 设置
+- **搜索页输入修复**：设置搜索页改用独立输入控件（MD3 `OutlinedTextField` / iOS `BasicTextField` / Miuix `InputField`），固定于 scaffold 顶栏，避免滚动容器吞掉输入与文字不显示；首页搜索入口改为纯展示跳转。
+- **iOS 描边圆角修复**：带 border 的分组卡片与说明卡片改用标准圆弧，避免连续曲率圆角出现切角。
+- **移除重复大标题**：设置各子页与首页仅保留 TopAppBar 标题，去掉内容区 `SettingsLargeTitleHeader`。
+
+---
+
+## v9.9.0 (2026-07-07)
+
+### 版本信息
+- 版本号从 `9.8.9` 升级到 `9.9.0`，`versionCode` 从 `248` 升级到 `249`。
+
+### 更新内容
+
+#### 预测性返回与视频卡片背景
+- **落位首帧清晰**：pop 前归零 HELD/OPENING 背景模糊，消除返回落位封面残留高斯模糊。
+- **OPENING 手势消退**：进入未完成时预测返回可随手势线性消退背景虚化，取消手势平滑回满。
+- **关闭共享元素对齐**：VideoDetail → 卡片来源页手势预览与按钮返回复用方向化横滑 spec。
+
+#### 全屏与播放器呈现
+- **全屏 morph 策略**：抽取 `VideoFullscreenTransitionPolicy` 与 morph host，统一横屏/竖屏全屏切换相位。
+- **Compose surface 呈现**：播放器 section 改用 TrackedSurface 与 presentation policy，接入 `media3-ui-compose`。
+
+#### 设置与 UI
+- **Miuix 设置子页简化**：统一 `SettingsPageScaffold` 与视觉规范，收敛各子页 Large Title 与分组布局。
+- **模糊强度视觉策略**：新增 `BlurIntensityVisualPolicy`，按预算档位映射 haze 材质与背景 alpha。
+
+#### 其他
+- **内置投屏默认可用**：DLNA 与 Google Cast 开箱启用。
+- **首页/直播/投屏**：滚动协调、前台恢复与 SSDP 发现等小修复。
+
+---
+
+## v9.8.9 (2026-07-07)
+
+### 版本信息
+- 版本号从 `9.8.8` 升级到 `9.8.9`，`versionCode` 从 `247` 升级到 `248`。
+
+### 更新内容
+
+#### 设置导航架构（Nav3 统一）
+- **取消手机本地 drill-down**：设置首页、分类、搜索全部纳入 Nav3 单栈；新增 `SettingsCategory`、`SettingsSearch` 路由，分类点击与搜索提交改为标准 push/pop。
+- **层级 sibling 过渡**：`SettingsNavHierarchyPolicy` 统一管理 settings 子树深度与父子关系，子树内相邻 push/pop 均走同一套 iOS push 动效，不再与底栏 sibling 混用。
+- **删除废弃实现**：移除 `SettingsRootDrillDownNavigator`、`SettingsRootCategoryTransitionPolicy` 及平板 `TabletSettingsLayout` 的 `activeDetail` 本地导航。
+
+#### iOS Settings 风格 push 动效
+- **专用过渡类型**：新增 `SETTINGS_IOS_PUSH_FORWARD` / `SETTINGS_IOS_PUSH_POP`，新页全宽右推入、旧页 parallax（≈0.33）左移，更接近 iOS UINavigationController。
+- **预测返回同源**：`BiliPaiIosPushPredictiveBackAnimation` 无 scale/圆角，手势中纯横滑 + 底层 parallax；提交 pop 与预测手势视觉一致，消除此前 SCALE 预览 vs BOTTOM_BAR 提交的分裂。
+- **退出设置到主页**：Settings → MainHost 仍走全局 `CLASSIC_CARD`，不纳入 iOS push 子树。
+
+#### 设置 UI 重设计
+- **首页**：Large Title「设置」+ 可点击搜索入口 + 四分类 icon bubble 卡片 + 关于区分组下沉。
+- **分类页 / 搜索页**：独立 Nav 页面（`SettingsCategoryScreen`、`SettingsSearchScreen`），搜索结果直达子页 push。
+- **共享 scaffold**：新增 `SettingsVisualSpec`、`SettingsPageScaffold`；首页、搜索、技巧、权限等页已统一 Large Title → Inline Title 与分组间距规范。
+
+#### 平板分栏
+- **`SettingsTabletShell`**：Nav 栈驱动左栏分类高亮 + 右栏当前 entry 内容；`AppNavigation` 中 settings 子树全部路由（含插件、WebDAV、分享等）经 `SettingsTabletEntry` 包裹，与手机共用 iOS push 预测返回体验。
+
+#### 测试
+- 新增/迁移 `SettingsNavHierarchyPolicyTest`、`SettingsIosPushTransitionPolicyTest` 等 policy 测试；更新 Nav entry provider 与 content transform 结构测试。
+
+---
+
+## v9.8.8 (2026-07-07)
+
+### 版本信息
+- 版本号从 `9.8.7` 升级到 `9.8.8`，`versionCode` 从 `246` 升级到 `247`。
+
+### 更新内容
+
+#### 液态玻璃滑动性能
+- **切断底栏无效重组**：删除贯穿底栏四层却从未消费的 `scrollOffset` 死参数，移除 `AppNavigation` 对滚动偏移的 composition 读取，滑动时底栏子树不再每帧重组。
+- **消除 RenderEffect 每帧分配**：`liquidGlassBackground` 缓存 `RenderEffect`，shader uniform 仍每帧更新，像素输出不变但 GC 压力显著降低。
+- **顶部 chrome 折射延迟读取**：液态玻璃 Tab / slab 的滚动耦合折射改为 draw 阶段读取，保持实时联动、避免逐帧重组，且不引入滑动停止时的折射突跳闪烁。
+- **Header lambda 稳定化**：`headerOffsetProvider` 改为 `remember`，恢复 `iOSHomeHeader` 可跳过性。
+
+#### 视频卡片过渡
+- **移除原生过渡层**：删除 `NativeVideoCardTransition` 控制器/覆盖视图/策略及其测试，统一走 Compose 过渡与 backdrop 模糊链路。
+- **motionTier 驱动过渡背景**：`VideoCardTransitionBackgroundPolicy` 接入 `motionTierProvider`，过渡背景按运动档位降级，减少低性能设备上的模糊开销。
+- **返回落位与共享边界修复**：修复封面共享边界与播放器容器冲突导致的返回落位动画缺失；完整进入后返回、横幅卡片返回、分区/分类来源转场等多条路径对齐。
+- **背景模糊稳定性**：稳定返回背景模糊状态，优化打断表现与模糊层级；调整预测返回背景时长与壳层背景透明度。
+
+#### 视频详情 Tab 与指示器
+- **顶部指示器实时同步**：Tab 指示器与 Pager 滑动、拖拽状态对齐，修复 settle 后重复播放 slide 的问题。
+- **分段控件物理回弹**：Tab 指示器增加物理 settle 回弹，拖拽切换与液态玻璃复用体验更一致。
+
+#### 首页与分区
+- **分区入口兜底**：修复分区入口与一级分区兜底逻辑。
+- **分类卡片转场来源**：修正首页分类与分区视频卡片的转场来源 metadata。
+
+---
+
+## v9.8.6 (2026-06-30)
+
+### 版本信息
+- 版本号从 `9.8.5` 升级到 `9.8.6`，`versionCode` 从 `244` 升级到 `245`。
+
+### 更新内容
+
+#### 预测返回手势视觉连续性与稳定性修复
+- **退出平移与手势位置连续**：`BiliPaiScalePredictiveBackAnimation` 提交退出时，`exitAnimatable` 从手势进度 snap 开始再 animateTo，消除手势中只有缩放、松手后平移从 0 突破的断裂感。
+- **目标页遮罩平滑渐入**：Scale 风格预测返回的黑色覆盖层改用 `gestureProgress` 线性驱动（0→0.5），替代 `inPredictiveBackAnimation` 阶跃跳变。
+- **AOSP 退出页面淡化**：`BiliPaiAospCrossActivityPredictiveBackAnimation` 退出页 alpha 移除 `linearProgress≥0.2` 硬截断，改为 `1 - progress` 全程线性渐变。
+- **中断进入无闪烁**：快速返回手势在页面入场未完成时触发，不再因 decorator 早期返回而导致 1 帧视觉跳跃。
+
+#### 预测返回状态一致性
+- **`exitingPageKey` 改为 reactive state**：消除快速连续返回手势时的状态覆盖。
+- **AOSP 异步 snapTo 竞争修复**：移除 `onPagePop` 中的 `animationScope.launch`，消除 `exitAnimatable` 悬空在 1f 的时间窗口。
+
+#### 共享元素与预测返回方向对齐
+- **共享元素模式滑动跟随手势**：`BiliPaiNavDisplayHost` 在 `NO_OP_SHARED_ELEMENT` 时强制 `FOLLOW_GESTURE`，避免共享元素封面几何插值方向与背景页面滑动方向冲突。
+- **`onPredictivePopTransitionSpec` 加入专属缓动曲线**：slideOut/In 使用 `tween(220ms)` + `EmphasizedExit/EmphasizedEnter`，与导航过渡曲线族一致。
+
+#### 页面过渡对称性
+- **禁用共享元素时返回方向加 fadeOut**：`disabledVideoDirectionReturnTransform` 在 `slideOut` 上叠加 `fadeOut`，与前向 `slideIn+fadeIn` 对称。
+
+#### 代码重构
+- **提取重复函数**：`resolveCardDisabledReturnTransition` 统一为单点定义，消除两处字节完全一致的副本。
+
+---
+
+## v9.8.0 (2026-06-29)
+
+### 版本信息
+- 版本号从 `9.7.0` 升级到 `9.8.0`，`versionCode` 从 `242` 升级到 `243`。
+
+### 更新内容
+
+#### 搜索聚焦索引修复
+- **修复设置页搜索跳转错位**：`PlaybackSettingsScreen` 中「网络与画质」「省流量」「互动与评论」「全屏与手势」四个 section 的聚焦索引（10/12/14/16）与实际 LazyColumn item 排列顺序脱节，导致点击「播放与画质」跳转到「互动与评论」、点击「互动与评论」跳转到「网络与画质」。已按实际渲染顺序修正映射，并更新测试覆盖。
+
+#### AndroidX Navigation Event 适配
+- **新增 `navigationevent-compose` 适配模块**：在 `androidx.navigationevent.compose` 包下实现 `NavigationEventHandler`（事件处理器，424 行核心实现）、`NavigationEventState`（事件状态管理）、`RememberNavigationEventDispatcherOwner`（调度器所有者组合记忆）、`LocalNavigationEventDispatcherOwner`（局部提供）、`RememberNavigationEventState`（组合状态记忆），为导航事件驱动提供基础能力。
+
+#### 预测返回手势完善
+- **AOSP 跨 Activity 预测返回**：`BiliPaiAospCrossActivityPredictiveBackAnimation` 策略增强。
+- **预测返回策略层**：`BiliPaiPredictiveBackAnimationPolicy` 逻辑完善。
+- **缩放预测返回**：`BiliPaiScalePredictiveBackAnimation` 实现补充。
+- **共享元素预测返回**：`BiliPaiSharedElementPredictiveBackAnimation` 动画改进。
+- **预测返回退出方向跟随卡片位置**：`BiliPaiNavDisplayHost` 根据 `sourceMetadata.cardSourceDirection` 自动推导退出方向——卡片在左侧时向右滑出、右侧时向左滑出、居中或无卡片上下文时跟随手势方向，返回动画朝向卡片实际所在位置。
+
+#### 导航架构调整
+- **`BiliPaiNavDisplayHost`**：显示宿主逻辑重构。
+- **`MainHostTabBackHandler`**：Tab 返回处理增强。
+- **构建排除规则**：`build.gradle.kts` 中新增 `androidx.navigationevent` 依赖排除，避免编译冲突。
+
+#### 首页刷新策略
+- **`HomePullRefreshUiPolicy`**：刷新逻辑微调，同步更新单元测试。
+
+#### 视频详情页
+- **`VideoDetailReturnCoverPolicy`**：新增返回封面策略，含单元测试覆盖。
+
+#### 首页横幅共享元素动画
+- **首页顶部横幅支持共享元素过渡**：`HomeHeroCarousel` 卡片点击时记录位置信息到 `CardPositionManager`，封面图注册 `sharedBounds` 共享边界。从视频详情页通过预测返回手势返回时，退出动画朝向横幅卡片实际所在位置，享元元素过渡动画与普通视频卡片体验一致。同时 `cardSourceDirection` 自动推导，预测返回退出方向随横幅卡片位置变化。
+
+#### UI 调整
+- **个人页**：按钮与标签留白修复。（`093cd317`）
+- **首页顶部标签**：左侧间距调整。（`7eafaf7f`）
+
+#### 致谢
+- 在致谢页面中加入 PR 贡献者列表。（`f8f71c5d`）
+
+---
+
+## v9.7.0 (2026-06-28)
+
+### 版本信息
+- 版本号从 `9.6.0` 升级到 `9.7.0`，`versionCode` 从 `241` 升级到 `242`。
+
+### 更新内容
+
+#### Miuix 0.9.2 迁移（Wave 1–9）
+- **语义颜色统一**：通过 `AppSurfaceTokens` 统一 Miuix 语义颜色，替代直接 `MiuixTheme.colorScheme` 读取。
+- **设置子页转场**：设置子页统一 Chrome，增加 Miuix squircle 支持。
+- **自适应刷新**：新增 `AdaptivePullToRefresh`，Miuix 首页 Feed 路由到原生刷新组件。
+- **搜索输入框**：Miuix 搜索输入路由到官方 `InputField`。
+- **底部栏标准化**：Miuix 停靠底部栏 Tab 使用官方 `NavigationBarItem`。
+- **设置列表路由**：设置列表项路由统一，加强 Miuix 主题同步。
+- **分段控件迁移**：Miuix 分段设置路由到 `TabRow`，新增 `miuix-icons` artifact。
+- **弹窗与脚手架**：`AdaptiveScaffold`、Miuix `PopupHost` 策略、`iOSLargeTitleBar` 防护。
+
+#### 液态玻璃重构与全局复用
+- **底部栏预设合并**：合并底部栏液态玻璃预设，升级 `backdrop` 库到 2.0.0。
+- **全局复用对齐**：Miuix 渲染器统一使用 MD3 滑动胶囊指示器，移除原生 Miuix TabRow 旧渲染路径。
+- **顶部标签指示器**：修复顶部标签液态玻璃指示器颜色、空闲渲染、对齐与背板采样；消除重复指示器 Chrome 与标签运动漂移。
+- **设置内联指示器**：对齐设置内联液态指示器主题色与底部栏玻璃渲染。
+- **壳导出层修复**：修复顶部标签玻璃导出捕获层结构，路由顶部标签液态玻璃通过底部栏分段控制。
+- **冷启动修复**：修复 Miuix 主题冷启动误进设置搜索。
+- **刷新适配**：补齐液态玻璃回退与 Miuix 刷新适配。
+
+#### 预测返回手势
+- **预测返回完整支持**：完成预测返回手势移植与 Phase 5 处理器，设置中新增预测返回开关与样式选择器。
+
+#### 个人主页重构
+- **个人主页大改版**：重新设计个人主页，统一壁纸内容面板，围绕纯壁纸 + 不透明内容面板重建，应用着色内容面板与封面主导资料卡。
+
+#### 其他修复
+- **短视频修复**：修复竖屏滑动封面比例跳动，修复短视频首个 av 标识播放加载。
+- **设置分享栏**：修复设置分享标题栏布局与播放设置顶部栏颜色。
+
+### 文件变更
+- 新增 `app/src/main/java/.../theme/AppSurfaceTokens.kt` 等 Miuix 色彩桥梁
+- 新增 `app/src/main/java/.../core/ui/AdaptivePullToRefreshBox.kt`
+- 移除 `app/src/main/java/.../components/TopBar.kt` 中 `MiuixCategoryTabRow`、`resolveMiuixVisibleTabIndices` 等废弃函数
+- 更新 tests 适配移除的 Miuix 函数与渲染器路由变更
+
+## v9.6.0 (2026-06-28)
+
+### 版本信息
+- 版本号从 `9.5.0` 升级到 `9.6.0`，`versionCode` 从 `240` 升级到 `241`。
+
+### 更新内容
+
+#### 竖屏短视频与 Story
+- **竖屏直连 Story**：新增「竖屏视频直接进入 Story」与「启动时进入竖屏 Feed」设置；首页点竖屏视频可带种子视频进入 `PortraitVideoPager`。
+- **全局竖屏路由**：统一 `PortraitStoryNavigationPolicy`，列表/历史/收藏/分区等入口传递 `isVertical` 元数据；收藏项无 dimension 时从封面推断竖屏并异步补拉 view 信息。
+- **启动闪屏修复**：开启启动进短视频时，导航栈初始化即带 Story，避免 compose 后再跳转的闪屏。
+- **竖屏加载加速**：`getPortraitPlaybackDetails` 在 feed 已有 cid 时并行拉 view + playurl；复用缓存 OkHttp 媒体源、CDN 选线与 `getBestVideo`；WiFi 下预取下一/下两条 playurl。
+- **滑动中提前加载**：偏移 ≥25% 预热目标页 playurl；偏移 ≥58% 在 pager settle 前提前绑流；settle 时若媒体已绑定则跳过重复加载。
+
+#### 评论与楼中楼
+- **楼中楼分页修复**：对齐 `x/v2/reply/reply` REST pn 分页，保留声明总数、loaded/total 展示；gRPC offset 不可用时回退 REST；大线程（如 20/157）在列表尚不可滚动时自动预取子回复。
+- **竖屏评论交互**：评论/楼中楼打开时禁用 `VerticalPager` 滚动；楼中楼嵌入竖屏保持 60% drawer 高度；拖拽关闭评论时视频缩放线性化，消除关闭回弹与二次缩小。
+- **动态评论**：修复动态评论排序与楼中楼分页。
+
+#### 播放器与弹幕
+- **长按 2x 进度条**：修复长按倍速后进度条冻结（seek 会话与 long-press 冲突）。
+- **弹幕同步**：修复 seek 取消/提交与倍速变更后的弹幕时间轴漂移；2x 播放改用 SoftResync 减少卡顿。
+- **横屏发弹幕**：全屏改为底部内联 Composer，支持回车发送与样式快捷条；窄屏紧凑入口，未登录前置拦截。
+- **弹幕云同步开关**：播放/弹幕设置新增「同步弹幕设置到账号」开关。
+- **高刷分辨率**：修复视频页高刷新设备切换分辨率异常。
+
+#### 界面与体验
+- **设置二级页转场**：手机/平板分类详情加入 `AnimatedContent` 淡入淡出；分段错峰入场（`EntranceGroup`）；移除误加的退出模糊。
+- **全局壁纸**：优化壁纸显示与性能；修复动态侧栏全局壁纸遮罩。
+- **首页刷新**：下拉刷新阈值从 56dp 降至 44dp，MD3 样式加入渐进阻尼。
+- **共享元素**：修复个人页「点击播放」关闭自动播放时共享元素返回不稳定。
+- **小窗全屏**：修复小米小窗展开视频未正确请求全屏。
+
+### 验证
+- 竖屏加载/滑动策略、楼中楼分页、评论 sheet 策略相关单元测试通过。
+- Debug Kotlin 编译通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机全量视觉回归。
+
+## v9.4.2 (2026-06-24)
+
+### 版本信息
+- 版本号升级到 `9.4.2`，`versionCode` 升级到 `238`。
+
+### 更新内容
+- **设置页重排**：将设置首页改为”分类 / 关于 / 设置”分区列表；手机端分类入口改为进入二级页，平板端保留 master/detail 分栏，并同步左侧列表与右侧详情语义。
+- **设置二级页优化**：整理外观、播放、动效、导航、存储、隐私、诊断和关于等分区标题与顺序，减少单屏信息密度，让常用项更靠前，高级/诊断项更靠后。
+- **关于页重写**：新增项目概览、贡献者头像墙、源码验证、更新与辅助工具分区；修复关于页加载自适应图标导致的崩溃；贡献者超过一行自动换行，头像可点击进入 GitHub 主页。
+- **作者与贡献者修正**：补充 `jay3-yy`，修正 Leko 的 GitHub 主页为 `lekoOwO`，并将关于页标语改为三版诗句随机展示。
+- **共享元素收尾优化**：为标题、UP 主、头像、播放量、弹幕等文字类共享元素启用更短的 metadata bounds 时间线，解决返回/进入动画收尾阶段文字略滞后的观感；封面共享元素仍保留原完整时间线。
+- **设置页稳定性**：补充设置页结构测试，锁定根分类顺序、关于页作者区、GitHub 跳转、换行展示、资源图标和 AppShapes/AppSurfaceTokens 使用约束。
+
+### 验证
+- Debug Kotlin 编译通过。
+- 设置页、共享元素、Story 视频卡片、分区页结构相关单元测试通过。
+- `git diff --check` 通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机视觉回归。
+
+## v9.4.1 (2026-06-23)
+
+### 版本信息
+- 版本号升级到 `9.4.1`，`versionCode` 升级到 `237`。
+
+### 更新内容
+- **共享元素过渡速度调优**：为全部视频卡片（标准视频、沉浸式、毛玻璃、故事模式及关联推荐）接入统一的 `VideoSharedTransitionPolicy`，支持配置过渡持续时长、缓动曲线及遮罩层完整度阈值；首页标签页、分区、空间页、稍后再看和视频详情页均已接入。新增设置项入口，用户可在动画设置页自定义过渡速度。
+- **首页顶部视觉间距优化**：调整 iOSHomeHeader 中对齐间距，使搜索框与顶部状态区域的视觉间距一致。重构 TopTabStylePolicy 参数传递方式，减少组合阶段的冗余测量。
+- **底栏页面常驻窗口**：优化 `AppTopLevelNavigationPolicy` 常驻窗口策略，确保底栏各页面在切换时保留其窗口引用与加载状态，修复远距离跳转后保存状态重复 key 的问题。
+- **底栏跨页跳转动画**：优化 `MainBottomPagerState` 中的跨页跳转动画策略，落页后才触发动画目标帧渲染，避免 Pager 预跳引起的闪退。
+- **搜索和评论底栏布局**：修复 SearchLandingUi 搜索结果页底栏在部分布局模式下的偏移问题；修复视频详情页评论底栏（BottomInputBar）的 safeArea 适配。
+
+### 验证
+- Debug Kotlin 编译通过。
+- 共享元素过渡策略、底栏常驻窗口策略相关单元测试通过。
+- `git diff --check` 通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机视觉回归。
+
+## v9.3.4 (2026-06-18)
+
+### 版本信息
+- 版本号升级到 `9.3.4`，`versionCode` 升级到 `233`。
+
+### 更新内容
+- **首页底栏轮播搜索**：修复首页底栏与轮播联动的搜索入口布局，理顺 BottomBar、HomeHeroCarousel 和 SettingsManager 之间的交互策略，保证底栏搜索入口在各类显示模式下的正确渲染。
+- **共享元素返回动画**：修复从视频详情页返回首页时封面归位后的多余回弹效果。根因是 VideoPlayerSection 封面遮罩层的 boundsTransform 缓动曲线与首页卡片侧不一致，统一为 `VIDEO_CARD_IOS_LIKE_EASE_OUT`。
+- **动态评论图片展示**：修复动态评论区图片不可见的问题，原本仅 RichCommentText 渲染文字，遗漏了 CommentPictures 组件调用，现已补齐并支持点击图片在浏览器中查看原图。
+- **动态页投稿栏折叠**：动态页顶部投稿 tab 栏新增滚动折叠行为，下滑自动收起（shrinkVertically + fadeOut，180ms），回顶复现，列表 TopPadding 同步调整。SIDEBAR / HORIZONTAL 两种布局模式均生效。
+- **动态页左右切换**：动态时间线按全部、投稿、番剧和专栏分别缓存列表、加载、错误与分页状态；请求令牌和加载锁按类型隔离，避免快速切页后旧请求覆盖当前内容。Pager 仅在落页后切换数据源，各标签保留独立滚动位置，并移除重页面预加载、组合阶段状态回写和切页强制回顶，改善左右滑动迟滞与内容串页问题。
+- **首页标签页折叠设置**：设置项收敛为“下滑折叠 / 不折叠”两档，默认下滑折叠；切换时仅调整标签页折叠行为，保留搜索栏当前设置。
+
+### 验证
+- Debug Kotlin 编译通过。
+- 动态分页状态、请求隔离、Pager 结构及首页折叠设置相关单元测试通过。
+- `git diff --check` 通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机视觉回归。
+
+## v9.3.6 (2026-06-20)
+
+### 版本信息
+- 版本号升级到 `9.3.6`，`versionCode` 升级到 `235`。
+
+### 更新内容
+- **播放器竖屏体验**：修复竖屏播放器从后台恢复后控件状态异常，以及横竖屏切换时控件显示逻辑；修复进度条拖动后卡住不更新的问题。
+- **视频音量修复**：优化 PlayerVolumeController 音量控制策略，移除多余的增益叠加逻辑，解决视频播放声音偏小的问题。
+- **全屏锁定按钮**：修复全屏模式下锁定按钮始终显示的问题，在全屏/小窗模式下按场景正确隐藏。
+- **动态楼层图片**：修复 DynamicCommentSheet 中楼层图片缺失问题，补充图片加载与预览入口。
+- **横屏倍速与底栏视觉效果**：修复横屏模式倍速面板交互与显示，调整底栏视觉效果相关策略。
+
+### 验证
+- Debug Kotlin 编译通过。
+- 音量控制、进度条、全屏锁定、倍速面板、底栏策略等单元测试通过。
+- `git diff --check` 通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机视觉回归。
+
+## v9.3.5 (2026-06-19)
+
+### 版本信息
+- 版本号升级到 `9.3.5`，`versionCode` 升级到 `234`。
+
+### 更新内容
+- **首页封面高质量加载**：修正 FormatUtils 图片 URL 在 `@` 参数为空时等价于整条移除的处理逻辑，补充 ImageDecodeTarget 保留策略与 VideoCard 大图回退路径，修复高清封面图裂后不再降级重试的问题。添加 `VideoCardImageDecodeStrategyStructureTest` 覆盖降级链路构造验证。
+- **首页轮播**：修复轮播顶部留白过大（`insets` 计算修正），修复刷新时因指针越界引发的闪退。
+- **列表顶部栏折叠**：新增滚动折叠开关选项，默认开启；修复折叠动画中标签错位及收起后残留白边。
+- **首页标签页折叠**：调整折叠逻辑，配合新增的折叠开关，保证与搜索栏行为互不干扰。
+- **动态分页切换**：修复快速切换标签页时状态串页和数据覆盖，隔离各类型缓存与加载锁。
+- **动态评论图片预览**：优化图片预览交互，补充点击预览入口。
+- **播放器**：修复横屏模式倍速面板布局与交互；修复滑动音量调节手势在特定条件下误触静音。
+- **共享元素返回动画**：重新修复首页单列视频返回时封面多余回弹，确保 VideoPlayerSection 与卡片侧缓动曲线严格一致。
+
+### 验证
+- Debug Kotlin 编译通过。
+- 封面加载策略、轮播越界、折叠动画相关单元测试通过。
+- `git diff --check` 通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机视觉回归。
+
+## v9.3.3 (2026-06-17)
+
+### 版本信息
+- 版本号升级到 `9.3.3`，`versionCode` 升级到 `232`。
+- 完整汇总 `v9.3.2` 后的约 10 个补丁，覆盖首页轮播、播放器和底栏搜索。
+
+### 更新内容
+- **首页轮播**：修复自动播放切换视频时偶发黑屏，增强 3D 视差效果，优化遮挡去重与跟手倾斜，改善滑动层级过渡体验。
+- **播放器**：修复全屏模式音量手势区域偏移，优化小窗纯净模式显示。
+- **首页封面与设置**：修复封面历史进度条显示异常，还原设置入口点击响应。
+- **底栏搜索**：修复首页 banner 与底栏搜索入口的回归问题，保留底栏搜索布局设置不被意外覆盖。
+
+### 验证
+- Debug Kotlin 编译通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机视觉回归。
+
+## v9.3.2 (2026-06-16)
+
+### 版本信息
+- 版本号升级到 `9.3.2`，`versionCode` 升级到 `231`。
+- 完整汇总 `v9.3.1` 后的 3 个补丁，覆盖首页刷新提示、首页侧栏安全布局和个人主页背景装扮入口。
+
+### 更新内容
+- **首页刷新提示**：仅在液态玻璃与模糊同时启用时使用玻璃样式；任一效果关闭时改用普通 Material 浮层，避免关闭玻璃后仍残留透明边框和玻璃观感。
+- **首页个人侧栏**：打开头像侧栏时立即隐藏底部栏，并为侧栏底部预留浮动/停靠底栏遮挡空间；侧栏改用 `safeDrawing` 纵向 Insets，提升折叠屏、手势导航和窄屏下的安全布局表现。
+- **个人主页背景装扮**：把官方壁纸、本地相册和恢复默认收纳到背景装扮菜单；移动端顶栏和个人信息区都可打开同一底部菜单，减少页面中段卡片占位。
+- **个人资料展示**：昵称区域新增个人资料展开/收起抽屉，签名、IP 属地和性别默认收纳，展开后集中展示，减少个人主页头部信息拥挤。
+
+### 验证
+- 首页刷新提示策略和个人侧栏布局策略单元测试通过。
+- Debug Kotlin 编译及 `git diff --check` 通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机视觉回归。
+
+## v9.3.1 (2026-06-15)
+
+### 版本信息
+- 版本号升级到 `9.3.1`，`versionCode` 升级到 `230`。
+
+### 更新内容
+- **首页卡片**：旧版封面调整为 `16:9`；官方样式保持 `4:3`，缩小横向留白与卡片间距，增强贴边大卡片观感。
+- **竖屏播放**：竖屏会话使用独立弹幕管理器和评论状态，切换视频时废弃旧请求与内容，修复快速滑动后的弹幕、评论串台。
+- **播放器选集**：修复章节与分集面板的嵌套滚动冲突、切集后进度显示异常，并恢复合集选中态的主题色。
+- **毛玻璃底栏**：修复底栏模糊不可见、折射串色、主题表面与指示器背景采样问题，恢复整体磨砂效果并解耦指示器动态效果。
+
+### 验证
+- 首页卡片、竖屏播放、评论与弹幕相关定向单元测试通过。
+- Debug Kotlin 编译及 `git diff --check` 通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机视觉回归。
+
+## v9.3.0 (2026-06-15)
+
+### 版本信息
+- 版本号升级到 `9.3.0`，`versionCode` 升级到 `229`。
+
+### 更新内容
+- **首页卡片样式全局化**：官方样式（4:3 封面、贴边宽图、紧凑信息区、封面外时长与发布日期合并为一行）从此前可选设置变为全局默认，设置中可自由切换；首页、历史、收藏、分区、搜索、相关推荐等页面统一遵循该设置。
+- **加载骨架屏适配**：首页、历史/收藏、相关推荐等页面的加载占位卡片自动匹配当前卡片样式的封面比例与间距。
+- **历史记录筛选**：新增历史记录筛选功能并修复章节滚动冲突。
+- **直播稳定性**：限制直播结束后的自动恢复条件，修复直播断流恢复与弹幕漏收问题。
+- **动态刷新修复**：修复动态刷新与分页拉取不全的问题。
+- **评论体验优化**：修复评论输入光标与返回动画卡顿。
+- **编译清理**：清理非实验 API 编译警告。
+
+### 验证
+- Debug Kotlin 编译及 `git diff --check` 通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机视觉回归。
+
+## v9.2.3 (2026-06-14)
+
+### 版本信息
+- 版本号升级到 `9.2.3`，`versionCode` 升级到 `228`。
+
+### 更新内容
+- **播放器控件**：进入视频时默认隐藏控制按钮和可拖动进度条，避免首帧出现后快速消失；选择“视频最底部”时，控制栏与进度条进一步贴近播放器底边。
+- **首页卡片**：官方样式调整为 `4:3` 封面、贴边宽图和更紧凑的信息区；封面外时长与发布日期合并为一行，提升双列信息流单屏可见数量。
+- **高级配色**：开启高级配色时自动读取当前浅色与深色主题生成结果，便于从“极光青”等已有预设继续微调。
+
+### 验证
+- 首页卡片、播放器布局、主题角色策略单元测试及 Debug Kotlin 编译通过。
+
+### 未验证项
+- 未执行 APK 打包、安装和真机视觉回归。
+
+## v9.2.2 (2026-06-14)
+
+### 版本信息
+- 版本号升级到 `9.2.2`，`versionCode` 升级到 `227`。
+- 完整汇总 `v9.2.1` 发布后的 5 个功能、修复与回归测试提交。
+
+### 更新内容
+- **首页与主题升级**：新增首页卡片样式和视频时长展示选项，优化首页滚动、返回顶部与卡片渲染性能；新增明暗模式高级配色，可分别覆盖背景、文字和控件颜色。
+- **播放器体验与稳定性**：新增投屏/关注按钮显示开关和控制栏进度条位置选项，统一播放器音量控制，保留弹幕与评论输入草稿并优化手势反馈；修复全屏手势或插件跳转后进度条停留、回跳及弹幕概率消失，并补齐首页、主题和播放器界面回归测试。
+
+### 验证
+- 播放进度会话与弹幕同步策略单元测试、Debug Kotlin 编译及 `git diff --check` 通过。
+
+### 未验证项
+- 未执行 APK 打包、安装或真机连续 seek 回归。
+
+## v9.2.1 (2026-06-13)
+
+### 版本信息
+- 版本号从 `9.1.3` 升级到 `9.2.1`，`versionCode` 升级到 `226`。
+- 本次完整汇总 `v9.1.3` 发布后的 11 个提交，重点完善视频播放、小窗、收藏夹、追更合集、首页反馈和“我的”页面加载体验。
+
+### 更新内容
+- **新增“我的点赞”**：首页头像下拉栏新增“我的点赞”入口，复用通用视频列表展示当前账号点过赞的视频。
+- **不感兴趣原因反馈**：首页推荐和视频预览支持选择不感兴趣原因，并向服务端提交对应反馈；本地反馈记录同步兼容新的原因字段。
+- **播放器交互修复**：修复暂停后双击播放器无法立即恢复播放的问题；重新调整滑动快进快退幅度，使短视频和长视频的手势定位更易控制。
+- **应用内小窗支持缩放**：小窗右下角新增拖拽缩放控制，保持视频比例，并限制在屏幕可用区域和合理尺寸范围内。
+- **小窗切换系统画中画**：应用内小窗新增画中画入口；使用同时支持小窗与画中画的模式时，从小窗回到桌面也可继续进入系统画中画，而不是退化为后台音频播放。
+- **小窗返回首页自动续播**：普通返回或点击回首页时先进入应用内小窗，再弹出视频详情页，避免生命周期提前清除播放意图；播放中的视频会在小窗继续播放。
+- **收藏夹空白修复**：收藏夹内容请求失败不再被误判为真实空列表；多个收藏夹的内容请求改为串行执行并提供一次短退避重试，保留已有内容，拒绝不完整响应和过期排序结果覆盖。
+- **收藏夹共享元素修复**：收藏夹视频点击时显式携带来源路由，封面卡片与视频详情页可稳定配对共享元素动画。
+- **追更合集列表优化**：追更页使用接口返回的最新视频封面展示 16:9 横向预览行，统一图片协议与列表尺寸，空封面回退文件夹占位，避免逐合集追加网络请求。
+- **追更合集转场修复**：追更文件夹行与合集详情顶栏使用稳定共享元素身份，进入、普通返回和预测式返回均让位给共享元素动画。
+- **追更视频转场修复**：拆分视频卡片正向进入与返回落位的就绪条件，修复合集详情首行或靠近顶栏的视频卡片点击后退化为普通页面动画的问题，同时保留返回到被遮挡卡片时的安全兜底。
+- **“我的”页面渐进加载**：账号主信息优先展示，收藏夹、投稿、追番和动态等空间数据分步并行加载；单项失败不再阻塞整页，并通过请求代次校验避免旧结果覆盖当前账号。
+- **版本与文档同步**：应用版本、README 中英文版本标识和更新日志同步到 `9.2.1 / versionCode 226`。
+
+### 验证
+- “我的点赞”、不感兴趣反馈、收藏夹状态与“我的”页面渐进加载针对性单元测试。
+- 小窗续播、缩放边界、画中画触发、导航离开策略、收藏夹与追更合集共享元素来源和转场策略针对性单元测试。
+- `:app:testDebugUnitTest` 共执行 4951 项，4947 项通过；4 项既有底栏视觉 token 迁移守卫失败，与本次改动文件无关。
+- `:app:compileDebugKotlin`
+- `git diff --check`
+
+### 未验证项
+- 未执行 APK 打包、安装或 Release 冒烟验证。
+- 小窗拖拽缩放、返回首页自动续播、应用内小窗切换系统画中画、收藏夹与追更合集共享元素、多收藏夹连续切换仍需真机交互回归。
+
+## v9.1.3 (2026-06-11)
+
+### 版本信息
+- 版本号从 `9.1.2` 升级到 `9.1.3`，`versionCode` 升级到 `224`。
+- 本次完整汇总 `v9.1.2` 发布后的 11 个提交，重点修复视频播放与评论交互、页面返回导航、关注列表同步、崩溃上报和首页滚动视觉问题。
+
+### 更新内容
+- **播放器进度稳定性修复**：修复回退播放进度后拖动状态概率停滞，以及媒体源恢复或切换后进度条冻结的问题；恢复流程会重新同步播放进度和时长，避免 UI 停在旧位置。
+- **消息评论回复定位与播放保护**：从消息中心进入评论回复时可直接定位目标主楼并保持楼层上下文；回复期间视频播放结束不再自动跳转下一条，暂停播放也不会导致目标楼层消失。
+- **视频评论入口增强**：手机视频详情操作区新增明确的“评论 + 数量”入口，可直接切换到评论标签；平板继续使用既有双栏评论布局，不重复展示入口。
+- **评论栏与液态玻璃解耦**：关闭“底栏液态玻璃”后，手机评论页底部评论栏仍正常显示；液态玻璃设置只影响视觉效果，不再控制评论功能是否存在。
+- **关注列表实时校准**：关注页改为缓存快速展示后立即以服务器第一页校准，再继续补齐分页；修复新关注不显示、已取关用户残留和空列表仍恢复旧快照的问题，网络失败时保留可用缓存。
+- **网络取消与崩溃上报修复**：取消网络请求不再被当作异常持续写入崩溃追踪；限制实时追踪记录数量与单条长度，避免取消风暴造成日志递归增长和内存溢出。
+- **共享元素动画与返回链路修复**：全局动画开关统一控制首页、动态、分区和个人空间的视频共享元素；补齐返回来源和封面恢复状态，关闭动画时不再残留过渡逻辑。
+- **自定义顶栏返回选中态修复**：首页分类使用自定义顺序时，视频详情返回后按分类身份而非固定下标恢复页面，避免跳到错误标签。
+- **动态角标折射修复**：限制液态玻璃底栏采样层中的动态未读角标尺寸，避免指示器滑过时红点或数字角标被异常放大。
+- **首页封面滚动闪烁修复**：紧凑双列网格滚动期间移除封面底部动态阴影，仅保留稳定的轻量视觉层，降低滑动时明暗闪烁。
+- **版本与文档同步**：应用版本、README 中英文版本标识和完整更新日志同步到 `9.1.3 / versionCode 224`。
+
+### 验证
+- 播放进度与媒体源恢复、消息评论定位、评论栏显示、首页 Pager 同步、关注列表状态、崩溃追踪、共享元素和底栏结构的针对性单元测试。
+- `./gradlew --no-daemon :app:compileDebugKotlin`
+- `git diff --check`
+
+### 未验证项
+- 未执行 APK 打包、安装或 Release 冒烟验证。
+- 消息评论深链定位、播放器结束保护、液态玻璃底栏和首页滚动闪烁仍需真机交互与视觉回归。
+
+## v9.1.2 (2026-06-06)
+
+### 版本信息
+- 版本号从 `9.1.1` 升级到 `9.1.2`，`versionCode` 升级到 `223`。
+- 本次完整汇总 `v9.1.1` 发布后至当前版本的 8 个提交，重点修复评论楼中楼、图片预览、首页导航与液态玻璃细节，并增强 Android 平板体验。
+
+### 更新内容
+- **楼中楼评论完整性修复**：二级评论总数改为合并主楼声明数量、详情接口数量和已加载数量，较小的详情计数不再覆盖外层显示的总数；分页遇到审核折叠或稀疏空页时会继续请求到声明总数对应的末页，修复外层显示约 200 条、进入后只有几条的问题，并同步修正动态详情的楼中楼分页。
+- **超大图片预览崩溃修复**：图片预览根据设备纹理上限和安全像素预算限制解码尺寸，避免超长图或超大图触发 `Canvas: trying to draw too large bitmap` 崩溃。
+- **动态角标参与底栏折射**：底栏液态玻璃指示器的隐藏采样层保留动态未读红点与数量；图标和文字继续按主题染色，角标改为独立采样并保持红色，避免左右滑动经过“动态”时被染成蓝色大圆斑或随导航项过度放大。
+- **历史页顶栏毛玻璃修复**：历史记录页顶栏改用专用 Header 模糊表面策略，修正模糊强度和顶部材质表现。
+- **热门页返回选中态修复**：视频详情覆盖首页期间暂停 Pager 对分类状态的反向写入；返回首页后以 ViewModel 保存的分类重新对齐，避免从“热门”进入视频再退出时顶栏误跳到“关注”。
+- **平板字幕可读性增强**：字幕字号按播放器有效宽度适配；手机保持原字号，中型平板主字幕使用 `20sp / 24sp`，大平板使用 `22sp / 26sp`，双语副字幕同步放大并保留视觉层级。
+- **平板横屏设置滚动修复**：设置页左侧分类栏改为独立滚动列表，右侧根设置、搜索结果和各子设置页获得明确的有限高度与独立滚动区域，修复 Android 平板横屏时无法下滑的问题。
+- **个人空间 IP 样式优化**：IP 属地改为随深浅色主题自动适配的低强调文字，移除突兀的胶囊底色与描边。
+
+### 验证
+- 楼中楼分页、字幕字号、底栏结构、首页 Pager 同步、历史页外观和平板设置布局的针对性单元测试。
+- `./gradlew --no-daemon :app:compileDebugKotlin`
+- `git diff --check`
+
+### 未验证项
+- 未执行 APK 打包、安装或 Release 冒烟验证。
+- 液态玻璃折射、历史页毛玻璃、平板字幕和横屏设置滚动仍需真机视觉与手势回归。
+
+## v9.1.1 (2026-06-06)
+
+### 版本信息
+- 版本号从 `9.1.0` 升级到 `9.1.1`，`versionCode` 升级到 `222`。
+
+### 更新内容
+- **搜索召回修复**：视频分类搜索第一页返回空结果时自动回退到综合搜索，不再因登录状态不同而直接显示无结果。
+- **个人空间配色统一**：IP 属地改为随深浅色主题自动适配的低强调文字，移除突兀的胶囊底色与描边。
+- **评论入口修复**：从 UP 空间进入视频后，评论页优先展示评论输入栏，播放队列不再覆盖评论功能（#485）。
+- **视频返回修复**：首页被视频详情覆盖时禁用顶部分类横向手势，避免从“热门”退出播放后误切到相邻“关注”页（#486）。
+
+### 验证
+- 针对性单元测试与 Debug Kotlin 编译。
+
+## v9.1.0 (2026-06-05)
+
+### 版本信息
+- 版本号从 `9.0.7` 升级到 `9.1.0`，`versionCode` 升级到 `221`。
+
+### 更新内容
+- **底栏搜索入口稳定性**：修复液态玻璃指示器左右滑动时，旁边搜索框跟随指示器形变放大的问题，搜索入口保持独立尺寸。
+- **个人空间崩溃修复**：根据 `9.0.3 (216)` 崩溃日志定位到空间背景图绘制超大 bitmap，限制个人页沉浸背景、个人空间封面和公开空间封面的 Coil 解码尺寸，避免 `Canvas: trying to draw too large bitmap` 闪退。
+- **个人空间资料可读性优化**：个人空间签名和 IP 属地不再硬编码两行文案，改为使用真实签名、真实 IP 属地和隐私兜底；IP/性别信息改为深浅色都可读的小胶囊。
+- **Release 混淆保护**：补充首页视频卡片圆角、主题圆角缩放、共享元素过渡相关最小 keep 规则，降低 R8 优化后视觉状态回归风险。
+
+### 近期版本简述
+- `9.0.3`：稳定性与流畅度维护。
+- `9.0.4`：当前 `CHANGELOG.md` 未单列，内容已并入后续维护记录。
+- `9.0.5`：修复设置圆角、评论冻结条、播放器双击/后台播放、沉浸模式和首页布局问题。
+- `9.0.6`：解决已知问题，并通过 Debug Kotlin 编译验证。
+- `9.0.7`：继续解决已知问题，并通过 Debug Kotlin 编译验证。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest' --tests 'com.android.purebilibili.feature.profile.ProfileSpacePolicyTest' --tests 'com.android.purebilibili.feature.profile.ProfileWallpaperActionLayoutPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+
+## v9.0.7 (2026-06-05)
+
+### 版本信息
+- 版本号从 `9.0.6` 升级到 `9.0.7`，`versionCode` 升级到 `220`。
+
+### 更新内容
+- 解决了一些已知问题。
+
+### 验证
+- `./gradlew :app:compileDebugKotlin`
+
+## v9.0.6 (2026-06-04)
+
+### 版本信息
+- 版本号从 `9.0.5` 升级到 `9.0.6`，`versionCode` 升级到 `219`。
+
+### 更新内容
+- 解决了一些已知问题。
+
+### 验证
+- `./gradlew :app:compileDebugKotlin`
+
+## v9.0.5 (2026-06-03)
+
+### 版本信息
+- 版本号从 `9.0.4` 升级到 `9.0.5`，`versionCode` 升级到 `218`。
+
+### 更新内容
+- **设置界面圆角修复**：修复播放设置中 AVC / HEVC / AV1 等液态分段控件外层容器圆角与选中指示器不匹配的问题，视觉边界更统一。
+- **评论体验优化**：液态玻璃总开关开启时，视频详情评论页支持底部冻结评论条；关闭时保持原有滚动入口。
+- **播放器交互修复**：修复双击暂停后再次双击需要两次才恢复播放、后台播放返回应用自动暂停等体验问题。
+- **沉浸与首页布局优化**：竖屏沉浸模式切换视频后保持隐藏状态；首页顶部标签布局更对称。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.settings.PlaybackSettingsSelectionPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+
+## v9.0.3 (2026-06-03)
+
+### 版本信息
+- 版本号从 `9.0.2` 升级到 `9.0.3`，`versionCode` 升级到 `216`。
+
+### 更新内容
+- 提高软件稳定性。
+- 优化软件流畅度。
+
+### Release Notes
+- Bug fixes minor improments and more.
+
+## v9.0.2 (2026-06-01)
+
+### 版本信息
+- 版本号从 `9.0.1` 升级到 `9.0.2`，`versionCode` 升级到 `215`。
+
+### 更新内容
+- **版本与文档同步**：应用打包版本、README 和更新日志同步到 `9.0.2 / versionCode 215`。
+
+### 验证
+- `./gradlew :app:compileDebugKotlin`
+
+## v9.0.1 (2026-06-01)
+
+### 版本信息
+- 版本号从 `9.0.0` 升级到 `9.0.1`，`versionCode` 升级到 `214`。
+- 本次重点修复视频共享元素进入/退出详情页的观感一致性，让封面、播放器、横屏全屏和竖屏播放器都有稳定动画落点。
+
+### 更新内容
+- **共享元素视觉策略统一**：新增视频共享元素视觉策略，统一计算目标模式、来源圆角、目标圆角、是否铺满播放器视口、是否使用封面 sharedBounds 和是否压制封面 fade。
+- **多入口卡片圆角统一**：首页、分区、动态、稍后再看、空间页和相关视频入口都会记录来源卡片圆角，返回时复用同一个 rounded shape，修复分区视频返回收尾阶段圆角弹跳。
+- **点击意图适配**：区分立即播放和先停在封面两类入口意图，手动封面优先落到封面容器，立即播放优先落到播放器区域。
+- **横竖屏目标固定**：普通横屏、横屏全屏、竖屏/autoPortrait 分别使用对应目标形态；横屏全屏过渡期间圆角收敛到 `0dp`，竖屏返回时先切回封面 sharedBounds 再回卡片。
+- **详情页承接统一**：视频详情播放器 sharedBounds 与返回封面 sharedBounds 复用同一份 target spec，减少播放器、封面和目标卡片之间的裁剪/圆角切换。
+
+### 已知问题
+- 本次已通过策略与结构测试覆盖主要路径，但仍建议用真机录屏确认首页立即播放、分区返回、手动封面、竖屏 autoPortrait 和横屏 fullscreen 的实际视觉收尾。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.core.ui.transition.VideoSharedTransitionPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.ui.section.VideoPlayerCoverPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.navigation3.*'`
+- `./gradlew --no-daemon :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.screen.VideoDetailScreenMethodSizeStructureTest' --tests 'com.android.purebilibili.feature.home.HomeHeroFlyoutStructureTest'`
+- `./gradlew --no-daemon :app:compileDebugKotlin`
+
+## v9.0.0 (2026-06-01)
+
+### 版本信息
+- 版本号从 `8.8.0` 升级到 `9.0.0`，`versionCode` 升级到 `213`。
+- 本次为 8.8.0 后的主线更新，重点补齐直播互动与横屏发送、评论输入与楼层体验、空间动态转发、首页顶部标签/分区指示器/液态玻璃动效、CDN 稳播优选、空降助手统计、离线下载与番剧影视能力，并修复 MD3 下拉刷新与胶囊标签点击态问题。
+- 六一儿童节快乐；也提前祝高考学子高考顺利，落笔生花，奔赴热爱。
+
+### 更新内容
+- **直播互动与横屏发送**：补齐直播互动链路与横屏发送能力，直播观看中的输入、发送和横屏操作更完整。
+- **评论输入体验增强**：视频评论输入支持 `@` 好友昵称搜索；动态评论楼层可自动展开，小站评论跳转修复，评论链路从输入到定位更顺。
+- **空间动态转发与删除修复**：转发动态改为按 Web 端 `dyn_req` JSON 协议提交，空间页、动态页和动态详情页共享的转发弹窗在失败后会恢复按钮与取消能力；个人空间动态会使用服务端返回的删除菜单参数提交删除请求，删除成功后从列表移除。
+- **个人页动态交互修复**：从动态侧边栏头像进入个人页后，动态卡片三点菜单可正常展开，支持复制链接与删除自己的动态；动态图片、图文图片点击后可沿用动态页图片预览的展开动画进入全屏预览。
+- **底栏搜索入口修复**：底栏搜索图标点击后直接进入搜索页，不再依赖底栏展开动画完成回调；搜索框展开且搜索词为空时，点击搜索框也会进入搜索页，已有输入内容时仍保留键盘搜索提交；正式版保留底栏搜索、搜索页入口和导航交接相关代码，避免压缩优化破坏点击链路。
+- **追更合集与详情修复**：修复追更合集入口与详情页相关问题，降低从合集入口进入内容时的断链风险。
+- **首页顶部布局设置**：新增首页顶部布局设置，扩展顶部折叠设置，首页顶部可按不同显示偏好调整；顶部标签固定为六项展示并补齐分页、默认展示和超六项回退策略。
+- **顶部标签视觉与交互打磨**：修正顶部标签垂直居中、MD3 顶部标签样式、安卓原生顶部标签指示器、热门子页签切换动效，以及顶部标签长按拖动与点击切换体验。
+- **顶部标签液态玻璃与折射**：顶部 dock 跟随 iOS26 底栏玻璃，补齐顶部标签液态玻璃 dock、内容折射采样预热、顶部/底栏指示器交互复用、折射避让和发行版分层，减少玻璃指示器错位、外溢和矩形捕获问题。
+- **液态玻璃滑动形变优化**：补齐胶囊速度形变、X/Y 双轴 scale 弹簧和点按落位四向回弹，形变速度改为弹簧过滤，保留 BiliPai 现有指示器放大倍数，减少左右滑动时的抖动和顿挫。
+- **分区页重构与指示器复用**：重构分区页样式，增强分区侧栏长按拖动和滑动手势处理，修复分区返回、侧栏指示器漂移、视频返回状态，并复用首页顶部与底栏指示器渲染。
+- **首页返回与底栏收尾修复**：修复首页视频返回时顶栏复位、底栏重复隐藏、底栏收尾和延迟恢复问题，让返回路径的顶部/底部镀铬状态更稳定。
+- **离线下载与本地播放增强**：增强离线下载与断点续传稳定性，修复离线播放器弹幕与进度条体验，离线播放链路更可靠。
+- **番剧影视 API 完善**：完善番剧影视 API 功能，扩展内容获取与页面承载能力。
+- **CDN 稳播优选与手动检测**：优化 CDN 区域优选、播放 fallback 和手动检测链路，提升弱网或区域节点不稳时的播放恢复能力。
+- **空降助手统计与卡片修复**：补齐空降助手洞察统计和卡片展示策略，修复相关卡片状态与 CDN 手动检测联动问题。
+- **骨架屏同步呼吸光**：首页与视频详情骨架屏改为统一节奏的同步呼吸光动画，首屏加载和详情加载占位更一致。
+- **首页下拉刷新修复**：MD3 下拉刷新按完整指示器和提示文字高度预留空间，内容下移更跟手，刷新指示器层级高于视频卡片，避免被视频遮挡；松手刷新后旧卡片先停留在原位置，等新内容插入后再回顶，减少刷新过程跳动。
+- **顶部胶囊点击态修复**：胶囊指示器场景关闭默认矩形水波纹，普通 MD3 下划线标签保留点击反馈，修复点按切换时胶囊周围出现矩形形状的问题。
+- **低版本底栏闪退修复**：移除底栏交互高光对 `RuntimeShader` 的直接引用，避免 Android 10 等低版本系统在解析高光 Modifier 时因缺少类而闪退。
+- **开源致谢补全**：设置页开源致谢按当前工程依赖、投屏/测试模块与明确参考实现补齐库名、许可和 GitHub 链接，并注明该列表可能不包含全部传递依赖或完整法律清单；列表样式跟随当前主题色。
+- **版本与文档同步**：版本号升级到 `9.0.0` / `versionCode 213`，README、README_EN 和更新日志同步到 9.0.0。
+
+### 已知问题
+- 顶部标签与分区指示器的液态玻璃、折射和长按拖动链路改动较多，建议继续在不同刷新率、深浅色背景和窄屏/大屏设备上观察。
+- MD3 下拉刷新已补策略测试，但仍建议在真机覆盖“下拉到阈值、上提取消、松手刷新”和首屏视频卡片遮挡路径。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.HomePullRefreshUiPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.TopTabMotionVelocityTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.BottomBarIndicatorPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.core.ui.animation.DampedDragAnimationPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.ui.components.CommentInputDialogLayoutPolicyTest' --tests 'com.android.purebilibili.feature.settings.OpenSourceLicensesPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.core.network.DynamicApiContractTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.search.SearchScreenPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.ReleasePlayerOverlayR8KeepRulesTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.profile.ProfileSpacePolicyTest' --tests 'com.android.purebilibili.feature.profile.ProfileServicesVisibilityPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.HomeFeedSkeletonCardStructureTest' --tests 'com.android.purebilibili.feature.video.ui.components.VideoDetailSkeletonStructureTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.plugin.CdnRegionPolicyTest' --tests 'com.android.purebilibili.feature.plugin.SponsorBlockPluginPolicyTest' --tests 'com.android.purebilibili.feature.video.viewmodel.PlaybackCdnFallbackPolicyTest' --tests 'com.android.purebilibili.core.network.NetworkClientPolicyTest'`
+- `git diff --check`
+
+## v8.8.0 (2026-05-31)
+
+### 版本信息
+- 版本号从 `8.7.0` 升级到 `8.8.0`，`versionCode` 升级到 `212`。
+- 本次为 8.7.0 后的主线更新，重点打磨 iOS26 底栏液态玻璃的滚动上色与指示器折射，重做视频封面共享转场与返回时的底栏跟手恢复，并修复首页底栏返回抖动、顶部标签页不可见、封面返回阴影突兀等回归问题。
+
+### 更新内容
+- **iOS26 底栏液态玻璃滚动调校**：优化滚动上色与滚动辉光，固定停稳后的底栏亮度，移除人工彩色镀膜并修正停稳残留色，同步 iOS26 玻璃透明度断言，让滑动过程与停稳状态的玻璃质感更贴近系统。
+- **底栏玻璃指示器修复**：修复液态玻璃指示器在滑动时的裁剪、折射区域越界、形变采样偏差和捕获层宽度问题，指示器跟手形变更稳定。
+- **视频封面共享转场重做**：移除视频详情壳 sharedBounds，播放器独立映射封面；统一空间、相关视频与首页视频的 sharedElement key 为 `videoCoverSharedElementKey`；将封面 sharedBounds 范围收敛到仅包裹封面图，渐变遮罩与统计标注独立渲染。
+- **封面返回阴影修复**：封面阴影改为随共享转场补间淡入，仅对正在返回的目标卡片在转场期间压暗、落位后再补间到满高度，消除返回时阴影滞后与封面尚未落位就突兀出现的硬阴影。
+- **视频返回底栏跟手恢复**：补齐多入口视频共享元素返回动画，统一首页/非首页视频返回时的底栏恢复节奏——首页由跟随动画完成后恢复，非首页路由立即恢复，消除底栏闪烁与恢复滞后。
+- **首页底栏返回抖动修复**：修复首页底栏在返回时出现“出现→隐藏→出现”抖动、以及顶部标签页隐藏后不可见的回归；底栏恢复仅在真实返回路径触发，不再被点击视频的前进导航误触发。
+- **入场动画统一**：将入场动画替换为 AppEntrance，统一并减少动效门控。
+- **首页顶部镀铬渲染兜底**：修复首页顶部镀铬 Haze 渲染模式未检查运行时着色器能力的问题，避免在不支持的设备上异常。
+- **动态侧边栏修复**：修复动态侧边栏头像布局结构与 LIVE 徽章字号。
+- **底栏搜索入口修复**：修复正式版底栏搜索入口失效。
+- **其他优化**：为侧边栏点击增加触觉反馈；缓存媒体解码器探测结果，减少重复探测开销；debug 构建默认关闭诊断日志，并新增番剧调试快照与播放器状态追踪。
+- **版本与文档同步**：版本号升级到 `8.8.0` / `versionCode 212`，README、README_EN 和更新日志同步到 8.8.0。
+
+### 已知问题
+- iOS26 底栏液态玻璃的滚动上色与停稳亮度仍建议在不同 ROM、刷新率和深浅色背景下继续观察。
+- 视频封面共享转场、返回阴影与返回底栏恢复经过重做，已补结构与策略测试，但仍建议在真机覆盖“首页 / 空间 / 相关视频 -> 视频详情 -> 返回”的完整路径。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.HomeHeroFlyoutStructureTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.7.0 (2026-05-29)
+
+### 版本信息
+- 版本号从 `8.6.0` 升级到 `8.7.0`，`versionCode` 升级到 `211`。
+- 本次为 8.6.0 后的主线更新，重点补齐 iOS26 底栏液态玻璃预设、我的空间首页、空间首页封面/服务入口、空间动态/收藏/追番、视频封面/竖屏入口、低版本系统视觉兜底、系统通知和动态显示修复。
+
+### 更新内容
+- **iOS26 底栏液态玻璃预设**：新增“iOS 26 调校”底栏液态玻璃预设，提供更厚的边缘折射、更轻的色散、更贴近系统玻璃的高光和壳层质感。
+- **底栏玻璃滚动体验优化**：修复滑动停止时底栏整体闪烁；滚动中底栏材质改为连续回落，并加入轻白色提亮膜，让上下滑动时整体更接近 iOS26 的亮面玻璃反馈。
+- **底栏高光与视觉细节**：恢复并优化底栏液态玻璃高光跟手效果，移除首页刷新提示阴影，减少底栏与首页内容叠加时的突兀感。
+- **视频封面与竖屏入口修复**：首页视频点击请求继续携带封面地址，并额外携带竖屏视频提示；标准视频路由、Navigation3 映射和视频详情页初始状态同步支持该提示，修复部分入口视频封面不可见，以及竖屏视频从首页进入时没有及时进入竖屏全屏的问题。
+- **我的空间首页重写**：将“我的”Tab 重写为空间首页式布局，补齐账号信息解析、空间首页策略和测试，让个人资料、入口与空间内容承载更统一。
+- **空间首页封面与服务入口修复**：修复空间首页视频封面不可见、收藏夹封面字段缺失和服务入口展示不完整的问题，补齐收藏夹封面、空间模型解析与服务入口策略测试。
+- **空间动态、收藏与追番完善**：空间首页补齐动态内容承载、收藏模块和追番入口，追番卡片支持跳转番剧详情；空间动态封面比例和内容展示更稳定。
+- **动态显示修复**：修复动态顶部遮挡用户信息的问题，补齐动态时间显示策略，转发内容和动态卡片显示更稳定。
+- **系统通知修复**：修复系统通知页面闪退，系统通知链接和内容解析更稳，消息页跳转和动态时间显示细节同步修正。
+- **低版本系统视觉兜底**：修复低版本 Android 上 Haze 视觉效果触发闪退的问题，新增可恢复视觉效果策略，保证不支持的运行时效果能安全降级。
+- **版本与文档同步**：版本号升级到 `8.7.0` / `versionCode 211`，README、README_EN 和更新日志同步到 8.7.0。
+
+### 已知问题
+- iOS26 底栏液态玻璃仍属于新预设，真机不同 ROM、刷新率和深浅色背景下的亮度强度仍建议继续观察。
+- 空间首页封面、收藏、追番和动态模块已补策略测试，但仍建议在真机覆盖“我的 Tab -> 空间首页 -> 收藏/追番/动态”的完整路径。
+- 竖屏视频入口、系统通知和动态显示已补策略测试，但仍建议在真机覆盖首页竖屏视频、系统通知详情和动态列表滚动路径。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.BottomBarGlassMaterialPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.profile.ProfileSpacePolicyTest' --tests 'com.android.purebilibili.data.model.response.SpaceModelsParsingTest' --tests 'com.android.purebilibili.feature.bangumi.BangumiDetailScreenStructureTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.6.0 (2026-05-28)
+
+### 版本信息
+- 版本号从 `8.5.0` 升级到 `8.6.0`，`versionCode` 升级到 `210`。
+- 本次为 8.5.0 后的主线更新，重点修复正式包播放器控制层、分 P 进度隔离、视频笔记设置门禁、PBP/API 兼容、评论楼中楼、空间投稿、MD3 自定义颜色、截图分享提示、首页消息入口、底栏光影和视频详情返回/共享元素动效。
+
+### 更新内容
+- **正式包播放器控制层修复**：补充 Release 播放器控制层保留规则，修复正式包中点击播放器后控制层不响应的问题。
+- **分 P 进度隔离**：播放进度缓存改为按 `bvid#cid` 精确区分，修复切换分 P 后继承旧分 P 进度的问题。
+- **视频笔记显示设置**：新增视频笔记显示总开关与默认折叠开关；关闭总开关后详情页不再加载或渲染视频笔记，子开关只在总开关开启时生效。
+- **PBP 与弹幕设置增强**：修正 PBP 请求接口并补齐契约测试，弹幕密度进度条支持 PBP 数据；弹幕设置合并显示区域和相关交互更清晰。
+- **评论与内容标识优化**：评论楼中楼默认内联展开，补齐楼中楼控制字段解析；UP 认证蓝黄标改为统一策略，搜索、关注与空间页显示更一致。
+- **视频笔记入口细节**：视频笔记“新建”按钮右对齐，笔记卡片布局在窄屏和详情页内容区更稳定。
+- **空间与设置稳定性修复**：修复空间投稿布局切换闪退，修复设置页语义图标重复，设置搜索覆盖更多外观、动画和播放相关入口。
+- **MD3 自定义颜色**：新增 MD3 自定义颜色来源，外观设置支持自定义主题颜色入口；设置搜索可定位自定义颜色相关项，主题偏好和动态取色策略补齐测试。
+- **截图分享提示优化**：完善应用内截图分享提示和手势策略，截图分享入口与提示状态更清晰。
+- **导航与返回动效修复**：修复关闭共享元素后的详情返回动画状态、相关推荐来源识别、共享元素返回横向过渡和详情推荐卡片共享元素过渡，降低返回链路错位。
+- **消息入口与消息路由修复**：首页右上角消息入口红点改为预留布局空间，不再依赖越界偏移；从“收到的赞”按 `av`/aid 路由进入视频时，等待详情返回规范 BV 后再请求相关推荐，避免详情页只显示“相关推荐”标题。
+- **底栏实时光影修复**：恢复浮动底栏拖动链路的实时高光，底栏指示器左右扫过时 shell 高光继续跟随指示器 motion 进度，不再在拖动阶段被错误关闭。
+- **播放交互修复**：修复长按倍速提示重复弹出，补齐播放交互设置映射。
+- **版本与文档同步**：版本号升级到 `8.6.0` / `versionCode 210`，README、README_EN 和更新日志同步到 8.6.0。
+
+### 已知问题
+- 公开视频笔记发布、评论区同步发布、图片上传和本地持久草稿库仍未纳入本版范围。
+- 相关推荐共享元素和详情返回链路已补齐策略测试，但仍建议在真机上覆盖“从相关推荐进入详情后返回”的横竖屏路径。
+
+### 验证
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.5.0 (2026-05-27)
+
+### 版本信息
+- 版本号从 `8.4.2` 升级到 `8.5.0`，`versionCode` 升级到 `209`。
+- 本次为 8.4.2 后的主线更新，重点新增视频笔记与 AI 总结联动、系统分享、直播观看端一期能力，并修复底栏、首页、播放器沉浸与投屏音频等问题。
+
+### 更新内容
+- **视频笔记首版**：新增 B 站视频笔记接口模型、私有笔记读取/保存/删除、公开笔记列表入口、登录态与 CSRF 检查、接口错误分类和 note JSON 适配层。
+- **富文本编辑体验**：引入 `compose-rich-editor`，笔记编辑器支持加粗、高亮、无序列表、撤销/重做、插入当前播放时间点和时间点回跳；编辑器内部支持 Markdown 导入/导出作为中间格式，保存到 B 站前统一转为官方 note JSON。
+- **AI 总结生成笔记草稿**：AI 总结卡新增“生成笔记草稿”，可把摘要、提纲和时间点转成可编辑笔记；已有私有笔记时追加到草稿末尾并标记“尚未保存”，不会自动写入服务端。
+- **笔记草稿继续编辑与分享**：未保存 AI 草稿会在笔记卡显示“继续编辑”，关闭编辑器后可重新打开原草稿；笔记卡和编辑器支持通过系统分享面板分享到 Telegram、微信、X、邮件等社交应用。
+- **AI 总结稳定性增强**：保留 WBI 签名与 412 重签重试，将可重试请求失败纳入有限自动重试预算，并区分排队、未授权、无语音、暂不支持和可重试失败等提示状态。
+- **直播观看端一期能力**：增强直播观看端基础链路，补齐直播弹幕区域和画面比例处理，减少直播画面与弹幕区域错位。PR #420 由 **@jay3-yy** 合并。
+- **底栏与首页修复**：修复重装后底栏不显示、底栏可见项顺序兜底、首页视频卡片菜单定位和 MIUIX 首页顶栏对齐问题。
+- **播放器体验修复**：修复播放器硬解开关缓存同步、视频沉浸顶部和长按提示关闭、隐藏状态栏导致视频页跳动、系统栏隐藏稳定性和长按倍速锁定引导问题；移除播放器统计信息周围的黑色遮罩层。
+- **动态与稍后再看交互修复**：修复动态页与稍后再看相关交互问题，降低从内容流进入播放队列时的状态错乱。
+- **投屏音频回退修复**：修复 DASH 投屏回退时音频轨缺失问题，保证投屏源切换时保留音频。PR #411 由 **@lekoOwO** 贡献，感谢对投屏音频链路的修复。
+- **版本与文档同步**：版本号升级到 `8.5.0` / `versionCode 209`，README、README_EN 和更新日志同步到 8.5.0。
+
+### 已知问题
+- 视频笔记公开发布、评论区同步发布、图片上传和本地持久草稿库仍未纳入本版范围。
+- 笔记保存链路已通过单元测试和编译验证，真实账号的新建、编辑、删除与社交分享仍建议在真机登录态下做一次发布前验收。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests '*VideoNote*' --tests '*AiSummary*' --tests '*VideoInfoDisplayPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.4.2 (2026-05-26)
+
+### 版本信息
+- 版本号从 `8.4.1` 升级到 `8.4.2`，`versionCode` 升级到 `208`。
+- 本次为 8.4.1 后的维护更新，重点补齐 Google Cast / DLNA 投屏插件化、播放器分片缓存、初见推荐刷新、视频详情返回动效、番剧影视崩溃、索引页滚动交互和设置项重复显示修复。
+
+### 更新内容
+- **Google Cast / DLNA 投屏插件化**：新增 Google Cast 插件壳、投屏路由管理、媒体加载与播放控制；DLNA 投屏迁移到插件 API 之后继续保留设备发现、设备选择和播放控制能力。PR #409 由 **@lekoOwO** 贡献，感谢投屏链路的大体量补齐。
+- **投屏体验稳定性**：投屏弹窗现在会显示 Google Cast 路由，活动投屏源变化后会重新加载当前投屏会话；补齐 Google Cast、DLNA、设备展示和投屏控制相关策略测试，降低插件化后回归风险。
+- **播放器媒体分片缓存**：新增播放器媒体分片缓存能力，并在播放链路接入缓存读取与 seek 诊断；同步清理缓存统计展示，避免把临时诊断指标长期暴露给用户。
+- **首页初见推荐修复**：按原文收窄初见推荐匿名化，仅在命中首页 Web 推荐 feed 时清空 Cookie；修复匿名推荐重复刷新后请求索引不推进导致“暂无新内容”的问题，并补齐策略测试。
+- **播放器缩小与详情交互**：修正暂停时播放器缩小策略，避免暂停态被错误折叠；视频详情操作按钮适配动态取色，返回首页和关闭共享元素后的返回方向动效更明确。
+- **番剧影视闪退修复**：修复点击“番剧影视”后接口返回多个 `season_id = 0` 时 Lazy key 重复导致的 Compose 崩溃；推荐网格、搜索网格和时间表列表统一使用安全 key 策略。
+- **番剧索引页滚动交互**：番剧影视索引页下滑后会自动收起顶部模式、分类和筛选区域；滚动离开顶部后新增右下角“回到顶部”按钮，点击后回到列表顶部并恢复顶部区域。
+- **设置与显示细节修复**：修复色彩标准选项重复显示，减少播放设置页的误导项。
+- **版本与文档同步**：版本号升级到 `8.4.2` / `versionCode 208`，README、README_EN 和更新日志同步到 8.4.2。
+
+### 已知问题
+- 部分用户反映底栏消失，目前仍在排查中，后续会尽快修复。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.bangumi.MyFollowPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.bangumi.BangumiChromeCollapsePolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.4.1 (2026-05-25)
+
+### 版本信息
+- 版本号从 `8.4.0` 升级到 `8.4.1`，`versionCode` 升级到 `207`。
+- 本次为 8.4.0 后的维护更新，重点修复直播弹幕、评论解码、首页刷新、关注页刷新、播放队列、横屏小窗、空间跳转、返回动画和交互浮层动效预算问题。
+
+### 更新内容
+- **应用内图标库回滚**：回滚 8.4.0 引入的全局图标库设置，移除多图标库切换相关状态、入口、向量工厂和静态守门，避免设置体系复杂化和图标语义漂移。
+- **预测性返回死链路清理**：删除已暂停预测性返回后的残留策略、Modifier、状态和 Navigation3 桥接代码，设置页同步收口搜索与动画选项，降低返回链路维护成本。
+- **共享元素返回收口**：收紧视频卡片、空间页、平板影院布局和相关推荐入口的共享元素返回路径，减少非目标页面误吃视频返回转场、返回尾段错位和 stale metadata 风险。
+- **播放与详情稳定性**：新增播完后评论收起播放器策略；修复多 P 视频从外部队列跳转时的播放解析；修复小窗进入横屏全屏时方向抖动；补充竖屏详情和视频加载请求策略测试。
+- **关注页与首页刷新**：修复关注页下拉刷新分类同步、增量刷新基线和视频动态刷新；收窄关注页刷新入口，保留列表滚动状态；优化首页下拉刷新手感和 iOS 刷新指示器动效。
+- **首页空间跳转**：修复首页 UP 头像跳转空间链路，补齐首页卡片到空间页的 Navigation3 entry、转场和结构测试。
+- **首页不感兴趣同步**：将“不感兴趣 UP”同步到 B 站黑名单，减少首页推荐中已屏蔽 UP 反复出现的情况。
+- **直播弹幕稳定性**：修复直播弹幕业务流停摆后不重连，以及刷新后弹幕层空屏的问题；新增连接健康和弹幕渲染策略测试。
+- **评论与命令弹幕修复**：修复评论 gRPC 特殊字符解码；修复关注并三连命令弹幕误触发取关的问题。
+- **顶部与浮层动效优化**：修复 iOS 顶部标签胶囊跟随位置；新增交互浮层进度视觉策略，让底部弹窗、评论面板、对话框和侧边抽屉在打开/关闭过程中按进度调整遮罩、面板透明度和模糊预算，降低拖拽和过渡阶段的实时 blur 压力。
+- **冷启动导航修复**：修复冷启动底栏占位路由不显示，减少启动后底栏状态和当前页面不一致的问题。
+- **版本与文档同步**：版本号升级到 `8.4.1` / `versionCode 207`，README、README_EN 和更新日志同步到 8.4.1。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.core.ui.AdaptiveBottomSheetPolicyTest' --tests 'com.android.purebilibili.feature.home.components.DrawerMotionBudgetPolicyTest' --tests 'com.android.purebilibili.feature.home.components.MineSideDrawerVisualPolicyTest' --tests 'com.android.purebilibili.feature.video.ui.components.VideoCommentSheetHostPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.4.0 (2026-05-24)
+
+### 版本信息
+- 版本号从 `8.4.0-Beta1` 升级到 `8.4.0`，`versionCode` 升级到 `206`。
+- 本次为 8.4.0 正式版，汇总 Beta1 后的直播、空间页、首页侧栏、播放器默认设置、应用内图标库和折叠屏竖屏视频详情修复。
+
+### 更新内容
+- **直播弹幕稳定性**：修复直播弹幕静默断流后的重连链路，减少长时间观看时弹幕不再刷新的情况。
+- **空间页与动态评论入口**：修复空间页搜索和动态评论入口异常，降低从空间页进入相关内容时的中断风险。
+- **首页侧栏历史入口**：修复首页侧栏历史入口闪退，确保常用导航入口可用。
+- **播放器交互默认设置**：修正播放器交互默认值，让新安装和重置后的播放器行为更符合当前主线预期。
+- **应用内图标库设置**：新增应用内全局图标库设置，支持 Material Symbols、Lucide、Phosphor、Tabler，并补齐全局语义图标去重约束。
+- **折叠屏竖屏视频详情**：修复普通折叠屏内屏观看竖屏视频时播放器占满首屏的问题，评论区和推荐入口保持可访问。
+- **版本与文档同步**：版本号升级到 `8.4.0` / `versionCode 206`，README、README_EN 和更新日志同步到 8.4.0。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests '*PortraitDetailPresentationPolicyTest' --tests '*VideoDetailLayoutModePolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.4.0-Beta1 (2026-05-24)
+
+### 版本信息
+- 版本号从 `8.3.9` 升级到 `8.4.0-Beta1`，`versionCode` 升级到 `205`。
+- 本次为 8.3.9 之后的 Beta 更新，重点补齐推荐过滤、JSON 规则、皮肤包管理、底栏皮肤显示、初见推荐内置插件和插件统计通知链路。
+
+### 更新内容
+- **推荐与弹幕规则补齐**：处理 issue 394 暴露的推荐过滤和弹幕规则缺口，补充推荐插件 API 字段、首页不感兴趣策略、今日看点过滤策略和弹幕关键词过滤规则覆盖。
+- **推荐字段按 API 文档收窄**：按真实 API 文档修正推荐数据字段映射，移除不可靠字段假设，补充列表模型映射测试，降低插件规则误判和字段漂移风险。
+- **皮肤包管理增强**：新增皮肤包图片预览与删除能力，设置页可以查看皮肤包内图片资源并删除已安装皮肤包；同步整理皮肤包安装存储和能力展示策略。
+- **底栏皮肤图标修复**：修复第五个底栏皮肤图标显示异常，补充底栏皮肤装饰测试，避免自定义皮肤在多标签位下出现缺图或错位。
+- **初见推荐内置插件**：新增内置初见推荐插件，用更可控的推荐匿名化与统计策略处理首页推荐内容，并在 README / README_EN 中补充相关说明和致谢。
+- **空降助手通知补全**：空降助手每日汇总通知支持点击跳转插件设置，并新增测试通知入口，方便确认系统通知权限和展示效果。
+- **JSON 插件统计通知**：新增 JSON 规则插件统计通知渠道、每日过滤数量汇总、测试通知和设置页开关，按上次汇总后的增量展示过滤结果。
+- **版本与文档同步**：版本号升级到 `8.4.0-Beta1` / `versionCode 205`，README、README_EN 和更新日志同步到 8.4.0-Beta1。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.app.AppNotificationChannelsTest' --tests 'com.android.purebilibili.feature.plugin.SponsorBlockPluginPolicyTest' --tests 'com.android.purebilibili.core.plugin.json.JsonPluginStatsNotificationPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.3.9 (2026-05-24)
+
+### 版本信息
+- 版本号从 `8.3.9 Beta1` 升级到 `8.3.9`，`versionCode` 升级到 `204`。
+- 本次为 8.3.8 之后的正式维护更新，汇总 Beta1 的视频详情返回、分享与动效 token 收敛，以及 Beta1 后新增的听视频、横竖屏、评论图片预览和顶部标签体验修复。
+
+### 更新内容
+- **视频详情返回动画稳定**：收紧共享元素返回路由，只在真实视频详情来源页启用视频返回转场；修复视频详情预测返回所有权、评论切换播放器动画叠加和视频卡片返回末尾额外回弹，减少黑屏、硬切、二次跳动和 stale metadata 误用。
+- **预测式返回与共享元素收口**：共享元素关闭时恢复 Home、History、Favorite 等来源页方向 fallback，并关闭残留 cover-only 回收路径；Beta1 后临时暂停预测性返回手势，优先保证主链路返回稳定。
+- **视频分享链路补全**：新增视频详情分享面板，分享视频时优先准备封面图片；系统分享和更多分享路径尽量以图片型 payload 打开，减少微信、QQ 等接收端降级成纯文本气泡。
+- **听视频模式重做**：修复听视频入口空加载，新增上下切换播放交互，补齐听视频播放状态同步、合集切换播放和合集播放队列，让听视频在单集、合集和连续切换时更稳定。
+- **横竖屏体验修复**：降低横竖屏自动切换灵敏度，减少轻微晃动触发误旋转。
+- **评论图片沉浸预览**：评论图片点击后进入黑底沉浸式预览，支持评论上下文底栏、真实点赞/回复/分享入口和参考图风格的 3D 反转翻页；不再新增“我也发一张”和点踩入口。
+- **首页顶部标签体验**：修复 MIUIX 顶栏切到第 5 个标签时指示器先跳前槽的问题，并恢复 MIUIX 原生轮廓指示器样式；iOS 预设下顶部选中胶囊改为灰白色，图标和文字保留主题色，胶囊位移改为共享 spring 动画，减少机械感。
+- **动效与代码清理**：清理旧动画死代码和返回回弹残留，收敛共享元素空间动效 token 到 `AppMotionTokens.spatialSpec()`，删除旧 `AnimationSpecs` 入口，保持原空间弹簧手感。
+- **冷启动与基础稳定性**：修复冷启动底栏显示判定，减少启动后底栏状态和当前页面不一致的问题。
+- **版本与文档同步**：版本号升级到 `8.3.9` / `versionCode 204`，README、README_EN 和更新日志同步到 8.3.9。
+
+### Beta1 后新增
+- 听视频入口、上下切换、播放状态、合集播放和队列修复。
+- 横竖屏自动切换灵敏度修复。
+- 评论图片 3D 沉浸式预览。
+- MIUIX 顶栏第五项切换、指示器样式退化修复。
+- iOS 顶部胶囊灰白色与共享 spring 位移动效。
+
+### 验证
+- `./gradlew --no-daemon --max-workers=1 :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.3.9 Beta1 (2026-05-23)
+
+### 版本信息
+- 版本号从 `8.3.8` 升级到 `8.3.9 Beta1`，`versionCode` 升级到 `203`。
+- 本次为“视频详情返回动画稳定 + 共享元素动效 token 收敛”的 Beta 更新，继续收口 8.3.8 后的 Navigation3、共享元素和预测式返回链路。
+
+### 更新内容
+- **共享元素返回路由收紧**：只在真实视频详情返回来源页时启用视频返回转场，避免动态详情等非视频页面吃到 stale 视频 metadata 后出现黑屏、硬切或错误共享元素状态。
+- **关闭共享元素后的方向返回修复**：共享元素动画关闭时，Home、History、Favorite 等来源页恢复左右方向 fallback；返回目标页保持显式可见，减少返回首页时整页短暂消失或闪白。
+- **预测式返回与共享元素设置解耦**：预测式返回样式不再隐式依赖卡片共享元素开关；关闭共享元素后同步关闭残留的 cover-only 回收路径，降低“看起来仍像共享元素返回”的概率。
+- **视频详情返回动画清理**：修复评论切换播放器时的动画叠加，取消视频卡片返回末尾的额外回弹，减少详情页返回卡片时的二次跳动。
+- **冷启动底栏显示修复**：修正冷启动阶段底栏可见性判定，减少启动后底栏状态和当前页面不一致的问题。
+- **共享元素动效 token 收敛**：新增 `AppMotionTokens.spatialSpec()`，迁移共享元素空间变换弹簧，删除旧 `AnimationSpecs` 入口；参数保持原空间弹簧手感，不改变动画时序。
+- **版本与文档同步**：版本号升级到 `8.3.9 Beta1` / `versionCode 203`，README、README_EN 和更新日志同步到 8.3.9 Beta1。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.core.ui.AppMotionTokensTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.3.8 (2026-05-22)
+
+### 版本信息
+- 版本号从 `8.3.7` 升级到 `8.3.8`，`versionCode` 升级到 `202`。
+- 本次为“预测式返回与共享元素动画稳定 + 长图文详情全文、图片、链接卡完整显示”的维护更新，汇总 8.3.7 到 8.3.8 的全部改动。
+
+### 更新内容
+- **预测式返回链路重写**：重写预测式返回开关所有权、手势驱动与 Navigation3 展示宿主联动，避免系统预测返回、应用内返回和共享元素动画争抢同一段返回过程。
+- **共享元素返回稳定性**：修复底栏分页下视频详情共享元素来源记录，返回时能回到正确视频卡片；视频预测返回回收动画接入同一套链路，减少返回尾段错位。
+- **系统返回视觉一致性**：补齐 AOSP 预测返回截图一致性与经典/现代样式策略，并把预测返回样式从卡片转场开关中解耦，降低设置项之间的隐性耦合。
+- **首页返场与动态顶部修复**：修复从详情回到首页后首滑失效的问题；收敛预测返回手势进度状态范围；修复动态顶部玻璃分隔线透出导致的视觉噪点。
+- **长图文详情全文显示**：动态详情遇到 `MAJOR_TYPE_OPUS`、`opus` 或 `/opus/` 入口时优先请求 `x/polymer/web-dynamic/v1/opus/detail`，不再因为桌面动态详情已有预览摘要就提前返回。
+- **长图文段落解析补全**：按 `MODULE_TYPE_CONTENT.module_content.paragraphs` 顺序解析标题、文本、富文本节点、`pic.pics[]`、`pic.url` 和 `line.pic`，详情页按完整段落渲染，图片不再受列表九宫格上限影响。
+- **长图文入口跳转修复**：兼容动态 `type` 数字解析，空间长图文和动态长图文预览点击后进入动态详情全文路径，不再停留在预览卡片或错误旧入口。
+- **长图文链接卡完整渲染**：新增紧凑链接卡正文块，支持 UGC、COMMON、LIVE、OPUS、MUSIC、GOODS、VOTE 和 ITEM_NULL；B 站视频、动态、专栏、直播等优先走应用内路由，外部网页和商品链接交给系统打开，缺失链接时安全无操作。
+- **版本与文档同步**：版本号升级到 `8.3.8` / `versionCode 202`，README、README_EN 和更新日志同步到 8.3.8。
+- **回归覆盖**：补充长图文段落解析、详情回退策略、动态卡点击策略、链接卡路由策略、首页返场首滑、预测返回与共享元素联动相关测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.data.model.response.DynamicModulesFlexibleSerializerTest' --tests 'com.android.purebilibili.feature.dynamic.components.DynamicCardClickPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.3.7 (2026-05-21)
+
+### 版本信息
+- 版本号从 `8.3.6` 升级到 `8.3.7`，`versionCode` 升级到 `201`。
+- 本次为“底栏一级页 HorizontalPager 主入口 + 点击折射与详情进入动画修复 + 连续分页体验”的维护更新，汇总 8.3.6 到 8.3.7 的全部改动。
+
+### 更新内容
+- **底栏一级页主入口重构**：非 Onboarding 初始栈固定为 `MainHost`，底栏首页、动态、历史、我的等一级页统一由 `HorizontalPager` 承载；底栏点击、页内一级入口和外部命中底栏 route 都切换 pager，不再把底栏 tab 当作 Navigation3 顶级详情页反复 push。
+- **详情页与底栏职责分离**：视频详情、空间、搜索、设置子页、消息页、直播详情、番剧详情等非底栏一级内容继续进入 Navigation3 backstack；返回键策略改为详情栈优先 pop，无详情且当前 pager 非首页时横滑回首页。
+- **底栏点击折射与放大反馈修复**：点击底栏项切换时保留隐藏捕获层与指示器折射，按压/切换阶段维持可见的玻璃折射和放大反馈，避免指示器只位移、不出现折射过渡。
+- **底栏跨页连续切换优化**：切换时保留连续 `HorizontalPager` 位移，中间页在内容就绪后参与真实横向滑动，不再以空白占位穿过；动态、历史、我的等重页面的首次加载延后到页面真正成为 settled 当前页后触发，减少首页到我的跨页切换时的卡顿尖峰。
+- **视频详情进入动画修复**：移除视频卡片进入详情页时误加入的收尾回弹，避免进入详情过程中状态栏短暂露出白色或出现额外回弹感。
+- **旧底栏切换补丁清理**：删除旧顶级 tab route push、instant transition hack、底栏 route 的 no-op 共享元素特判和不含 `HorizontalPager` 的结构假设，降低后续维护成本。
+- **版本与文档同步**：版本号升级到 `8.3.7` / `versionCode 201`，README、README_EN 和更新日志同步到 8.3.7。
+- **回归覆盖**：更新 Navigation3 初始栈、底栏 page/route 映射、返回键、Story 离屏预加载、HorizontalPager 结构、底栏指示器折射和视频详情进入动效相关测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.navigation.AppTopLevelNavigationPolicyTest' --tests 'com.android.purebilibili.navigation.BottomPagerStatePersistenceStructureTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.navigation.AppTopLevelNavigationPolicyTest' --tests 'com.android.purebilibili.navigation3.BiliPaiNavEntryContentPolicyTest' --tests 'com.android.purebilibili.navigation3.BiliPaiNavBackStackPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.3.6 (2026-05-21)
+
+### 版本信息
+- 版本号从 `8.3.5` 升级到 `8.3.6`，`versionCode` 升级到 `200`。
+- 本次重点是继续把主导航、详情页返回和共享元素动画迁移到 Navigation3，并修复迁移过程中暴露出的返回动画、ViewModel extras 与高频入口过渡问题。
+
+### 迁移背景
+- **之前使用的导航方式**：应用长期由 `AppNavigation` 自己维护路由字符串、返回栈、`BackHandler` 和共享元素返回状态；部分新页面虽然已经有 Navigation3 key，但仍需要和旧路由栈互相镜像，属于“旧应用壳 + 部分 Navigation3 桥接”的混合链路。
+- **为什么要迁移到 Navigation3**：旧链路在视频详情、历史、动态、空间等页面之间返回时，需要同时协调系统返回、应用内返回、共享元素来源卡片、ViewModel 创建环境和底部/顶部导航状态，状态分散后容易出现返回动画抢占、来源卡片丢失、UI 短暂错位或页面点击闪退。
+- **迁移后的目标**：让页面栈、返回目标、转场策略和页面创建环境统一由 Navigation3 主链路承接，`AppNavigation` 只保留应用壳、全局状态和必要的兼容桥接，后续页面接入共享元素或预测式返回时不用再各自补一套返回状态。
+
+### 更新内容
+- **迁移到 Navigation3 的返回链路**：视频详情返回首页、历史、动态、空间等来源页时，返回动作会先由应用内 Navigation3 桥接层识别来源和目标，再交给共享元素系统执行卡片到详情页的形变，避免系统预测式返回和应用内共享元素同时抢同一段动画。
+- **迁移到 Navigation3 的 ViewModel 环境**：Navigation3 页面内容现在会继承应用级 `APPLICATION_KEY` extras，历史、动态、空间等入口创建 ViewModel 时不再因为缺少 Application 上下文而闪退。
+- **迁移到 Navigation3 的共享元素来源页**：首页、动态和 UP 主空间等高频视频卡片统一记录来源位置和共享元素 key，视频详情返回时能回到正确卡片，并带有轻微物理回弹收尾。
+- **迁移过程中的 UI 稳定性修复**：修复关闭预测式返回手势后，从视频详情返回首页出现 UI 错位的问题；开启首页顶部标签页下滑隐藏时，返回过程中也不再短暂闪出顶部标签页。
+- **首页底栏点击切换稳定性**：底栏一级 Tab 切换时接入真实转场预算和 Navigation3 无淡入淡出策略，指示器点击动效改为统一的 `DampedDragAnimation` 时序，避免页面切换期间叠加重折射、页面 fade 和额外指示器 pulse。
+- **首页底栏玻璃层稳定性**：底栏搜索胶囊、外壳、指示器和输入热区拆成独立渲染层；点击高光锚定到目标 Tab，拖拽时才跟随实时指示器；玻璃捕获层改为预热/常驻策略，避免切换瞬间采样到原始视频画面或出现短暂透底。
+- **首页顶部 Chrome 液态玻璃收敛**：移除旧的共用 Home Chrome renderer 和过时的实验液态玻璃容器，首页顶部 Chrome 直接在 `iOSHomeHeader` 内按 Backdrop / Haze / 普通模糊模式渲染，滚动耦合折射、暗色叠层和扁平玻璃策略更清晰。
+- **底栏拖拽动画性能整理**：`DampedDragAnimation` 的逐帧拖拽更新合并为单个协程同步位置和偏移，减少拖拽过程中的重复 launch / cancel，并保留 snap 抢占语义。
+- **图片保存目录自定义**：新增“图片保存位置”设置入口，可通过系统文件夹选择器授权自定义目录；动态图片、头像/背景预览保存和评论图片保存会优先写入用户选择目录，失败时回退原有系统相册保存逻辑。
+- **动态页顶栏对齐**：动态侧边栏返回区域与顶部标签栏统一使用 52dp 顶栏高度，侧边栏列表顶部预留同步跟随该高度，修复返回图标和顶部标签视觉中心不一致的问题。
+- **隐私内容解锁**：新增“进入隐私内容时验证”开关，进入搜索、历史、收藏、稍后再看、离线缓存和消息等隐私内容前可使用系统指纹、人脸或锁屏密码验证。
+- **设置页图标与隐私文案整理**：抽出统一语义图标策略，设置页与搜索结果的 iOS / MD3 图标语义更稳定；“隐私无痕模式”改为更直观的“不记录历史”，并补充隐私内容验证入口。
+- **首页卡片玻璃标签退役**：首页、搜索和通用列表的视频信息标签固定回普通样式，旧的封面/信息区玻璃标签偏好不再影响卡片渲染，减少小卡片上的玻璃层级干扰。
+- **版本与文档同步**：版本号升级到 `8.3.6` / `versionCode 200`，README、README_EN 和更新日志同步到 8.3.6。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest` 的 Navigation3、共享元素、空间页和首页顶部标签页相关目标测试
+- `./gradlew --no-daemon --no-build-cache --rerun-tasks -Dkotlin.incremental=false -Dkotlin.incremental.useClasspathSnapshot=false -Pkotlin.incremental=false -Pkotlin.incremental.useClasspathSnapshot=false :app:testDebugUnitTest --tests 'com.android.purebilibili.core.ui.animation.DampedDragAnimationPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarIndicatorPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest'`
+- `./gradlew --no-daemon --max-workers=1 :app:testDebugUnitTest --tests 'com.android.purebilibili.core.ui.animation.DampedDragAnimationPolicyTest'`
+- `./gradlew --no-daemon --max-workers=1 :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.BottomBarIndicatorPolicyTest'`
+- `./gradlew --no-daemon --max-workers=1 :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest'`
+- `./gradlew --no-daemon --max-workers=1 :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.HomeChromeLiquidSurfaceStructureTest'`
+- `./gradlew --no-daemon --max-workers=1 :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.dynamic.DynamicLayoutPolicyTest'`
+- `./gradlew --no-daemon --max-workers=1 :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.dynamic.components.ImagePreviewSaveLocationPolicyTest'`
+- `./gradlew --no-daemon --max-workers=1 :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.dynamic.components.ImagePreviewFeedbackPolicyTest'`
+- `./gradlew --no-daemon --max-workers=1 :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.settings.SettingsSearchPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.3.5 (2026-05-20)
+
+### 版本信息
+- 版本号从 `8.3.4` 升级到 `8.3.5`，`versionCode` 升级到 `199`。
+- 本次为“空间动态长图文、动态评论数量与评论区选择、空间页稳定性、历史与搜索补全”的维护更新，汇总 8.3.4 到 8.3.5 的全部改动。
+
+### 更新内容
+- **空间动态长图文**：修复 TDS 音频体验等 UP 空间里长图文只显示图片、不显示正文和评论数量的问题；空间动态 article 会把标题与摘要合成到动态正文槽位，保留封面、跳转、转发、评论和点赞计数。
+- **长图文全文跳转与图片加载**：`/opus/` 长图文链接现在直接进入动态详情全文，不再误走旧专栏兜底；兼容 `opus.pics.url` 图片字段，修复空间长图文图片只显示灰色占位的问题。
+- **动态评论数量与评论区选择**：评论按钮在手机窄槽位也保留非 0 数量；打开评论时会按列表页评论数选择最接近的评论区候选，减少动态图文在 `type=17` 与旧评论区之间选错导致数量不一致的问题。
+- **空间页稳定性**：修复空间页 LazyGrid 共享过渡崩溃、合集外层内容为空，以及充电视频/充电动态提示展示，减少空间页进入、滚动和卡片展示异常。
+- **历史与搜索补全**：修复观看历史里的 UP 跳转，搜索列表补充分页加载策略，减少搜索结果只显示首屏或历史入口无法正确进入 UP 空间的问题。
+- **版本与文档同步**：版本号升级到 `8.3.5` / `versionCode 199`，README、README_EN 和更新日志同步到 8.3.5。
+- **回归覆盖**：新增或更新空间动态模型解析、动态接口契约、空间动态加载/导航、动态评论候选选择、动态操作按钮、空间页合集/充电提示、观看历史 UP 跳转和搜索补页等测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.data.model.response.SpaceModelsParsingTest' --tests 'com.android.purebilibili.feature.space.SpaceDynamicLoadPolicyTest' --tests 'com.android.purebilibili.core.network.DynamicApiContractTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.dynamic.DynamicCommentLoadPolicyTest' --tests 'com.android.purebilibili.feature.dynamic.DynamicInteractionPolicyTest' --tests 'com.android.purebilibili.feature.space.SpaceDynamicLoadPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.dynamic.DynamicLayoutPolicyTest' --tests 'com.android.purebilibili.feature.space.SpaceDynamicLoadPolicyTest' --tests 'com.android.purebilibili.data.model.response.SpaceModelsParsingTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.3.4 (2026-05-19)
+
+### 版本信息
+- 版本号从 `8.3.3` 升级到 `8.3.4`，`versionCode` 升级到 `198`。
+- 本次为“评论楼中楼与竖屏评论体验、空间长图文、播放器手势/横竖屏、音频备用源、流畅度优先依赖维护”的维护更新，汇总 8.3.3 到 8.3.4 的全部改动。
+
+### 更新内容
+- **评论楼中楼与评论详情**：移除楼中楼模糊背景，修复分页加载和动效闪退；新增楼中楼下拉关闭把手，优化滚动加载、文本展开、下滑关闭跟手和竖屏评论展开比例，让二级评论进入、加载、关闭更稳定。
+- **竖屏评论与播放器联动**：重做竖屏评论播放器联动，修复竖屏评论进入横屏后的画面对齐问题，并减少评论展开时播放器区域比例突变。
+- **空间页与长图文**：修复空间长图文专栏显示，补齐空间动态模型解析、长图文内容块解析、动态导航与加载策略，减少空间页图文内容空白或误跳转。
+- **播放器手势与横竖屏**：修复竖屏弹幕首次设置不生效、双击快进提示计时异常；降低横竖屏自动切换灵敏度，修复竖屏和横屏视频位置偏移。
+- **视频音频稳定性**：修复视频播放时音频备用源选择错误的问题，按当前选中音轨匹配 `backupUrl`，在主音频 URL 无音轨或渲染异常时可回退到同一音质的备用音频源，减少“自动/192K 来回切才有声音”的情况。
+- **依赖维护**：按“流畅度优先、低运行风险”原则维护 AGP、Kotlin、Compose BOM、Lifecycle、Activity Compose、Window 与 Compose Animation 版本，不引入新的业务依赖。
+- **版本与文档同步**：版本号升级到 `8.3.4` / `versionCode 198`，README、README_EN 和更新日志同步到 8.3.4。
+- **回归覆盖**：新增或更新楼中楼展示、评论 Sheet、竖屏评论展示、竖屏分页、双击提示、空间动态加载/导航、空间模型解析、长图文解析、动态接口契约、视频详情布局和播放音频备用源等策略与结构测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.viewmodel.PlaybackCdnFallbackPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.usecase.VideoPlaybackUseCaseQualitySwitchTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.3.3 (2026-05-19)
+
+### 版本信息
+- 版本号从 `8.3.2` 升级到 `8.3.3`，`versionCode` 升级到 `197`。
+- 本次为“播放与空间页反馈、楼中楼体验、设置入口整理、液态玻璃与皮肤视觉修复、番剧历史记录提示”的维护更新，汇总 8.3.2 到 8.3.3 的全部改动。
+
+### 更新内容
+- **播放链路与空间页体验**：补充播放 CDN / 音频异常回退诊断、空间页已看进度与续播策略、空间投稿发布时间和播放量展示、今日推荐 UP 榜跳转、倍速锁定后的长按下滑解锁，以及合集订阅列表发布时间显示。
+- **评论楼中楼**：二级评论首屏不再只依赖根评论预览的 2 条回复，按分页接口加载更多楼中楼内容；补齐楼中楼文本点击展开、逐级展开动画、点击过渡和可选模糊开关，减少必须点“查看更多”才能看到内容的问题。
+- **设置页入口与发布声明**：将 Telegram 频道、Twitter / X 和打赏作者放到设置顶部第一组；发布渠道声明去除重复卡片，完整声明保持同一行可读，减少设置页顶部占位和重复 UI。
+- **UP 空间投稿工具栏**：投稿页“视频 / 图文 / 合集 / 系列”等二级标签与播放全部、单双列、排序入口合并为紧凑 dock；默认只显示当前标签，长按展开可横向滑动选择标签，选择后自动收起；标签指示器改为随文案自适应，不再被等间距拉长。
+- **液态玻璃与皮肤视觉**：修复首页皮肤包资源导入与消费、顶部标签页皮肤背景、首页贴纸与列表氛围、皮肤图标尺寸、顶部标签宿主可读性、贴纸裁切和下划线定位；通透底栏液态玻璃经过多轮折射、静止捕获、前景层级、颜色可读性和滑动对齐校准后，回滚移除不稳定实现，避免影响底栏可读性。
+- **历史记录与番剧播放诊断**：番剧类历史记录不再在缺少 UP 信息时显示“未知UP主”，改为按内容类型展示并隐藏 UP 标识；番剧播放器黑屏诊断接入首帧渲染状态，正常播放时不再误提示黑屏。
+- **版本与文档同步**：版本号升级到 `8.3.3` / `versionCode 197`，README、README_EN 和更新日志同步到 8.3.3。
+- **回归覆盖**：新增或更新播放 CDN 回退、空间播放进度、今日推荐 UP 榜、倍速手势、评论分页、楼中楼展示、设置入口、空间投稿工具栏、历史记录展示和番剧播放诊断等策略与结构测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.list.HistoryNavigationPolicyTest' --tests 'com.android.purebilibili.feature.bangumi.BangumiPlayerOverlayPolicyTest' --tests 'com.android.purebilibili.feature.space.SpaceScreenStructureTest' --tests 'com.android.purebilibili.feature.space.SpaceTabChromePolicyTest' --no-daemon`
+- `./gradlew :app:compileDebugKotlin --no-daemon`
+- `git diff --check`
+
+## v8.3.2 (2026-05-18)
+
+### 版本信息
+- 版本号从 `8.3.1` 升级到 `8.3.2`，`versionCode` 升级到 `196`。
+- 本次为“插件与皮肤包闭环、动态链接修复、关注分页补全、播放器动效、评论/BGM/空间页体验”的维护更新，汇总 8.3.1 到 8.3.2 的全部改动。
+
+### 更新内容
+- **插件 SDK 与皮肤包闭环**：完善插件 SDK 预览闭环，补齐数据型皮肤包预览、导入启用入口、资源渲染、装扮存档转皮肤包、应用内导入装扮存档皮肤和示例皮肤资源；修复沉底底栏皮肤失效、首页顶部/底栏布局、图标适配、文字裁切、深色可读性、色块与底栏文字颜色、悬浮底栏圆角裁剪和本地装扮皮肤解析去重。
+- **动态与链接解析**：修复动态专栏封面图显示、动态富文本链接误进视频页、超大视频深链误判动态、动态链接内部解析等问题，让专栏、动态、视频深链和 WebView 内部跳转更稳定。
+- **关注列表加载**：修复关注列表分页补全问题，补齐“加载更多”后的动态增量；关注分组/成员加载增加更平滑的 Lazy item 过渡，减少只显示前半段和加载突兀感。
+- **播放器手势动效**：横屏音量/亮度百分比数字统一为逐位上下渐隐、轻微模糊、非线性恢复和阻尼位移动效；数字变化只在有效刻度触发克制触感反馈，并同步到共享的手势百分比组件。
+- **竖屏视频返回详情**：竖屏全屏返回竖屏详情页时，覆盖层以顶部为锚点轻微缩小、上移并淡出，详情页内联播放器同步淡入并回到稳定比例，减少返回时整屏瞬间消失的割裂感。
+- **评论区显示**：合入 [@chenx-dust](https://github.com/chenx-dust) 的 [#348 更好的评论区显示](https://github.com/jay3-yy/BiliPai/pull/348)，优化评论排序/筛选、回复组件和相关视频卡片比例，补充评论组件策略测试。
+- **视频详情 BGM 发现**：合入 [@UsonTong](https://github.com/UsonTong) 的 [#349 在视频详情页内联“发现音乐”UI](https://github.com/jay3-yy/BiliPai/pull/349)，改为底部 Sheet，接入真实 BGM 详情、推荐视频、封面渲染、加载状态和影院/平板面板入口，减少跳网页的割裂感；修复合入后的 BGM 发现测试导入。
+- **空间页头像预览**：合入 [@UsonTong](https://github.com/UsonTong) 的 [#350 修复空间页头像无法预览的问题](https://github.com/jay3-yy/BiliPai/pull/350)，头像点击可进入图片预览。
+- **预测性返回与评论反诈**：继续按官方语义修正预测性返回开关动画、关闭态拦截优先级，并修复评论反诈误判。
+- **版本与文档同步**：版本号升级到 `8.3.2` / `versionCode 196`，README、README_EN 和更新日志同步到 8.3.2。
+- **回归覆盖**：新增或更新插件包读取、皮肤包安装/解析、动态链接解析、关注分组、评论反诈、评论区组件、BGM 发现 Sheet、播放器手势动效、竖屏详情返回动效等策略与结构测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.screen.PortraitDetailPresentationPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.ui.section.VideoGestureFeedbackPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.ui.section.BgmDiscoverySheetPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.ui.components.ReplyComponentsPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.3.1 (2026-05-17)
+
+### 版本信息
+- 版本号从 `8.3.0` 升级到 `8.3.1`，`versionCode` 升级到 `195`。
+- 本次为“消息与列表管理补全、首页状态保持、动态富文本清理、预测性返回修复、空降助手播放衔接、竖屏可读性”的维护更新，汇总 8.3.0 到 8.3.1 的全部改动。
+
+### 更新内容
+- **私信会话与消息中心**：补全私信会话分类、会话设置、整页昵称刷新、用户信息补全、消息预览解析和分页加载策略；修复加载更多分页与重复分页自动加载问题，避免会话列表反复请求或昵称缺失。
+- **历史、稍后再看与收藏管理**：补全历史记录与稍后再看的管理入口、删除策略和播放策略；收藏夹增加排序与失效内容清理能力，让常用列表具备更完整的整理流程。
+- **首页导航状态保持**：修复首页下滑一段视频后切到其它页面再返回会回到顶部的问题；底部导航和首页 feed 滚动状态增加结构测试，确保跨 Tab 返回时保留当前位置。
+- **动态富文本与图片占位**：动态正文、转发内容和专栏富文本已有真实图片时不再显示 `[图片]` / `【图片】` 占位文字；补齐动态富文本策略测试，覆盖普通动态与专栏富文本场景。
+- **预测性返回动画**：修复预测性返回手势全局失效、关闭后仍有预测性效果、开关状态不可靠等问题；应用内预测式返回动画改为由设置开关稳定控制，并收敛 Android 版本兼容策略。
+- **空降助手播放衔接**：修复空降助手跳过广告片段后不会自动继续播放的问题，跳过完成后按用户期望自动恢复播放，减少手动点播。
+- **竖屏播放器可读性**：竖屏全屏覆盖层新增顶部和底部渐变暗层，遮罩只放在文字/控件区域下方，提升白色视频背景下标题、作者、进度和顶部图标的可读性。
+- **设置首页结构**：修复设置首页重复分区标题，保持设置搜索和分类展示结构一致。
+- **版本与文档同步**：版本号升级到 `8.3.1` / `versionCode 195`，README、README_EN 和更新日志同步到 8.3.1。
+- **回归覆盖**：新增或更新私信分页、消息预览、消息中心策略、历史/稍后再看/收藏管理、首页滚动状态保持、底部导航状态保持、动态富文本占位、预测性返回、空降助手跳过播放和竖屏遮罩布局等测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.ui.overlay.PortraitFullscreenOverlayLayoutPolicyTest' --no-daemon`
+- `./gradlew :app:compileDebugKotlin --no-daemon`
+- `git diff --check`
+
+## v8.3.0 (2026-05-17)
+
+### 版本信息
+- 版本号升级到 `8.3.0`，`versionCode` 升级到 `194`。
+- 本次为“插件可视化、首页交互、黑名单导入导出、评论子回复统计、图片预览与返回动效”的主线更新，汇总 8.2.4 到 8.3.0 的累计改动。
+
+### 更新内容
+- **插件可视化与统计**：空降助手新增可视化统计、横向仪表盘尝试与回滚后的稳定布局，补齐日汇总 Worker 与通知通道；去广告插件新增过滤命中洞察、自定义规则列表管理、详情页可视化和头像补全，规则匹配与展示更容易排查。
+- **黑名单导入导出**：支持黑名单 JSON 文件导入、导出与分享，导入时会隐藏未知等级并补齐用户信息、同步数据结构、数据库字段和策略测试，减少跨设备迁移时的数据丢失。
+- **首页下拉刷新与顶部标签**：区分 Material 3 与 MIUIX 下拉刷新样式，优化顶部空间、物理反馈和回收手感；恢复首页顶部搜索与标签顺序，固定顶部标签位置，修正 MD3 顶部标签指示器跟手、iOS 指示器圆角、MIUIX 标签展示和外层阴影。
+- **分段控件与胶囊尺寸**：统一常用胶囊控件尺寸、分段控件外层圆角和设置分段控件透字问题；恢复分段指示器放大折射，让首页、搜索和设置类控件的触感更一致。
+- **搜索与列表体验**：搜索页的分类左右滑动方向改为符合直觉，搜索栏和结果区布局继续收敛；视频预览缩略图比例修复，列表/直播/空间等入口补充更稳定的外观策略。
+- **动态与图片预览**：图片预览长按保存新增合适的触发震感，并提供“图片长按保存”开关；动态和转发内容已有真实图片时不再额外显示 `[图片]` / `【图片】` 占位文字，图片预览文字也会使用过滤后的正文；视频预览缩略图比例和搜索分类滑动方向同步修正。
+- **首页底栏液态玻璃**：底栏动态红点不再被 item 胶囊裁切；滑动时折射捕获增加横向余量，减少快速拖动时折射不全；底栏前景、红点和搜索胶囊保持同一捕获层。
+- **评论子回复统计**：子回复详情页按 `x/v2/reply/reply` 文档优先使用 `data.page.count`，再用 `root.rcount`、游标数量和已加载数量兜底，避免根评论旧 `count` 覆盖详情接口真实二级评论数；新增回复后也会同步更新当前子回复总数。
+- **返回动效开关**：预测性返回设置不再依赖 Manifest 全局 opt-in，关闭后不会继续触发系统预测性返回手势效果；设置项文案改为应用内预测式返回动画，避免把运行时开关误写成系统级开关。
+- **番剧与追番稳定性**：修复追番列表重复 Key 闪退，补齐追番列表策略；追番、番剧和空间相关标签继续收敛到统一控件尺寸与视觉策略。
+- **设置与长文案布局**：修复 iOS 设置页长文案布局，新增图片长按保存设置搜索命中；平板设置布局和设置首页结构继续按真实场景整理。
+- **版本与文档同步**：版本号升级到 `8.3.0` / `versionCode 194`，README、README_EN 和更新日志同步到 8.3.0。
+- **回归覆盖**：新增或更新插件统计、去广告规则、黑名单导入导出、首页下拉刷新、顶部标签、分段控件、搜索滑动、图片预览、动态富文本、底栏红点/折射、子回复统计、预测性返回关闭、追番重复 Key 和设置搜索等策略测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.search.SearchScreenPolicyTest' --tests 'com.android.purebilibili.feature.dynamic.components.ImagePreviewFeedbackPolicyTest' --tests 'com.android.purebilibili.feature.dynamic.components.DynamicRichTextPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarDynamicReminderBadgePolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.dynamic.components.ImagePreviewTransitionPolicyTest' --tests 'com.android.purebilibili.feature.settings.PlaybackSettingsSelectionPolicyTest' --tests 'com.android.purebilibili.feature.settings.SettingsSearchPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.ui.components.SubReplyDetailPresentationPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.AndroidApiCompatibilityPolicyTest' --tests 'com.android.purebilibili.feature.settings.AnimationSettingsPolicyTest' --tests 'com.android.purebilibili.navigation.AppNavigationTransitionPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.2.3 (2026-05-16)
+
+### 版本信息
+- 版本号从 `8.2.2` 升级到 `8.2.3`，`versionCode` 升级到 `193`。
+- 本次为“播放画质弹窗修复 + 设置场景重组 + 首页顶部预设适配”的维护更新。
+
+### 更新内容
+- **播放画质弹窗**：自动最高画质会先解析为当前视频实际可播最高档，再和首播实际画质比较；视频本身最高只有 1080P60/1080P 时不再误弹“未能使用 HDR/4K”，真实的权限、设备能力、接口风控、省流量或手动切换失败仍会提示。
+- **播放设置文案**：重写自动最高画质、无线网络默认画质、流量默认画质和画质降档诊断弹窗说明，明确默认画质只是关闭自动最高后的保留偏好，视频本身无更高档不作为异常打断播放。
+- **全屏与手势入口**：修正设置入口图标，Material 3 使用触控语义图标，iOS/MIUIX 使用手势语义图标，不再显示警告图标。
+- **设置场景重组**：设置首页按账号与数据、播放体验、弹幕与互动、外观与界面、下载与网络、实验与扩展重新分组；手机与平板入口共用分类策略，搜索结果可定位到对应设置区块。
+- **播放、评论与互动设置**：播放设置拆分为画质与解码、播放行为、全屏与手势、弹幕与互动等场景小节；评论、互动提示、全屏手势等入口收敛到同一组设置组件。
+- **首页顶部标签**：保留新版顶部结构，同时补齐 iOS、安卓原生 Material 3、MIUIX 三种界面预设的搜索栏、统一面板、标签页、指示器和分区按钮策略；MIUIX 文本标签优先走原生分类行。
+- **顶部模糊区域**：重新调整首页顶部搜索与标签区域的毛玻璃覆盖，标签页一排纳入模糊背景，滚动内容不再直接穿透到标签文字下方。
+- **首页顶栏交互**：重写顶部标签滚动与分页同步，修复指示器跟随、拖拽保持、点击切换和横向滚动之间的边界，减少重复动画和视觉错位。
+- **底栏渲染预算**：收敛首页滚动期底栏液态玻璃采样、指示器光晕和切页动画预算，降低列表滚动时的额外渲染压力。
+- **视觉效果入口**：视觉效果相关开关继续收敛到预设感知策略，首页、底栏、顶部标签和设置入口共享更一致的渲染决策。
+- **个人页壁纸**：补充个人页壁纸展示策略测试，稳定沉浸背景和本地壁纸展示边界。
+- **版本与文档同步**：版本号升级到 `8.2.3` / `versionCode 193`，README、README_EN 和更新日志同步到 8.2.3。
+- **回归覆盖**：新增或更新播放画质首播目标、自动最高画质解析、播放设置文案、全屏手势图标、设置分组、设置搜索定位、首页顶部三预设、顶部模糊、底栏渲染预算和个人页壁纸等策略测试。
+
+### 验证
+- `./gradlew --no-daemon :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.viewmodel.VideoLoadRequestPolicyTest'`
+- `./gradlew --no-daemon :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.usecase.VideoPlaybackUseCaseQualitySwitchTest'`
+- `./gradlew --no-daemon :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.settings.PlaybackSettingsSelectionPolicyTest' --tests 'com.android.purebilibili.feature.settings.SettingsEntryVisualPolicyTest'`
+- `./gradlew --no-daemon :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.2.2 (2026-05-16)
+
+### 版本信息
+- 版本号从 `8.2.1` 升级到 `8.2.2`，`versionCode` 升级到 `192`。
+- 本次为“Firebase 日活统计 + 顶部导航回归修复”的维护更新。
+
+### 更新内容
+- **Firebase 日活统计**：使用情况统计默认开启，并新增 `daily_active` 每日活跃心跳事件，便于在 Firebase 后台确认真实用户正在使用；事件仅携带应用版本、构建类型、本地日期和触发来源，不上传 B 站账号 ID、视频 ID、房间号或可识别用户身份的信息；设置页仍保留开关，用户关闭后停止 Firebase Analytics 收集。
+- **顶部导航栏与首页分类切换**：修复直接点击顶部标签时的重复分页动画和体感延迟；恢复顶部标签栏横向滚动能力，游戏、科技等隐藏标签可再次滑出；横向滚动顶栏只移动标签栏，不切换页面；收敛 MIUIX 首页顶栏颜色与指示器视觉。
+- **搜索结果体验**：搜索结果页支持左右滑动切换分类，并修正滑动方向语义，让分类切换方向与内容分页保持一致。
+- **番剧索引筛选**：补全 PGC / 番剧索引分类筛选能力，新增筛选模型、解析策略和筛选组件，支持按索引分类刷新内容。
+- **稍后再看与收藏播放**：稍后再看列表新增刷新事件通道，播放、移除或状态变化后可触发列表动态刷新；修复收藏夹播放队列与听视频模式回跳时的上下文归属问题，减少返回错页或队列错乱。
+- **黑名单与站内链接跳转**：加强黑名单同步与导入策略，修复站内链接解析和跳转路径，覆盖 WebView、动态、评论、个人页、空间合集等入口，减少链接无法打开或跳错页面的问题。
+- **首页反馈与预览**：增强首页“不感兴趣”反馈策略，支持更稳定地提交不感兴趣原因和刷新推荐；视频预览弹窗补齐策略保护，减少预览状态异常。
+- **动态页与空内容状态**：修复动态空内容状态下底栏卡住的问题，空内容、加载与错误状态的底栏展示更稳定。
+- **播放器与竖屏全屏**：竖屏全屏叠层补充进度时间和倍速控制；优化竖屏详情、评论半屏、播放器信息展示和高画质降级提示；改进播放加载请求与缓存策略，降低高画质不可用时的误导和重复请求。
+- **平板与大屏布局**：修复平板播放页首页按钮行为；修复平板个人页消息中心入口和滚动布局；平板影院/播放布局与首页返回路由补充契约测试；开屏壁纸在平板上改进铺满展示策略。
+- **字体与外观设置**：补齐外部字体导入与文件存储策略，新增字体文件保存、清理和展示策略；外观设置新增字体导入入口与搜索路由，主题层支持从本地字体文件恢复字体。
+- **启动与网络稳定性**：启动任务加入更稳健的后台初始化策略；网络层与视频加载策略补强高画质降级、缓存和错误提示路径。
+- **版本与文档同步**：版本号升级到 `8.2.2` / `versionCode 192`，README 当前版本、隐私说明和最近更新同步到 8.2.2。
+- **回归覆盖**：新增或更新日活统计、顶栏滚动、首页反馈、番剧筛选、站内链接跳转、黑名单同步、字体导入、动态空内容、播放器竖屏全屏、播放加载、稍后再看刷新、平板导航和评论组件等策略测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.core.store.TelemetryDefaultsPolicyTest' --tests 'com.android.purebilibili.core.util.AnalyticsTrackingPolicyTest' --tests 'com.android.purebilibili.feature.home.components.TopTabRefractionPolicyTest' --tests 'com.android.purebilibili.feature.home.policy.HomePagerSyncPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.2.1 (2026-05-15)
+
+### 版本信息
+- 版本号从 `8.2.0` 升级到 `8.2.1`，`versionCode` 升级到 `191`。
+- 本次为“原生控件适配 + 顶栏/底栏液态玻璃打磨 + 播放稳定性修复”的维护更新。
+
+### 更新内容
+- **MIUIX 原生控件适配**：升级并适配 MIUIX 0.9.1，补齐原生列表分组、开关和基础控件的结构策略，设置与列表表面更贴近系统控件语义。
+- **顶部标签液态玻璃**：优化 MIUIX 顶部标签的液态玻璃表现，稳定拖拽状态、折射强度和指示器跟手形变，减少拖拽结束后的突兀跳变。
+- **底栏指示器复用**：底栏指示器复用既有色散和形变动效，让图标、文字和指示器在切换时保持一致节奏，减少重复实现带来的手感差异。
+- **播放稳定性**：修复重复视频 Key 导致的闪退；修复竖屏弹幕显示区域比例，让竖屏播放下弹幕区域更符合播放器内容空间。
+- **关闭共享元素后的原生转场**：关闭共享元素动画时，视频详情进退场改为按来源卡片左右方向对称运动，左侧卡片与右侧卡片方向相反，返回不再像直接退出。
+- **番剧与视觉 token 收敛**：番剧列表、次级组件和部分播放器/列表入口继续迁移到预设 token，减少硬编码样式和跨页面视觉偏差。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.navigation.AppNavigationTransitionPolicyTest' --tests 'com.android.purebilibili.navigation.AppNavigationMotionSpecTest' --tests 'com.android.purebilibili.feature.common.VideoLazyKeyPolicyTest' --tests 'com.android.purebilibili.feature.video.ui.pager.PortraitVideoPagerPolicyTest' --tests 'com.android.purebilibili.feature.home.components.TopTabMotionVelocityTest' --tests 'com.android.purebilibili.feature.home.components.TopTabStylePolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarLiquidSegmentedControlStructureTest' --tests 'com.android.purebilibili.core.ui.components.AppAdaptiveSwitchPolicyTest' --tests 'com.android.purebilibili.core.ui.components.IOSGroupSurfaceShapeStructureTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.2.0 (2026-05-15)
+
+### 版本信息
+- 版本号从 `8.1.6` 升级到 `8.2.0`，`versionCode` 升级到 `190`。
+- 本次为“播放器音量根因修复 + 底栏交互收敛 + 视觉 token 化”的主线更新。
+
+### 更新内容
+- **系统音量手势**：主播放器和番剧播放器的右侧上下滑音量手势改为直接控制系统媒体音量，移除应用内播放音量上限和持久化残留，避免关闭手势后仍被旧音量值限制。
+- **播放器与播放设置**：改进视频加载与横屏方向反馈；稍后再看播放进度可正确传递；双击跳转整合到播放设置，新用户默认关闭，减少误触。
+- **底栏交互**：底栏指示器、图标和文字的点按切换节奏更统一，跨多个入口切换时按距离调整过渡时长；滑动形变改用实时速度，停靠回弹更轻；实验高光默认关闭并从设置中隐藏。
+- **首页和底栏性能**：首页滚动期底栏玻璃采样更克制，降低滚动时的额外渲染压力；底栏、顶部栏、首页卡片、侧栏和液态指示器继续收敛到统一 motion / shape / surface token。
+- **设置与视觉基础设施**：新增预设感知的基础渲染策略，设置页和首页组件迁移到共享 token；补充硬编码 motion、shape、surface 的守护测试，减少后续视觉参数回退。
+- **回归覆盖**：补充播放器系统音量策略、设置映射、底栏指示器、底栏结构、导航切换时长、动画设置隐藏项、token 覆盖和播放设置入口等策略测试。
+
+### 验证
+- `./gradlew --no-daemon :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.video.ui.section.VideoPlayerSectionPolicyTest' --tests 'com.android.purebilibili.core.store.PlayerInteractionSettingsMappingPolicyTest' --tests 'com.android.purebilibili.core.store.HomeSettingsMappingPolicyTest' --tests 'com.android.purebilibili.core.ui.animation.DampedDragAnimationPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarIndicatorPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest' --tests 'com.android.purebilibili.feature.settings.AnimationSettingsPolicyTest' --tests 'com.android.purebilibili.navigation.AppTopLevelNavigationPolicyTest'`
+- `./gradlew --no-daemon :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.1.6 (2026-05-14)
+
+### 版本信息
+- 版本号从 `8.1.5` 升级到 `8.1.6`，`versionCode` 升级到 `189`。
+- 本次为“播放器控件回归修复 + 搜索入口动效 + 我的页壁纸优化”的维护更新。
+
+### 更新内容
+- **播放器控件显示修复**：收敛原生视频 Surface、播放器根容器和全屏覆盖层的点按路径，修复控件隐藏后单击不稳定显示的问题，并保留正式版 Overlay R8 规则。
+- **播放状态与方向策略**：跨视频切换时尊重用户手动暂停状态，避免暂停后切换视频被自动恢复播放；恢复视频方向策略基线，降低分栏/返回后的方向异常。
+- **播放队列补强**：稍后看/播放队列来源扩展到更多视频列表场景，队列入口、布局和空状态策略继续收敛。
+- **底栏搜索体验**：底栏搜索入口新增点击后的压缩/淡出过渡，再进入搜索页；搜索页入场动效、底栏捕获宽度和设置页外观入口联动同步优化。
+- **我的页壁纸与服务区优化**：个人页沉浸背景从清晰头图渐隐到模糊背景，减少横向断层；“官方壁纸 / 本地相册 / 恢复默认”按钮在手机三列下统一两行排版；沉浸式服务区改为轻量列表岛，账号操作独立到底部，收藏夹快捷入口压缩为横向小卡。
+- **回归覆盖**：补充播放器生命周期、视频详情方向、稍后看队列、底栏搜索、搜索页入场、我的页壁纸、服务区结构和正式版控件保留规则等策略测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.ReleasePlayerOverlayR8KeepRulesTest' --tests 'com.android.purebilibili.feature.video.playback.session.PlaybackLifecycleCoordinatorTest' --tests 'com.android.purebilibili.feature.video.screen.VideoDetailScreenPolicyTest' --tests 'com.android.purebilibili.feature.video.screen.WatchLaterQueueUiPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest' --tests 'com.android.purebilibili.feature.search.SearchScreenPolicyTest' --tests 'com.android.purebilibili.feature.profile.ProfileWallpaperActionLayoutPolicyTest' --tests 'com.android.purebilibili.feature.profile.ProfileWallpaperTransformPolicyTest' --tests 'com.android.purebilibili.feature.profile.ProfileServicesVisibilityPolicyTest' --tests 'com.android.purebilibili.core.ui.wallpaper.WallpaperPresentationPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.1.5 (2026-05-14)
+
+### 版本信息
+- 版本号从 `8.1.4` 升级到 `8.1.5`，`versionCode` 升级到 `188`。
+- 本次为“播放进度/字幕/CDN 增强 + 动态关注状态同步 + 正式版播放器控件修复”的维护更新。
+
+### 更新内容
+- **正式版播放控件**：补充播放器控件 Overlay 的 R8 保留规则，修复正式版中双击暂停、长按倍速等手势正常，但单击后 UI 控件不显示的问题。
+- **播放进度与控制条**：接入高能进度（PBP）数据解析与归一化，播放器底部进度条可展示强度脊线；横屏/竖屏底部控制条、拖动预览、平板影院布局和进度显示策略继续收敛。
+- **字幕能力补强**：播放器信息中的字幕轨道会映射为受信任字幕源，支持更稳定的一/双语字幕选择、AI 字幕识别、字幕位置偏移和大字号显示，并补充字幕解析、排序和去重策略。
+- **CDN 插件**：保留并同步内置 CDN 区域插件修复，继续限制到 `bilivideo.com` 播放地址改写，并保留原始播放地址作为回退候选。
+- **动态同步**：关注/取消关注操作会向动态页同步状态；取消关注后会从动态缓存列表、已关注用户侧栏和直播缓存中移除对应 UP。
+- **搜索与外观收敛**：搜索视频卡片改为更扁平的列表视觉，减少重复卡片包裹；外观设置和主题组件分支继续收敛，降低维护成本。
+- **视频简介设置**：播放设置新增“默认展开视频简介”开关，并接入设置搜索和设置分享；关闭后视频详情简介默认收起，默认行为仍保持展开。
+- **视频方向策略**：保留大屏/分栏返回时的方向锁释放修复，避免返回后方向状态异常。
+- **底栏手感**：底栏指示器拖拽时保持放大和跟手形变；点按切换不放大；松手停下时平滑回到原始大小，避免突然缩回。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.ReleasePlayerOverlayR8KeepRulesTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.search.SearchResultCardAppearancePolicyTest' --tests 'com.android.purebilibili.feature.settings.SettingsSearchPolicyTest' --tests 'com.android.purebilibili.feature.video.progress.PbpProgressPolicyTest' --tests 'com.android.purebilibili.feature.video.subtitle.BiliSubtitlePolicyTest' --tests 'com.android.purebilibili.feature.video.ui.section.VideoPlayerSectionPolicyTest' --tests 'com.android.purebilibili.feature.video.ui.section.VideoInfoDisplayPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.BottomBarIndicatorPolicyTest' --tests 'com.android.purebilibili.feature.home.components.TopTabRefractionPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `./gradlew :app:compileReleaseKotlin`
+- `git diff --check`
+
+## v8.1.4 (2026-05-13)
+
+### 版本信息
+- 版本号从 `8.1.3` 升级到 `8.1.4`，`versionCode` 升级到 `187`。
+- 本次为“P0 体验补齐 + 播放/评论/个人页细节增强”的维护更新。
+
+### 更新内容
+- **个人页与首页**：当底栏已有“历史”入口时，“我的”页会隐藏重复历史按钮；“我的收藏”下新增收藏夹快捷入口，可直接打开对应收藏夹；首页顶部标签在只开启少量分类时自动居中。
+- **视频详情与播放**：视频介绍默认展开；播放流选择记录所选 DASH 编码、视频码率和音频码率，便于排查画质/音质选择问题；视频详情 Tab 切换动画按 UI 风格收敛节奏。
+- **评论区增强**：新增评论发送检测开关，评论发送后可提示是否正常显示；新增评论区个性装扮开关，可隐藏粉丝牌、铭牌和装扮卡片；评论回复预览数量可在播放设置中调整，减少频繁点展开。
+- **图片预览与分享**：图片预览文字显示状态可记忆；动态/转发图片预览动效与反馈继续打磨；图片预览新增系统分享按钮，评论区图片打开预览后可直接分享，GIF/WebP/PNG/JPEG 会尽量保留原格式。
+- **番剧、搜索与设置入口**：番剧播放页补充评论入口；搜索页和设置搜索补充动态预览文字、评论发送检测、评论装扮、进入视频自动播放和评论预览数量等关键词命中。
+- **直播体验**：直播列表和直播间补强真实观看人数解析；直播间互动面板默认显示/布局占位策略更稳定；直播分类分段控件结构补充回归约束。
+- **策略与回归覆盖**：补充直播解析、直播布局、播放流选择、评论发送检测、番剧评论入口、动态图片预览、设置搜索、个人页服务隐藏、收藏夹快捷入口、顶部标签居中、视频介绍展开、评论预览数量和图片分享格式等测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.dynamic.components.ImagePreviewFeedbackPolicyTest.imageShareMimeType_preservesAnimatedAndStaticFormats'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.1.3 (2026-05-11)
+
+### 版本信息
+- 版本号从 `8.1.2` 升级到 `8.1.3`，`versionCode` 升级到 `186`。
+- 本次为“播放手势与底栏手感修复 + 收藏/合集空指针修复 + 视频内互动提示隐藏能力”的维护更新。
+
+### 更新内容
+- **播放手势修复**：收敛播放器滑动/拖动判定和进度条手势策略，补充长按倍速、seek 手势与全屏覆盖层相关设置链路，降低横屏/播放器区域操作冲突。
+- **底栏与首页手感**：继续优化底栏指示器位移、液态拖拽阻尼和首页网格策略，降低滑动时的抖动、回弹错位和布局跳动。
+- **收藏与合集稳定性**：修正收藏夹、合集/系列详情和通用列表的本地状态映射与空数据处理，降低列表聚合、模式切换和详情初始化时的异常概率。
+- **PR #316 空指针修复**：合入 `@chenx-dust` 的初始化顺序修复，避免列表/合集 ViewModel 在父类 `init` 阶段访问尚未初始化的子类 Map 时触发 `NullPointerException`。
+- **视频内互动提示隐藏**：原“屏蔽关注/点赞弹幕”扩展为“隐藏视频内互动提示”，设置会同时隐藏关注、一键三连、UP 提示和投票等命令弹幕，并接入播放设置、视频详情弹幕面板、横屏/竖屏播放器覆盖层和设置分享。
+- **视频操作图标整理**：视频详情点赞、投币、收藏、稍后看和下载入口继续收敛到统一图标语义，减少旧 `rememberApp*Icon` 与新图标体系混用。
+- **回归覆盖**：补充播放器手势、底栏指示器、收藏映射、收藏夹聚合、弹幕设置映射、播放设置入口和命令弹幕过滤策略测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.core.store.DanmakuSettingsMappingPolicyTest' --tests 'com.android.purebilibili.feature.settings.PlaybackSettingsSelectionPolicyTest' --tests 'com.android.purebilibili.feature.video.danmaku.CommandDanmakuPolicyTest'`
+- `git diff --check`
+
+## v8.1.2 (2026-05-10)
+
+### 版本信息
+- 版本号从 `8.1.1` 升级到 `8.1.2`，`versionCode` 升级到 `185`。
+- 本次为“首页滑动误触修复 + 分段控件手势收敛 + Compose 状态采集稳定性”的维护更新。
+
+### 更新内容
+- **首页/底栏误触修复**：主底栏 `HorizontalPager` / `VerticalPager` 关闭用户手势滑动，保留底栏点击切页，避免在首页顶部搜索、分类等区域横滑时误跳到动态页。
+- **系统返回策略**：返回键策略改为先解析应用级动作，保留非首页 Tab 先回首页的拦截行为，避免预测返回开关打开后 retained bottom tab 直接退出或走错返回路径。
+- **分段控件手势**：共享液态分段控件区分“从指示器开始拖动”和“扫过标签后松手选择”，只有从当前指示器起手才连续跟随，普通横向扫动按释放位置选择目标，减少误拖和抖动。
+- **首页顶部 Tab 同步**：顶部分类指示器在 pager 目标页和 offset 符号不一致时按目标方向计算，视口跟随锚点改用目标分类，降低滑动时指示器反向或分类栏追踪错位。
+- **Compose 状态采集稳定性**：首页、收藏/历史通用列表、稍后再看、个人页、壁纸选择器、视频详情、竖屏播放器、平板布局、评论、合集、播放器覆盖层和音频模式等高频入口的 `collectAsState` 统一使用显式非空 `context`，减少不同 Compose 版本/重载解析下的编译和行为风险。
+- **回归覆盖**：新增 `ComposeCollectAsStateUsageTest` 扫描高频生产源码，锁定 `collectAsState` 命名参数和显式 `context`；补充分段控件拖拽、顶部 Tab pager 方向和主底栏 pager 手势策略测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.navigation.AppTopLevelNavigationPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.ComposeCollectAsStateUsageTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarLiquidSegmentedControlStructureTest' --tests 'com.android.purebilibili.feature.home.components.HomeInteractionMotionBudgetPolicyTest' --tests 'com.android.purebilibili.navigation.AppTopLevelNavigationPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.1.1 (2026-05-10)
+
+### 版本信息
+- 版本号从 `8.1.0` 升级到 `8.1.1`，`versionCode` 升级到 `184`。
+- 本次为“应用内截图能力 + 首页/导航策略修复 + 启动遮罩控制 + 底栏滑动视觉收敛 + issue #313 图标美化阶段性落地”的维护更新。
+
+### 更新内容
+- **应用内干净截图**：新增前台手势截图能力，支持全窗口保存和手选区域截图；截图流程会避开启动页、PiP 过渡、全屏锁定和保存中的状态，降低误触与异常截图概率。
+- **截图设置入口**：播放设置新增“应用内干净截图”、触发方式和截图范围选项，并接入设置搜索。
+- **主页/导航策略**：顶部分类和底部 pager 的同步策略继续收敛，减少导航切换期间的多余页面组合和分类语义绕路。
+- **主题刷新**：主 Activity 增加系统深浅色快照刷新策略，降低系统主题变化后应用内状态不同步的概率。
+- **启动图标遮罩控制**：外观设置新增“开屏图标遮罩动画”开关；关闭后会切换到无图标启动入口，系统 Splash 不再停留或播放应用图标遮罩，开屏壁纸可更快接管启动画面。
+- **启动入口同步**：应用图标切换与遮罩开关共用 launcher alias 同步逻辑，桌面图标继续保持用户选择的图标，同时启动主题可独立使用透明图标。
+- **底栏滑动视觉收敛**：底栏 item 的选中态、颜色权重、图标透明度和缩放统一由指示器覆盖度驱动，滑动过程中前景颜色和图标填充更连续。
+- **底栏导出层位移修复**：底栏导出内容改用 `graphicsLayer.translationX` 叠加指示器位移，减少 `offset` 与玻璃捕获层不同步导致的滑动错位。
+- **图标美化阶段性落地**：补齐 `AppIcons` 的 watch-later / coin 语义入口，播放页、横屏/竖屏覆盖层、音频模式、预览弹窗、评论输入、合集和“我的/侧边栏/底栏”相关入口逐步改为统一图标映射。
+- **AI 总结布局**：时间节点固定到右侧列，正文区域使用权重布局，减少长中文挤压时间胶囊的问题。
+
+### 未完成
+- issue #313 的全应用图标迁移仍未改完；设置页、弹幕设置、章节面板、选集弹窗、相关视频卡片等低频入口仍需继续分批收敛。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.core.ui.AppIconsPresetPolicyTest' --tests 'com.android.purebilibili.feature.profile.ProfileTopBarSystemUiPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarColorBindingPolicyTest' --tests 'com.android.purebilibili.feature.settings.BottomBarSettingsScreenIconPolicyTest' --tests 'com.android.purebilibili.feature.video.ui.VideoInteractionIconPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.core.store.AppIconAliasMappingTest' --tests 'com.android.purebilibili.MainActivityAppCompatContractTest' --tests 'com.android.purebilibili.StartupSplashPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.BottomBarIndicatorPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.1.0 (2026-05-08)
+
+### 版本信息
+- 版本号从 `8.0.9` 升级到 `8.1.0`，`versionCode` 升级到 `183`。
+- 本次为“整体观感流畅度优化 + 分段控件手感收敛”的功能更新。
+
+### 更新内容
+- **后台内存控制**：图片内存缓存上限从 15% 收紧到 10%，普通后台隐藏时改为裁剪热缓存并触发回收；系统继续施加后台压力时清空热缓存，降低后台常驻占用，同时保留普通切回的少量热封面。
+- **首页滑动流畅度**：首页封面预加载改为滑动停稳后保守触发，最多预取 2 个封面，避免快速滑动时预加载抢占资源。
+- **视频转场合理性**：共享元素已就绪时路由级动画让位给共享元素，减少视频详情进出时 slide / fade / sharedBounds 多层叠加；常规导航时长同步收紧，降低拖尾感。
+- **分段控件手感**：共享分段控件使用更克制的 spring 与折射参数，视频详情 Tab 和评论排序条关闭点击瞬间折射，保留拖动时的液态反馈但减少点按晃动。
+- **回归覆盖**：补充后台缓存裁剪、首页预加载、导航转场、分段控件 motion、视频详情 Tab 和评论排序条策略测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.PureApplicationTrimPolicyTest' --tests 'com.android.purebilibili.feature.home.HomePerformancePolicyTest' --tests 'com.android.purebilibili.navigation.AppNavigationTransitionPolicyTest' --tests 'com.android.purebilibili.navigation.AppNavigationMotionSpecTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarIndicatorPolicyTest' --tests 'com.android.purebilibili.feature.video.screen.VideoContentTabBarPolicyTest' --tests 'com.android.purebilibili.feature.video.ui.components.CommentSortFilterBarPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.0.9 (2026-05-08)
+
+### 版本信息
+- 版本号从 `8.0.8` 升级到 `8.0.9`，`versionCode` 升级到 `182`。
+- 本次为“底栏滑动跟手修复 + 预测返回开关修复”的小版本维护更新。
+
+### 更新内容
+- **底栏滑动跟手**：恢复底栏拖动阶段的即时跟手更新，松手后再执行吸附动画，减少左右滑动指示器卡顿与不跟手。
+- **底栏视觉反馈**：保留滑动过程中的图标折射、色散和选中态动态效果，同时继续移除切换后图标上下收缩的多余动画。
+- **预测返回设置**：manifest 保持系统预测返回 opt-in，开关打开时恢复系统预测返回动画；关闭时由经典 BackHandler 拦截返回，避免继续触发系统预测返回预览。
+- **回归覆盖**：补充底栏拖动、预测返回 manifest opt-out、设置搜索和导航转场策略测试，锁定相关行为。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.core.ui.animation.DampedDragAnimationPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.AndroidApiCompatibilityPolicyTest' --tests 'com.android.purebilibili.feature.settings.AnimationSettingsPolicyTest' --tests 'com.android.purebilibili.feature.settings.SettingsSearchPolicyTest' --tests 'com.android.purebilibili.navigation.AppNavigationTransitionPolicyTest'`
+- `./gradlew :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.0.8 (2026-05-08)
+
+### 版本信息
+- 版本号从 `8.0.7` 升级到 `8.0.8`，`versionCode` 升级到 `181`。
+- 本次为“底栏动画与液态玻璃优化 + 空间页投稿布局切换 + PiP 播放控制修复”的小版本维护更新。
+
+### 更新内容
+- **底栏动画与液态玻璃**：补充 `Backdrop Native` 底栏液态玻璃预设，底栏折射改为更克制的横向拖动反馈，收敛指示器色散、内容层偏移和选中态强调，减少滑动时整条底栏“果冻化”的晃动感。
+- **底栏材质细节**：滚动时只推进玻璃材质的透明度、高光、阴影和轻量折射，不再把首页纵向滚动进度叠加到 shell / capture 缩放；悬浮搜索展开时的首页图标也改为更稳定的独立尺寸与缩放。
+- **空间页投稿视频**：投稿列表新增网格/单列切换，默认保持原双列网格；单列模式复用归档列表行样式，并通过淡入淡出和尺寸过渡减少切换跳动。
+- **PiP / 媒体控制**：画中画按钮改为根据播放意图生成明确的播放或暂停动作，不再依赖可能滞后的 `isPlaying` 状态；系统媒体播放、暂停按键也拆分为显式控制，降低暂停后被误切回播放的概率。
+- **回归覆盖**：补充底栏指示器/布局策略、空间页布局策略、结构检查和迷你播放器媒体控制策略测试，锁定底栏折射参数、默认布局、全宽 span、PiP 动作选择和显式播放/暂停行为。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.BottomBarIndicatorPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarLayoutPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.space.SpaceLoadPolicyTest' --tests 'com.android.purebilibili.feature.space.SpaceScreenStructureTest' --tests 'com.android.purebilibili.feature.video.player.MiniPlayerMediaControlPolicyTest'`
+- `git diff --check`
+
+## v8.0.6 (2026-05-06)
+
+### 版本信息
+- 版本号从 `8.0.5` 升级到 `8.0.6`，`versionCode` 升级到 `179`。
+- 本次聚焦安卓原生 MD3E 适配和视频/直播方向策略修复。
+
+### 更新内容
+- **@Jay3-yy** 新增安卓原生 `Material 3 Expressive / MD3E` 子风格入口，补齐设置持久化、外观选项、主题 shape / typography / motion 接入，并锁定 Compose Material3 `1.5.0-alpha18`。
+- **@Jay3-yy** 深度适配 MD3E：顶部栏、底栏、首页顶部分类、共享列表、搜索、通用列表和视频设置面板获得更明显的 Expressive 圆角、选中容器、tonal surface 与动效策略。
+- **[@chenx-dust](https://github.com/chenx-dust) [#267](https://github.com/jay3-yy/BiliPai/pull/267)** 修复平板屏幕旋转体验，移除手机误入平板模式逻辑，并按官方推荐调整屏幕大小检测方式。
+- **[@chenx-dust](https://github.com/chenx-dust) [#267](https://github.com/jay3-yy/BiliPai/pull/267)** 同步修复视频和直播的方向策略。
+
+### 验证
+- `./gradlew --no-daemon -Dkotlin.compiler.execution.strategy=in-process :app:testDebugUnitTest --tests 'com.android.purebilibili.core.theme.AndroidNativeVariantThemePolicyTest' --tests 'com.android.purebilibili.core.ui.components.AdaptiveListComponentPolicyTest' --tests 'com.android.purebilibili.core.ui.AdaptiveScaffoldWallpaperPolicyTest' --tests 'com.android.purebilibili.feature.home.components.TopTabStylePolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarLayoutPolicyTest' --tests 'com.android.purebilibili.feature.search.SearchChromePolicyTest' --tests 'com.android.purebilibili.feature.list.CommonListAppearancePolicyTest' --tests 'com.android.purebilibili.feature.video.ui.components.VideoSettingsPanelActionPolicyTest'`
+- `./gradlew --no-daemon -Dkotlin.compiler.execution.strategy=in-process :app:compileDebugKotlin`
+- `git diff --check`
+
+## v8.0.5 (2026-05-05)
+
+### 版本信息
+- 版本号从 `8.0.4` 升级到 `8.0.5`，`versionCode` 升级到 `178`。
+- 本次聚焦首页到视频详情的共享元素转场、首页导航动效，以及竖屏/平板播放布局一致性。
+
+### 更新内容
+- **共享元素详情转场**：封面、标题和元信息拆分动效角色，进入、返回和元信息跟随分别使用更合适的 spring 参数。
+- **来源页背景动效**：从首页、历史、搜索、收藏、稍后再看等视频卡片进入详情或返回时，来源页整体收缩/恢复；Android 12+ 可叠加实时模糊。
+- **转场降级策略**：共享元素未就绪、卡片转场关闭或 predictive-stable 场景下自动降级，避免返回抖动和重复 blur。
+- **动画设置**：新增“共享元素背景模糊”开关，并接入设置搜索、ViewModel、DataStore 映射和导航外观模型。
+- **视频入口覆盖**：首页多种卡片、相关推荐、竖屏互动栏、竖屏 pager、视频信息区和平板视频布局同步接入新的共享转场参数。
+- **底栏动效**：搜索胶囊、Dock 宽度、内容淡入淡出和搜索图标缩放改为先快后慢；指示器色散与 settle pulse 保持原策略。
+- **首页导航细节**：底栏释放时更早切换目标项并等待回弹收束，顶部 tab 指示器尺寸和图标/文字间距同步压缩。
+- **测试覆盖**：补充导航转场、共享元素策略、设置映射、底栏结构、顶栏样式、竖屏互动栏和平板/封面策略测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.navigation.AppNavigationTransitionPolicyTest' --tests 'com.android.purebilibili.navigation.AppNavigationAppearancePolicyTest' --tests 'com.android.purebilibili.core.store.HomeSettingsMappingPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.BottomBarMiuixStructureTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarLayoutPolicyTest' --tests 'com.android.purebilibili.feature.home.components.BottomBarIndicatorPolicyTest'`
+- `git diff --check`
+
+## v8.0.4 (2026-05-04)
+
+### 版本信息
+- 版本号从 `8.0.3` 升级到 `8.0.4`，`versionCode` 升级到 `177`。
+- PR / 提交来源：
+  - **[@UsonTong](https://github.com/UsonTong) [#281](https://github.com/jay3-yy/BiliPai/pull/281)**：`fix: 修复两个音乐发现的问题`，merge commit `3764f6d4`。
+  - **@本地修复**：首页卡片播放量显示修复，修复提交号随 8.0.4 release commit 生成。
+- 本次为音乐发现页和首页卡片统计显示维护版本。
+
+### 更新内容
+- **[@UsonTong](https://github.com/UsonTong) [#281](https://github.com/jay3-yy/BiliPai/pull/281)** 优先使用 B 站官方 BGM `jumpUrl` 打开“发现音乐”，避免从首页、历史等入口进入视频后点击 BGM 直接进入原生音乐播放。
+- **[@UsonTong](https://github.com/UsonTong) [#281](https://github.com/jay3-yy/BiliPai/pull/281)** WebView 放行 `music.bilibili.com` 官方音乐详情页，避免音乐发现页被原生路由提前拦截。
+- **[@UsonTong](https://github.com/UsonTong) [#281](https://github.com/jay3-yy/BiliPai/pull/281)** 接入 `x/copyright-music-publicity/bgm/multiple/music` BGM 列表接口，支持多首背景音乐识别和展开/收起展示。
+- **[@UsonTong](https://github.com/UsonTong) [#281](https://github.com/jay3-yy/BiliPai/pull/281)** 视频详情页、平板影院布局和播放状态链路同步传递完整 BGM 列表，保留单首 BGM 兼容展示。
+- **@播放量修复** 首页视频卡片封面底部播放量胶囊增加内容保底宽度，避免在评论数、在线人数和时长同时显示时被挤成 `...`。
+- **@播放量修复** 播放量文本改为一次解析后同时供封面统计和信息区统计复用，并补充卡片统计布局策略测试。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.cards.VideoCardCoverStatsLayoutPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.home.components.cards.*'`
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.web.WebViewNavigationPolicyTest'`
+- `git diff --check`
+
+## v8.0.3 (2026-05-03)
+
+### 版本信息
+- 版本号从 `8.0.2` 升级到 `8.0.3`，`versionCode` 升级到 `176`。
+- PR / 提交来源：
+  - PR #273：`refactor: 更好的平板/折叠屏体验，修复 UI 问题`，作者 `chenx-dust`，merge commit `b4ae9235`。
+  - 直接提交：`Fix wallpaper and video interaction UI`，作者 [`Jay3-yy`](https://github.com/jay3-yy)，commit `cf300988`。
+  - 本次维护提交：作者 [`Jay3-yy`](https://github.com/jay3-yy)，提交号随 8.0.3 release commit 生成。
+- 本次为平板/折叠屏体验、视频交互、首页背景和播放器设置维护版本。
+
+### 更新内容
+- 合入 PR #273：优化平板/折叠屏视频页与“我的”页面空间利用率，调整平板影院布局、侧边栏展开按钮和导航栏 padding，减少大屏布局压缩与留白问题。
+- 优化全局壁纸/玻璃背景下的搜索顶栏显示，避免已有全局壁纸时重复叠加搜索顶栏模糊层；补齐搜索顶栏颜色与模糊策略测试。
+- 优化首页卡片封面统计标签布局，播放量、评论/弹幕、在线人数和时长标签在窄宽度下改用可收缩/省略策略，减少封面信息挤压。
+- 优化命令弹幕交互提示：支持关闭单条提示，调整关注/一键三连卡片留白和覆盖区域，避免提示遮挡过久。
+- 调整长按倍速锁定灵敏度，区分全屏和非全屏场景，降低普通竖屏播放中误触锁定的概率。
+- 修复首页背景图片设置后可能出现两张图片上下分离或重叠的问题，背景层改为单图渲染，避免同一 URI 被重复加载叠放。
+- 播放设置中的播放器缩小选项改为视频方向策略：`关闭 / 竖屏 / 横屏 / 全部`，并按当前视频横竖屏过滤，避免选择“竖屏”后横屏视频仍触发缩小。
+- 拆出竖屏内联播放器宿主组件，降低 `VideoDetailScreen` 主 Composable 方法体积，避免 Kotlin 编译时触发 `MethodTooLarge`。
+- 补充平板/动态、搜索顶栏、命令弹幕、播放器策略、首页背景渲染和竖屏策略行为的目标单元测试。
+
+### 验证
+- PR #273 已随 merge commit `b4ae9235` 合入主分支。
+- `cf300988` 已随主分支包含动态、搜索、命令弹幕和播放器交互相关测试。
+- `./gradlew :app:testDebugUnitTest --tests 'com.android.purebilibili.feature.settings.PlaybackSettingsSelectionPolicyTest' --tests 'com.android.purebilibili.feature.video.screen.PortraitDetailPresentationPolicyTest' --tests 'com.android.purebilibili.feature.video.screen.VideoDetailPlayerCollapsePolicyTest' --tests 'com.android.purebilibili.feature.home.HomeGlassVisualPolicyTest'`
+
+## v8.0.2 (2026-05-01)
+
+### 版本信息
+- 版本号从 `8.0.1` 升级到 `8.0.2`，`versionCode` 升级到 `175`。
+- 本次为全局壁纸、液态玻璃和播放体验维护版本，重点修复跨页面玻璃采样、设置分段控件字号、首页文字可读性和音频倍速失真。
+
+### 更新内容
+- 外观设置补齐首页壁纸作用范围，可选择仅首页使用或全局页面复用同一壁纸背景；全局模式下默认背景层透明显示，让动态、收藏、历史、设置等页面共享壁纸氛围。
+- 统一首页、动态、收藏、历史等页面的液态玻璃底栏采样源，底栏会同时捕获全局壁纸和页面内容；清理旧底栏玻璃渲染残留，底栏外壳、隐藏文字捕获层和分段控件使用同一套模糊参数。
+- 设置等页面的液态分段控件默认字号提升到 `14sp`，MD3 多选项 segmented control 字号同步上调，改善指示器内文字偏小和比例不协调的问题。
+- 首页视频卡片 UP 主名称、UP 标识、UP 元信息和发布时间改用 `onSurface` 派生颜色，浅色模式下更接近黑色，深色模式下自动适配高对比前景色。
+- 修复音频/听视频倍速播放时的失真问题，倍速切换后保持更稳定的音频输出。
+
+### 验证
+- 通过全局壁纸、底栏玻璃结构、设置分段控件和首页卡片元信息相关目标单测。
+
+## v8.0.1 (2026-05-01)
+
+### 版本信息
+- 版本号从 `8.0.0` 升级到 `8.0.1`，`versionCode` 升级到 `174`。
+- 本次为插件系统与推荐体验维护版本，重点补齐今日推荐算法优化、内置 CDN 属地优选插件、外部插件开发文档和插件中心展示细节。
+
+### 今日推荐单与推荐算法
+- 今日推荐单升级为推荐插件接口实现，补齐 `RECOMMENDATION_CANDIDATES`、`LOCAL_HISTORY_READ`、`LOCAL_FEEDBACK_READ` 能力声明，并可从统一推荐请求输出候选队列、推荐解释和偏好 UP 分组。
+- 推荐评分新增模式聚焦信号：「今晚轻松看」更偏向短时长、低刺激、轻松/治愈内容，并降低高热度学习内容权重；「深度学习看」更偏向教程、科普、技术、复盘和中长时长内容，并降低短平快娱乐内容权重。
+- 队列多样性从“避免同一 UP 连续出现”扩展到“避免同一主题连续堆叠”，对音乐、学习、游戏、美食、旅行、日常等主题做去重与新鲜度调节。
+- “不感兴趣”反馈会记录最近视频标题、UP 主、时间和关键词，后续推荐同时降权已反馈视频、UP 主和负向关键词。
+- 今日推荐单设置页新增“推荐依据”，展示当前模式侧重点、近期偏好 UP、最近不感兴趣样本和已降权信号；模式切换改用液态分段控件。
+
+### CDN 属地优选插件
+- 新增内置插件「CDN 属地优选」，默认关闭，面向默认 B 站 CDN 线路不稳定、跨地区网络或海外出口用户。
+- 插件启用后会后台请求 B 站 IP 属地接口并缓存地区信息，再把匹配地区的 CDN host 改写候选排到普通视频播放线路前面。
+- 插件只改写普通视频 `bilivideo.com` 播放 URL 的 host，保留 scheme、path、query，并始终保留 B 站原始 `baseUrl / backupUrl`，播放失败仍可走现有 CDN 切换与错误恢复。
+- 内置 CDN catalog 改为使用项目提供的 `cdn.json`，并修复海外地区错误优先 `gotcha` host 导致开启插件后播放异常的问题；旧缓存 host 不属于当前 catalog 时会自动回退到新 catalog。
+
+### 插件中心与开发文档
+- 插件中心新增「播放 CDN」能力展示，内置插件能力不再显示外部插件的“需授权 / 安装前确认”文案，避免把内置插件误导为需要额外授权。
+- CDN 属地优选图标改为服务器节点语义，所有官方内置插件作者统一为 `BiliPai项目组`。
+- 外部插件开发文档已同步：JSON / `.bpplugin` 指南见 [docs/PLUGIN_DEVELOPMENT.md](docs/PLUGIN_DEVELOPMENT.md)，源码级原生插件见 [docs/NATIVE_PLUGIN_DEVELOPMENT.md](docs/NATIVE_PLUGIN_DEVELOPMENT.md)，Plugin SDK 中文文档见 [plugins/sdk/README.md](plugins/sdk/README.md)。
+- `.bpplugin` 仍处于预览阶段：当前支持 manifest 解析、SHA-256 / 签名状态展示和能力授权记录，宿主暂不执行外部 Dex。
+
+### 主题与资源守卫
+- 迁移启动、通知、快捷方式和深色主题资源中的硬编码颜色引用，改用命名颜色资源，降低深色模式和动态配色回归风险。
+- 新增硬编码颜色迁移守卫测试，防止已迁移 UI 与 XML 资源重新引入裸色值。
+
+### 验证
+- `./gradlew :app:testDebugUnitTest --tests '*TodayWatch*'`
+- `./gradlew :app:testDebugUnitTest --tests '*Cdn*' --tests '*PlayerErrorRecoveryPolicyTest'`
+- `./gradlew :app:testDebugUnitTest --tests '*PluginsScreenPolicyTest' --tests '*Cdn*'`
+- `./gradlew :plugin-sdk:testDebugUnitTest`
+- `./gradlew :app:assembleDebug`
+
+## v8.0.0 (2026-04-30)
+
+### 版本信息
+- 版本号从 `8.0.0 RC` 升级到 `8.0.0`，`versionCode` 升级到 `173`。
+- 本次为 `8.0.0` 正式版，汇总并收敛 `8.0.0 Alpha1` 至 `8.0.0 RC` 以及 RC 后的主线修复。
+
+### 8.0.0 Beta / 预发布阶段汇总
+- 8.0.0 预发布阶段集中重做播放器、竖屏详情、评论弹层、离线缓存、直播分区、首页玻璃导航、设置结构和主题色体系，为正式版的 UI 预设和播放体验打底。
+- 播放器侧持续修复 seek、长按倍速、自动连播、听视频、后台播放、小窗、系统画中画、横竖屏切换和全屏退出路径，减少恢复播放、弹幕层和方向状态残留。
+- 评论侧重构竖屏评论、二级回复、评论排序、UP/置顶评论、粉丝团装扮、图片兜底和回复组件展示，补齐评论弹层与视频页嵌入式评论的交互一致性。
+- 首页与导航侧逐步引入液态玻璃底栏、顶部标签、热门二级分类、直播分类分段控件和统一滚动/指示器策略，减少标签滑动、底栏动画和玻璃表面在不同 UI 预设下的回归。
+- 直播侧完善直播首页、分区、直播间播放器、实时消息、分类指示器和统一视觉策略，让直播列表、直播播放器和平板布局在 8.0 正式版前收敛。
+- 空间、动态、搜索和收藏链路补齐聚合资料、合集/系列、动态分页、动态评论、搜索分类、专栏/番剧/直播结果和历史导航等能力，提升从搜索、空间和动态进入内容页的稳定性。
+- 设置与主题侧拆分播放、动画、外观、底栏和 Tips 等入口，迁移多处硬编码颜色到主题 token，补齐 iOS / Miuix / MD3 预设的结构与策略测试。
+
+### 8.0.0 RC 阶段汇总
+- RC 阶段重点做稳定性收口：修复平板视频与直播全屏退出方向、播放器恢复意图、双击播放状态同步，以及视频详情/直播播放器的设备尺寸分类。
+- 继续打磨首页、空间、直播、设置和底栏液态分段控件，统一评论区、视频页、空间、动态、直播等复用场景的 Android 原生液态玻璃指示器动画。
+- 补齐命令弹幕、特殊弹幕、实时消息、听视频模式、回复组件、空间 tab、直播分类、底栏颜色绑定和设置搜索等回归测试。
+- RC 后主线继续合入搜索 WBI、话题详情、视频评论回到顶部、空间网格和主题 token 迁移，作为 `8.0.0` 正式版的最后一轮增量。
+
+### 搜索、话题与导航
+- 搜索接口统一迁移到 WBI 路径，补齐综合搜索分页信息、热搜 WBI 优先加载和搜索字段清洗，减少 HTML 标记、图片协议和分页状态异常。
+- 新增直播用户、话题和图片搜索结果模型与加载链路，搜索页支持进入直播间、UP 空间和话题详情。
+- 新增话题详情页，接入话题顶部信息与话题动态流，支持动态卡片继续跳转视频、番剧、直播、用户空间和动态详情。
+- 合集/系列详情路由补齐 UP 名称透传，空间页进入合集/系列后视频卡片能保留作者信息。
+
+### 首页、底栏与液态分段控件
+- 底栏动效、主题色权重和移动态表面色继续收敛，补齐底栏颜色绑定、表面色和指示器策略测试。
+- 通用 `BottomBarLiquidSegmentedControl` 对齐首页底栏的 Android 原生液态玻璃指示器：复刻 lens、色散、highlight、shadow、innerShadow 和速度形变参数，并避免无外部 backdrop 时的静止残影。
+- 直播分类、空间 tab、评论排序、视频页简介/评论等复用分段控件继续共用同一套底栏液态玻璃动画与 Android 原生回退策略。
+
+### 评论、视频详情与空间
+- 视频评论弹层新增“回到顶部”显示策略，回复组件、二级回复详情和粉丝团装扮展示继续优化，提升身份装扮、图片兜底和文本对比度。
+- 视频信息区、竖屏详情和播放器区补齐展示策略，减少标题、简介、关注按钮和播放区在不同布局下的状态回归。
+- 空间页内容网格改用稳定列数策略，合集/系列/收藏夹列表补齐 ownerName，并统一空间视频卡片展示。
+- 动态流分页、动态评论弹层、动态卡片布局和动作按钮继续修复，增强重复数据、分页游标和评论目标的稳定性。
+
+### 主题、设置与视觉一致性
+- 登录、个人页、下载页、设置入口、缓存清理动画、抽屉和部分首页/直播卡片迁移到 Material 主题 token，减少硬编码颜色对深色模式和动态配色的干扰。
+- 播放设置选择项、设置搜索入口、Tips 设置页和 iOS 分段控件继续调整，保持设置页搜索、入口图标和分段选择器的一致性。
+- 底栏、液态玻璃表面、首页顶部标签、直播视觉和空间 tab 继续补齐结构/策略测试，降低 UI 预设切换时的回归风险。
+
+### 文档与验证
+- README / README_EN 同步到 `8.0.0`。
+- 补充搜索模型、话题解析、话题导航、空间布局、评论回到顶部、视频信息展示、底栏液态分段控件和主题色迁移相关单元测试。
+
+## v8.0.0 RC (2026-04-30)
+
+### 版本信息
+- 版本号升级到 `8.0.0 RC`，`versionCode` 升级到 `172`。
+
+### 播放器与平板适配
+- 修复视频播放恢复路径中的双击播放状态同步问题，避免暂停/恢复后被重复用户恢复意图干扰。
+- 视频详情布局、直播播放器和平板判断改用稳定设备尺寸分类，减少折叠屏、平板和多窗口场景下布局模式反复跳变。
+- 修复平板视频与直播全屏后退出时被切回竖屏的问题，退出全屏后继续尊重当前设备尺寸和方向状态。
+- 补充播放器恢复、全屏双击、用户恢复意图、视频详情布局和平板尺寸分类相关回归测试。
+
+### 首页、空间与直播
+- 首页 UI 预设继续打磨，优化 iOS / Miuix 设置项、底栏液态分段控件、开关控件和首页性能策略。
+- 首页视频卡片、顶部标签和底栏控件补齐结构与颜色策略测试，减少主题色、玻璃表面和动画状态回归。
+- 直播分区、直播间布局和实时消息展示继续收敛，补充直播分类分段控件、实时消息和直播布局策略测试。
+- 空间页重整聚合资料、头部展示和 tab chrome，提升个人空间在不同信息密度下的加载与展示稳定性。
+
+### 弹幕与交互
+- 弹幕发送响应、命令弹幕解析和命令弹幕覆盖层补齐更多字段与策略，增强特殊弹幕和交互弹幕的展示能力。
+- 听视频模式、回复组件和弹幕右键/长按菜单继续统一交互表现，减少播放器模式切换后的状态残留。
+- 补充弹幕仓库、命令弹幕协议、命令弹幕 UI、听视频播放模式和回复组件相关回归测试。
+
+### 设置与文档
+- 修复平板设置页内边距与滚动区域问题，避免内容贴边或滚动容器高度异常。
+- 设置搜索补充 UI 预设、动画、播放、底栏等入口，设置页结构测试同步覆盖 Miuix 简化布局。
+- README / README_EN 同步到 `8.0.0 RC`。
+- 贡献者与 PR：感谢 @chenx-dust 提交 PR #253、PR #260，感谢 @jay3-yy 完成本轮主线整合、发布整理与文档同步。
+
+## v8.0.0-Alpha9 (2026-04-29)
+
+### 版本信息
+- 版本号升级到 `8.0.0-Alpha9`，`versionCode` 升级到 `171`。
+
+### 播放器与小窗
+- 新增“小窗+画中画”后台播放模式，返回应用内列表时保留悬浮小窗，切到手机桌面时仍可进入系统画中画。
+- “小窗/画中画不加载弹幕”现在同时覆盖应用内小窗和系统画中画，避免竖屏播放切小窗后仍显示弹幕。
+- AI 总结时间点跳转改用统一 seek 提交流程，保留跳转前的继续播放意图，减少跳转后自动暂停。
+- 画中画过渡期间提前进入 PiP 渲染态，降低弹幕层被系统画中画捕获的概率；听视频自动画中画同步支持组合模式。
+
+### 首页与交互
+- 热门二级分类改为液态玻璃分段控件，支持拖动选择并统一首页控件语言。
+- 收敛首页顶部分类指示器的渲染与跟随滚动策略，减少内容页横滑时顶部指示器的额外滑动干扰。
+- 补充首页热门二级分类、顶部标签动效和直播分类指示器相关回归测试。
+
+### 文档与验证
+- README / README_EN 同步到 `8.0.0-Alpha9`。
+- 通过播放器后台模式、PiP、seek 恢复、首页顶部标签、直播分类指示器等目标单测，并通过 `:app:assembleDebug`。
+
+## v8.0.0-Alpha8 (2026-04-29)
+
+### 版本信息
+- 版本号升级到 `8.0.0-Alpha8`，`versionCode` 升级到 `170`。
+
+### UI 与交互
+- 直播首页一级分类继续复用底栏液态玻璃指示器、滑动动画和色散效果。
+- 保留指示器左右拖动选择；外层分类区域不再响应手动横滑，避免与指示器手势冲突。
+- 指示器拖向尚未完整露出的分类时，分类区域会按指示器实时位置自动左右跟随，确保目标文字和胶囊完整显示。
+- 直播“全部标签”父分类改为固定单项宽度和指示器跟随滚动，避免多标签时文字被压缩隐藏。
+
+### v7 到 v8 简要汇总
+- 8.0 系列重点重做直播、播放器、竖屏评论、离线缓存、首页玻璃导航、主题色、图标体系和设置结构。
+- 持续补齐 seek、长按倍速、横竖屏方向、评论弹层、动态图片、直播分区和液态玻璃控件的回归测试。
+
+### 文档与验证
+- README / README_EN 同步到 `8.0.0-Alpha8`。
+- 补充并通过直播分类指示器实时跟随滚动的策略与结构测试。
+
+## v8.0.0-Alpha7 (2026-04-28)
+
+### 版本信息
+- 版本号升级到 `8.0.0-Alpha7`，`versionCode` 升级到 `169`。
+
+### 首页
+- 修复首页视频网格遇到重复 `bvid` 时 LazyGrid key 冲突导致滚动闪退的问题。
+
+### UI 与交互
+- 修复设置页 iOS / Android 原生外观切换等分段控件的液态玻璃指示器被外层圆角裁剪的问题。
+- 修复视频详情“简介 / 评论”和评论排序等嵌入式液态玻璃指示器放大空间不足、边缘被裁剪的问题。
+- 将底栏、顶部标签和平板侧边栏相关入口统一整理到“导航设置”，外观设置聚焦主题、颜色、排版、图标、动画和首页展示。
+- 优化液态玻璃底栏指示器滑动过渡、动态卡片底部操作按钮、视频评论展示宽度和设置分组圆角观感。
+- 新增并整理 BiliPai 粉、BiliPai 白、BiliPai Monet 图标，精简旧版派生图标。
+
+### 文档与验证
+- README / README_EN 同步到 `8.0.0-Alpha7`。
+- 补充并通过首页视频网格 key 策略单测，覆盖重复 `bvid` 场景。
+
+## v8.0.0-Alpha6 (2026-04-26)
+
+### 版本信息
+- 版本号升级到 `8.0.0-Alpha6`，`versionCode` 升级到 `168`。
+
+### 播放器与横竖屏
+- 修复拖动进度条后播放器尚未恢复播放时过早清理 seek 状态，导致进度条停住不再刷新的问题。
+- 非全屏长按倍速释放后不再误触发控制栏/进度条显示，交互与全屏场景保持一致。
+- 全屏播放器退出时恢复进入前的方向请求，避免平板、横屏和竖屏混合使用后方向状态异常。
+- 竖屏视频进入评论区时保持播放区域尺寸，不再切到评论后播放器缩小且无法下拉恢复。
+
+### 外观、导航与设置
+- 设置首页将“底栏设置”整理为“导航设置”，统一承载底部导航、顶部标签和平板侧边栏配置。
+- 外观设置移除顶部标签、顶部栏自动收缩和侧边导航入口，保留主题、颜色、排版、图标、动画和首页展示等外观职责。
+- 安卓原生 MD3 / Miuix 设置卡片修正圆角边框绘制，避免分组圆角缺口。
+- 视频评论展示区域加宽，提升长评论阅读舒适度。
+
+### 首页、动态与液态玻璃
+- 底栏液态玻璃指示器在首页到动态滑动过程中实时跟随位置上色，避免动画中途突然变色。
+- 动态卡片底部转发和评论按钮改为“图标 + 文字”样式，评论数与标签一起展示。
+- 动态评论/分享按钮和底栏指示器补充策略测试，减少主题色与动画状态回归。
+
+### 应用图标
+- 新增 BiliPai 粉、BiliPai 白、BiliPai Monet 图标与启动器别名。
+- 精简旧版蓝色、霓虹和多色 Telegram 派生图标，统一图标选择列表和历史 key 归一化。
+
+### 文档与验证
+- README / README_EN 同步到 `8.0.0-Alpha6`。
+- 补充并通过设置搜索、导航设置、外观结构、播放器 seek、长按倍速、全屏方向、竖屏评论、动态按钮、底栏指示器、图标映射等目标单测。
+
+## v8.0.0-Alpha5 (2026-04-26)
+
+### 版本信息
+- 版本号升级到 `8.0.0-Alpha5`，`versionCode` 升级到 `167`。
+
+### 外观与主题
+- 主题色系统接入 Material Kolor，支持 `TonalSpot` 等色彩风格与 `SPEC_2021` / `SPEC_2025` / `Default` 色彩标准选择，动态取色和手动主题色都会走统一的 Material 3 配色生成链路。
+- 主题色调色板扩展到 25 个预设，新增炽焰红、绯樱粉、星云紫、暮影紫、晴空蓝、日光黄、琥珀金、雾霭蓝灰、晨曦粉等高饱和风格种子色。
+- 外观设置页新增“色彩风格”和“色彩标准”下拉项，并把新主题配置纳入设置导入导出。
+- 动态页顶部“全部 / 投稿 / 番剧 / 专栏 / UP”选中态统一使用当前主题主色，避免深色表面下固定金色与用户主题不一致。
+
+### 首页玻璃与导航
+- 首页右上角设置按钮接入与搜索框一致的液态玻璃和磨砂模糊表面，顶栏玻璃风格更统一。
+- 首页顶部浮动分类 dock 增加独立玻璃承载层，圆角、内边距和背景采样更接近底栏。
+- 首页顶部 dock 的文字/图标折射改为与底栏一致的“隐藏采样层 + 可见内容层”，减少液体玻璃下文字发虚、重影或渲染路径不一致的问题。
+- 底栏液体玻璃指示器提高主题色混入比例和透明度下限，移动和静止时主题色更明显，浅色/深色背景下都更容易辨认。
+
+### 动态与图片预览
+- 修复图片预览退出动画卡手、不连贯的问题，关闭时从当前图片显示区域平滑回到来源位置，并移除末尾回弹。
+- 动态详情页图片网格不再强制截断到 9 张；列表卡片仍保留 9 张上限和“+N”提示，详情页可完整查看长图集。
+- 动态图片宫格的显示数量、更多徽标和详情页展示策略抽成独立策略，减少列表页与详情页行为不一致。
+
+### 专栏阅读
+- 专栏接口解析补充 `ops` 内容流，兼容更多新版专栏正文结构。
+- 专栏正文解析新增 `ops` 文本、图片卡片和结构化段落内图片兜底，减少专栏详情空白或漏图。
+- 专栏图片会按接口宽高设置宽高比，避免图片加载前后版面明显跳动。
+
+### 播放器与弹幕
+- 移除 ML Kit 人脸检测和人脸避挡弹幕链路，删除 Play Services 人脸检测依赖、模型安装状态 UI 和相关检测循环，减少包体、后台检测开销和 Google Play 服务依赖。
+- 普通视频、横屏全屏和竖屏播放器弹幕层回到直接使用 `DanmakuView`，横竖屏切换时按视图尺寸重新绑定，保持弹幕显示稳定。
+- 关闭关联视频播放地址的预加载，避免还未打开的视频提前发起播放地址请求，降低首播抢带宽和额外流量。
+
+### 文档与验证
+- README / README_EN 同步到 `8.0.0-Alpha5`。
+- 补充图片预览、首页顶栏玻璃、顶部 dock 折射、底栏指示器、动态 tab 主题色、主题色调色板、专栏解析、动态图片网格和人脸模型移除相关策略测试。
+
+## v8.0.0 Alpha4 (2026-04-25)
+
+### 版本信息
+- 版本号升级到 `8.0.0 Alpha4`，`versionCode` 升级到 `166`。
+
+### 首页与玻璃导航
+- 底栏默认切换为新版浮动玻璃方案，重做三层背景、色散透镜、按压放大和长按/点击反馈。
+- 底栏移动指示器支持动态折射、内容采样和拖拽过程中的图标/文字跟随效果，滑动时选中态不再只锁定在旧 tab。
+- 顶栏统一面板圆角、内边距和搜索/分类间距，分类按钮改为与可见分类等宽居中，整体对齐更接近底栏。
+- 首页顶部分类和底栏共用更多液态玻璃调参策略，降低不同 chrome 区域的视觉割裂。
+
+### 播放器与手势
+- 长按倍速锁定区域去掉大块上下玻璃遮罩，改为轻量边缘标记，减少视频画面遮挡。
+- 修复长按锁定倍速后无法还原倍速、也无法切换到更高倍速的问题；手动倍速菜单和双指倍速会先解除锁定再应用新倍速。
+- 横屏、竖屏和播放器面板继续收敛倍速、seek、手势排除区和控制层状态，减少控制栏显示时的误触与状态残留。
+
+### 兼容性与稳定性
+- 搜索推荐、直播聊天和日志缓存移除不兼容的 `removeFirst()` 调用，补充 Android API 兼容性测试，降低旧系统运行风险。
+
+### 测试
+- 补充底栏玻璃、顶栏布局、长按倍速锁定和版本兼容相关策略测试，覆盖本轮 UI 与交互回归。
+
+## v8.0.0 Alpha3 (2026-04-25)
+
+### 版本信息
+- 版本号升级到 `8.0.0 Alpha3`，`versionCode` 升级到 `165`。
+
+### 本次更新
+- 评论操作补齐更多菜单，支持将一级/二级评论保存为带二维码的图片。
+- 图片预览支持一键隐藏或显示随图文字，阅读大图时减少遮挡。
+- 修复横屏控制栏显示时，屏幕中央和中下区域拖动进度不生效的问题，详情页横屏与全屏横屏都会按可见控件高度收敛手势排除区。
+- 修复拖动进度条后视频偶发暂停、预览图和进度停在拖动位置的问题；进度条拖拽被系统手势或界面重组打断时会主动清理 seek 状态。
+- 修复横屏全屏中央滑动快进/后退后，进度条先回到原位再跳到目标位置的问题；seek 提交后会保持目标进度，直到播放器真实位置追上。
+- 横屏播放/暂停按钮改为原生 Material 图标，颜色跟随当前主题主色，并移除灰色圆形背景和阴影感承载层。
+- 优化播放器 seek、小窗滑动快进和长按倍速锁定，降低跳进度和误触概率。
+- 竖屏二级评论沿用一级评论的播放器收缩表现，横屏/竖屏弹幕显示和字号更贴合视频比例。
+- 搜索历史读写和输入框自动聚焦增加异常兜底，避免局部数据或焦点状态异常影响搜索页。
+
+## v8.0.0 Alpha2 (2026-04-24)
+
+### 版本信息
+- 版本号升级到 `8.0.0 Alpha2`，`versionCode` 升级到 `164`。
+
+### 本次更新
+- 修复升级到 Alpha1 后部分设备桌面不显示 BiliPai、只能从系统应用设置中找到的问题。
+- 合集订阅/取消订阅改为真实调用接口，并同步合集订阅状态。
+- 修复横屏控制栏显示时，屏幕中央拖动无法调节播放进度的问题。
+- 放大首页顶部标签页的文字、图标和图标加文字样式，改善布局协调性。
+
+## v8.0.0 Alpha1 (2026-04-24)
+
+### 版本信息
+- 版本号从 `7.9.9` 升级到 `8.0.0 Alpha1`，`versionCode` 升级到 `163`。
+
+### 直播体验
+- 直播竖屏/横屏播放器的顶部信息区继续瘦身，移除占用内容区的主播信息条，把关注、画质、高能榜、发弹幕、屏蔽弹幕等操作统一收进右上角更多菜单。
+- 直播更多菜单补齐关注主播、切换画质、打开高能榜、发送弹幕、屏蔽弹幕、复制链接、分享和浏览器打开等入口，减少竖屏观看时的视觉遮挡。
+
+### 播放器与手势
+- 普通视频左右区域点击快进/后退改为走统一 seek 会话提交逻辑，保留播放恢复意图，并同步弹幕时间轴和用户 seek 记录。
+- 快进/后退目标位置增加边界收敛：已知时长的视频不会越过结尾，后退不会小于 `0`，直播或未知时长场景保持开放式 seek。
+- 全屏播放器在控制栏显示时不再响应拖拽手势，避免拖动控制条、按钮或弹层时误触发亮度、音量、快进等全屏手势。
+- 视频重试、解码兜底重试和 CDN 线路切换会保留当前播放位置、音轨语言与播放/暂停意图，减少重试后跳回开头或强制自动播放的问题。
+
+### 竖屏视频与评论
+- 竖屏评论主弹层支持下滑拖拽关闭，并向竖屏播放器回传弹层展开进度。
+- 竖屏评论展开时，播放器画面会随评论弹层展开进度缩小，评论关闭后恢复原尺寸，减少评论遮挡视频画面的突兀感。
+- 评论二级回复详情弹出时，竖屏内联播放器也会进入紧凑布局，避免回复详情和播放器区域互相挤压。
+- 视频详情页的独立评论二级页宿主拆成独立 composable，继续保留时间戳跳转、用户跳转、视频跳转、搜索词跳转和回复输入能力。
+
+### 离线缓存
+- 修复缓存进度百分比异常：下载进度现在会统一收敛到 `0%` 到 `100%`，避免旧任务或异常浮点值导致列表中出现 `2147483647%` 等无效进度。
+- 下载列表的圆形进度条和“下载中 xx%”文案都改为使用同一套安全进度计算，恢复历史任务和实时下载状态时表现一致。
+- 修复缓存失败后隔一段时间再重试容易显示 `HTTP 403` 的问题：当检测到旧视频/音频直链过期或被拒绝时，会重新请求播放地址并用新直链继续下载。
+- 仅音频缓存也会参与直链刷新逻辑，避免音频任务因空地址或过期地址直接失败。
+- 下载任务状态更新时会顺带清理异常进度值，减少异常状态被继续带入后续 UI 展示。
+
+### 开发与文档
+- `docs/wiki/AI.md` 补充 BiliPai 仓库的默认 skill 选择规则，明确 Compose、Android 平台和模拟器验证任务分别优先使用的轻量工具组合。
+- 新增和更新播放器 seek、竖屏评论展示、全屏手势、离线缓存进度恢复等策略测试，方便后续回归这些高频交互。
+
+### 稳定性与验证
+- 通过下载、更新检查、播放器 seek、竖屏详情、竖屏评论、播放器区域和全屏手势相关目标单测验证，确认缓存修复、播放器交互策略和 `8.0.0 Alpha1` 版本格式可正常编译与回归。
+
+## v7.9.9 (2026-04-23)
+
+### 版本信息
+- 版本号从 `7.9.8` 升级到 `7.9.9`，`versionCode` 升级到 `162`。
+
+### 本次更新
+- 直播体验继续打磨：横屏直播支持聊天切换与悬浮聊天层，分区直播在风控或频率限制时会自动回退列表请求，并补上空态提示。
+- 搜索发现改回更接近原版的双列样式，推荐内容会穿插最近搜索、关注 UP 主和通用热门，减少连续同类推荐。
+- 首页与列表细节修复：滑到直播标签会直接打开直播页，未观看视频不再误显示“已看完”进度条。
+
+## v7.9.7 (2026-04-22)
+
+### 版本信息
+- 版本号从 `7.9.6` 升级到 `7.9.7`，`versionCode` 升级到 `160`。
+
+### 本次更新
+- 普通视频详情页支持展示“xx 人正在看”，并在外观设置新增「视频页观看人数」开关。
+- 搜索页“搜索发现”优先结合最近搜索联想和关注 UP 主，再补充官方推荐与热搜，减少固定兜底内容占位。
+- 首页推荐视频新增「首页视频时长」外观开关，可隐藏封面右下角时长徽标，释放封面空间。
+- 补充直播 UI 对齐方案文档，为后续直播页合并和验证保留清晰实施记录。
+
+## v7.9.6 (2026-04-19)
+
+### 版本信息
+- 版本号从 `7.9.5` 升级到 `7.9.6`，`versionCode` 升级到 `159`。
+
+### 本次更新
+- 修复首页 MD3 / Miuix 风格下滑隐藏顶部推荐标签时残留半透明面板的问题，折叠后不再遮挡首屏视频封面。
+- 动态页新增左右滑动切换「全部 / 投稿 / 番剧 / 专栏 / UP」标签，并补上跟随方向的内容切换动画。
+- 底栏短视频入口复用现有竖屏播放器体验，支持评论、详情、推荐切换、手势、弹幕和用户/搜索入口；同时修复 Story 流分页游标和重复内容追加。
+- 优化竖屏推荐与前台恢复：减少长刷后同 UP/同质内容连续追加，修复锁屏再亮屏后可能黑屏或画面停住的问题。
+- 空降助手按 `cid` 请求片段数据，并且同一跳过类型只保留锁定或票数更高的最佳片段，避免开场动画等类型被连续多次跳过。
+
+## v7.9.5 (2026-04-19)
+
+### 版本信息
+- 版本号从 `7.9.4` 升级到 `7.9.5`，`versionCode` 升级到 `158`。
+
+### 本次更新
+- 离线缓存继续修复：批量下载优先展示合集/系列完整分集，避免只看到当前稿件分 P；应用退出后，中断中的下载任务会自动回到队列继续调度，手动暂停的任务仍保持暂停。
+- 播放与依赖链路升级：Media3/ExoPlayer 升级到 `1.10.0`，同步更新 Compose、Lifecycle、Room、DataStore、WorkManager、Navigation、OkHttp、Retrofit、Firebase、Lottie、Haze 等稳定依赖；播放器通知和 Crashlytics API 已适配新版依赖。
+- 首页、列表、动态、设置和视频详情页继续打磨：补强顶部标签/底栏手势、通用列表外观、设置搜索、评论弹层、视频详情布局与路由参数处理，减少界面状态不一致和入口不易发现的问题。
+
+## v7.9.4 (2026-04-18)
+
+### 版本信息
+- 版本号从 `7.9.3` 升级到 `7.9.4`，`versionCode` 升级到 `157`。
+
+### 本次更新
+- 设置体验继续补强：外观设置页新增“顶部标签页”直达入口，可直接跳转到顶部标签的显示、隐藏与排序管理；设置搜索和通用设置文案同步改为“自定义底栏和顶部标签”，顶部标签相关能力更容易被发现。
+- 自动画质策略调整：默认清晰度选项补上 `4K HDR`，自动最高画质的说明同步更新；VIP 账号自动最高画质现在最高优先到 `4K HDR`，避免再直接冲到更激进的超高规格清晰度。
+- 播放器全屏行为修复：补强自动全屏触发时机，兼容 `STATE_READY` 后才切到播放态的场景；手动进入全屏的请求生命周期也做了收口，离开全屏后不会残留错误请求状态。
+- 弹幕拖动预览更干净：开始拖动进度条预览时，会先暂停旧弹幕时间线再清屏，减少 seek scrub 过程中旧时间点弹幕残留、错位继续飘过屏幕的问题。
+- 下载兼容性修复：修复 Android 16 / `targetSdk 35` 下点击离线下载因前台服务类型缺失导致的闪退，补齐 `dataSync` 前台服务类型、权限声明和下载通知渠道。
+
+## v7.9.3 (2026-04-18)
+
+### 版本信息
+- 版本号从 `7.9.2` 升级到 `7.9.3`，`versionCode` 升级到 `156`。
+
+### 本次更新
+- 修复离线缓存批量下载反复重试、进度条从 0 到 100 循环、退出应用后下载列表丢失等问题；下载改为更稳的持久化、串行队列与可恢复续传。
+- 首页顶部标签页支持独立下滑收起/上滑恢复；动态、历史、收藏页支持单击底栏当前项回到顶部，并新增滚动后的回顶按钮。
+- 优化播放首播链路：播放地址获取支持更早预热与并行获取，播放器首播缓冲更积极，减少点开视频后的等待时间。
+- 首页视频与直播封面默认改为高清加载，并在设置中新增“省流量时降低首页封面清晰度”开关。
+- 优化竖屏视频体验：封面到首帧的过渡不再出现上下割裂，简介下滑时播放器会像评论页一样联动收缩，提升信息区可读性。
+
+## v7.9.1 (2026-04-17)
+
+### 版本信息
+- 版本号从 `7.9.0` 升级到 `7.9.1`，`versionCode` 升级到 `154`。
+
+### 本次更新
+- 修复播放器进度条反复拖动时预览图偶发卡住的问题，补强拖动取消与底部手势排除区处理。
+- 修复视频页常亮策略，未开始播放、暂停和播放结束后允许系统正常息屏。
+- 修复平板横屏进入竖屏沉浸播放时的画面比例异常，避免偶发留黑边或填充状态不一致。
+- 补齐 UP 主空间合集/系列视频的共享元素过渡，并同步部分头部与标签在深浅色主题下的显示。
+
+## v7.9.0 (2026-04-17)
+
+### 版本信息
+- 版本号从 `7.8.3` 升级到 `7.9.0`，`versionCode` 升级到 `153`。
+
+### 空间页体验
+- UP 主空间页继续修正顶部布局，头像、统计区与关注按钮的相对位置更稳定，顶部毛玻璃与滚动内容的联动保持一致。
+- 关注按钮在头部右侧区域重新布局，不再贴边，视觉重心更居中。
+
+### 普通视频弹幕
+- 普通视频弹幕链路补齐更多原始字段解析，会员渐变彩色弹幕、自发弹幕标记、重复计数与点赞相关信息能继续向渲染层传递。
+- 弹幕发送面板新增“关注弹幕”开关，并补上会员渐变彩色发送参数。
+- 重复弹幕合并不再额外生成居中的黄色特效弹幕，保留更贴近视频场景的普通合并显示方式。
+
+### 下载与离线缓存
+- 自定义下载目录场景补强离线缓存列表的可播放判断，仅对本地文件仍存在的任务开放离线播放入口。
+- 下载位置展示增加 URI 容错，异常路径字符串不会再把离线缓存页拖崩。
+- 对已导出到自定义目录但本地缓存文件不可用的任务补上明确提示，减少误点后异常退出。
+
+## v7.8.3 (2026-04-16)
+
+### 版本信息
+- 版本号从 `7.8.2` 升级到 `7.8.3`，`versionCode` 升级到 `152`。
+
+### 播放器与进度条
+- 播放器进度条、拖动预览和 seek 预览链路重写，横屏主进度条与竖屏全屏进度条统一到同一套 seek / preview / marker 计算。
+- `videoshot` 预览图补上秒级时间轴换算、缺失索引回退估算、稳定帧定位与雪碧图裁剪，减少错帧、跳帧和预览错位。
+- seek 手势与进度条拖动改为共用同一套预览组件，拖动过程中的缩略图和时间反馈一致性更高。
+
+### Seek 后恢复播放
+- 快进、快退、双击跳转和拖动进度条提交后补上显式播放恢复兜底；播放器尚未真正跑起来时会再次触发 `play / prepare`，降低 seek 后偶发停住、需要再点一次播放的问题。
+- 主播放器 overlay 和竖屏全屏页补上“正在恢复播放”状态，恢复期间不再误显示成暂停，减少用户重复点击后的错觉与等待成本。
+
+### 搜索入口性能
+- 搜索页首开改为轻量启动：本地历史先显示，默认搜索词、热搜和推荐词延后加载，减少点击首页搜索框后的首帧阻塞。
+- 顶部搜索框自动聚焦改为延后触发，首开阶段关闭重 blur / haze 并降低动效预算，键盘弹出与页面进入更跟手。
+
+## v7.8.2 (2026-04-15)
+
+### 版本信息
+- 版本号从 `7.8.1` 升级到 `7.8.2`，`versionCode` 升级到 `151`。
+
+### 播放器热路径
+- 收敛播放器高频操作链路，重点优化进度条拖动、点击跳转和切清晰度时的状态流转。
+- 进度条拖动统一使用单一 seek session，移除旧 UI-only seek 状态和未使用的旧横屏控制栏。
+- 清晰度切换改由播放器层读取当前位置，UI 不再传递播放进度，降低切源时的暂停误触发风险。
+- 切源与 seek 后显式保持播放意图，减少拖放进度条、点击跳转和切分辨率后的异常暂停。
+
+## v7.8.1 (2026-04-14)
+
+### 版本信息
+- 版本号从 `7.8.0` 升级到 `7.8.1`，`versionCode` 升级到 `150`。
+- 本次为一版“直播体验增强 + 搜索链路持续重构”的维护更新。
+
+### 直播体验
+- 关注直播列表兼容新的返回字段和更大的分页请求，减少关注页直播数量显示异常、列表偏空的问题。
+- 直播房间链路补充 H5 房间快照、历史弹幕、醒目留言预取和直播间屏蔽能力，为后续房间信息、弹幕和互动体验优化打基础。
+- 直播播放链路补充仅音频流参数、点赞点击次数透传和更多房间接口，后续直播控制与扩展能力更完整。
+- 直播页面开始拆分新的布局与配色策略，横屏聊天区、控制栏和房间信息区继续调整中，整体体验会优先向直播使用场景倾斜。
+
+### 搜索功能
+- 搜索首页补上热搜榜单、搜索发现、搜索联想和独立热搜页，热门词与推荐词改为直接走官方接口。
+- 顶部搜索栏支持在空输入时直接搜索默认推荐词，点右侧搜索按钮即可直接进入结果页。
+- 搜索功能目前仍在逐步重构中，首页、热搜、联想、结果切换等体验在部分场景下可能波动，短期内可能影响使用感受。
+
+### 弹幕体验
+- 弹幕倍速同步逻辑继续补强，视频切到非 `1.0x` 时，滚动弹幕速度、顶部弹幕停留时间和底部弹幕停留时间会一起跟随倍速调整，减少高倍速下弹幕明显拖慢的问题。
+- 弹幕同步策略补充倍速归一化、引擎播放速度换算和停留时长换算，seek 或倍速切换后的同步行为更稳定。
+- 位图弹幕与表情弹幕补上描边/阴影绘制，复杂背景下文字和表情占位的可读性更高。
+
+### 文档与版本同步
+- README、README_EN、版本徽章和最近更新摘要同步到 `7.8.1`。
+
+## v7.8.0 (2026-04-13)
+
+### 版本信息
+- 版本号从 `7.7.2` 升级到 `7.8.0`，`versionCode` 升级到 `149`。
+- 本次为一版“播放器缓冲恢复 + 番剧功能对齐 + 番剧长篇选集修复”的功能更新。
+
+### 播放器稳定性
+- 修复网络卡顿、播放源重载或 CDN 切换成功后，视频停在暂停态的问题；只要卡顿前是播放意图，加载恢复后会自动继续播放。
+- 修复拖动进度条到未加载区域后，缓冲完成仍需要手动点播放的问题；seek 前会先保留 `playWhenReady`，并在 READY 后补充恢复播放。
+- 播放器新增缓冲恢复意图判断，覆盖部分机型上 `READY + playWhenReady=false + isPlaying=false` 的异常回调顺序。
+- 用户主动暂停、定时关闭、离开播放页等明确暂停行为不会被自动恢复播放。
+- 单个视频循环同步到底层 ExoPlayer `REPEAT_MODE_ONE`，减少播完后停在结束态的问题。
+
+### 番剧功能完善
+- 番剧首页改为信息流，默认页展示最近追番/追剧、追番时间表和推荐内容，不再只显示单一索引网格。
+- 未登录时不显示追番错误卡片，已登录用户可在首页直接浏览最近追番/追剧并跳转到详情。
+- 番剧追番状态支持“想看 / 在看 / 看过 / 取消追番”，详情页和播放器内容页都可修改状态。
+- 接入 `/pgc/web/follow/status/update`，追番状态更新后会同步本地详情状态，减少 API 状态延迟导致的显示错误。
+
+### 番剧选集修复
+- 修复长篇番剧集数不全的问题；详情接口不再把 `episodes` 硬截断到前 200 集。
+- 修复详情页选集分页点击 `251-300` 等区间只高亮、不切换预览剧集的问题；现在会按选中的分页展示对应剧集。
+- 番剧详情页、播放器选集和外部播放列表都使用完整剧集列表，长篇番剧可以正确跳转后续集数。
+
+### 验证
+- 新增或更新番剧追番状态、选集分页预览、播放器缓冲恢复、seek 播放意图和单视频循环相关测试。
+- 已执行番剧目标单测和 `./gradlew :app:testDebugUnitTest`。
+
+## v7.7.2 (2026-04-13)
+
+### 版本信息
+- 版本号从 `7.7.1` 升级到 `7.7.2`，`versionCode` 升级到 `148`。
+- 本次为一版“动态页重写进行中 + 竖屏推荐去同质化 + 二级评论边看边刷 + 评论读取回退补强”的维护更新。
+
+### 动态页重写进行中
+- 动态页顶部分类扩展为“全部 / 投稿 / 番剧 / 专栏 / UP”，并补上对应的筛选策略，视频、番剧、图文和按用户查看的入口开始拆分。
+- 动态流请求链路补充 `type` 透传，后续分类页可以按不同动态类型拉取数据，不再只能固定请求 `all`。
+- 动态卡片与详情页开始改用更窄、更接近移动端信息流的布局，视频卡片统一回到纵向结构，顶部分类栏也改为可横向滚动。
+- 动态卡片和详情页补上番剧卡片跳转能力，番剧动态现在可以直接落到番剧详情或播放目标，不再只能当普通动态处理。
+- 动态模块目前仍在重写中，当前版本存在功能缺陷和不稳定情况；不同动态类型的展示、筛选、跳转、评论和交互在部分场景下仍可能异常，不建议把动态页当作稳定功能预期。
+
+### 评论与二级楼中楼
+- 手机视频详情里的二级评论不再一律强制全屏，打开后会优先占据播放器下方剩余区域，可以一边看视频一边刷楼中楼回复。
+- 当页面上方没有预留播放器区域时，二级评论详情仍会保持全屏展示；有预留区域时会自动取消多余的状态栏顶边距，顶部不会再空一截。
+- 评论读取链路补上“地理位置缺失时从 gRPC 回退到 REST”的判断，减少评论列表正文有了但位置信息丢失、显示不完整的问题。
+
+### 竖屏推荐流
+- 竖屏连续上滑的候选池改为优先混入首页推荐流，不再只沿着当前视频的相关推荐一路下钻。
+- 推荐候选继续打散，但现在会额外按标题归一化、封面、关键词重合、同 UP 和时长接近等特征过滤近重复内容，减少同题材、同内容、同模版视频连续出现。
+- 继续滑到列表尾部时会优先补首页推荐，首页推荐不够时再拿当前视频相关推荐兜底，让推荐来源更分散。
+
+### 文档与版本同步
+- README、README_EN、版本徽章和最近更新摘要同步到 `7.7.2`。
+- 最新版本说明明确标注动态页正在重写，当前存在功能缺陷和不稳定情况，避免误解为已经稳定可用。
+
+## v7.7.1 (2026-04-12)
+
+### 版本信息
+- 版本号从 `7.7.0` 升级到 `7.7.1`，`versionCode` 升级到 `147`。
+- 本次为一版“首页 UP 标识开关 + 底栏拖动与液态玻璃稳定性优化 + 评论链接跳转和宽屏楼中楼体验修复”的维护更新。
+
+### 首页与外观设置
+- 新增“UP主标识”外观开关，可控制首页视频卡、今日推荐单、相关推荐和视频详情相关列表中的 UP 标识显示。
+- 外观设置页新增对应开关，并接入设置搜索和设置分享导入导出，搜索“UP主标识”“UP标识”等关键词可以直接定位到外观设置。
+- 首页普通卡片、玻璃卡片、故事卡片、电影感卡片、今日推荐单和相关推荐列表都统一读取该开关，避免不同入口显示不一致。
+- UP 标识组件新增可见性策略，保留原有尾部占位和用户名排版，不显示标识时不会影响作者名截断与对齐。
+
+### 底栏拖动与液态玻璃
+- 底栏拖动状态改为记录像素速度和索引速度，释放时按项目宽度换算目标位置，并限制单次快速滑动的跳转步数。
+- 阻尼拖动动画补充任务取消和目标值记录，减少快速拖动、松手和外部选中态同步同时发生时的指示器跳动。
+- 液态玻璃移动指示器新增短暂保持折射层的策略，拖动刚结束时不会立刻丢失折射内容，视觉过渡更稳定。
+- iOS 风格浮动底栏的移动指示器颜色和透明度单独处理，浅色背景下保持足够可见，关闭中性色时继续使用主题色。
+
+### 评论链接与搜索跳转
+- 评论富文本链接统一解析为视频、搜索、空间三类应用内目标，不再优先走系统 Intent 打开自身页面。
+- 支持 `search.bilibili.com`、`bilibili://search` 以及 `keyword`、`query`、`search`、`q` 等查询参数，点击评论里的搜索链接会直接进入应用内搜索页并填入关键词。
+- 评论中的视频链接继续跳转到视频详情，空间链接继续跳转到用户空间，其他链接仍回退给系统浏览器处理。
+- 应用导航新增临时搜索关键词传递，避免从评论进入搜索页时覆盖外部 deep link 的一次性关键词消费逻辑。
+
+### 宽屏评论与楼中楼
+- 修复宽屏/平板右侧评论区点击楼中楼后直接打开全屏评论详情的问题；现在会在右侧评论区内展开，不遮挡左侧视频播放区域。
+- 平板分栏和影院侧栏都会在楼中楼打开时自动切回评论 tab，并在侧栏收起时展开到可查看评论的宽度。
+- 楼中楼详情复用现有评论详情组件，保留回复、点赞、举报、删除、查看对话、图片预览、时间戳跳转和头像跳转等操作。
+- 手机竖屏仍保留原有底部弹层评论详情，不改变小屏的评论操作路径。
+
+### 楼中楼视觉细节
+- 评论详情组件新增可复用的内嵌宿主，供右侧评论区直接承载二级评论详情。
+- 评论详情头部支持按宿主决定是否应用状态栏间距，避免右侧 Pane 内出现多余顶部空白。
+- 二级评论装扮/编号辅助信息的图片尺寸、圆角、间距和字号统一成策略，图片使用裁剪填充，提升可读性。
+
+### 致谢与文档
+- README 版本信息同步到 `7.7.1`。
+- 致谢列表补充 PiliPlus、Miuix、BilibiliSponsorBlock 和 AndroidLiquidGlass 等项目，明确本项目在评论样式、播放链路、Miuix 视觉组件和液态玻璃效果上的参考与依赖来源。
+
+### 验证
+- 新增或更新首页 UP 标识设置、底栏拖动释放、底栏液态玻璃指示器、评论链接解析、评论详情辅助徽章和宽屏楼中楼策略测试。
+- 已执行视频评论详情相关目标单测、视频布局策略目标单测和 `git diff --check`。
+
+## v7.7.0 (2026-04-12)
+
+### 版本信息
+- 版本号从 `7.6.1` 升级到 `7.7.0`，`versionCode` 升级到 `146`。
+- 本次为一版“评论区移动端样式与抓取升级 + 评论富文本和操作完善 + 听视频封面视觉升级 + 播放中评论徽章稳定显示”的功能更新。
+
+### 评论数据与抓取
+- 新增评论 gRPC 抓取链路，支持主评论、二级评论和对话评论的 `MainList` / `DetailList` / `DialogList` 请求，失败时保留 REST 回退，减少评论列表缺字段、二级回复上下文不完整的问题。
+- 引入轻量手写 protobuf / gRPC wire 实现，覆盖 gRPC 5 字节帧、gzip 解压、基础 protobuf 读写和 B 站移动端请求头，不额外引入 protobuf 插件或运行时依赖。
+- 评论模型补充 `parent`、`dialog`、`ReplyControl`、置顶标记、UP 回复标记、富文本链接、话题、@ 用户、投票、笔记和 opus 信息，为 UI 展示和跳转提供更完整的数据。
+- 评论分页状态改为区分主评论、二级评论和对话模式的 offset / end 状态，二级评论详情可以切换到同一对话链路。
+
+### 评论区展示
+- 评论区等级标识统一改为本地像素等级徽章，并复用到个人页、空间页和侧边栏等用户信息位置。
+- UP 主标识迁移为本地小徽章样式，评论、视频信息和播放器相关入口保持一致。
+- 评论用户名行改为用户名、等级、UP、粉丝牌/名牌的顺序，置顶标识移动到正文前的内联 `TOP` 标记，减少标题行拥挤。
+- 评论特殊标签取消方括号样式，避免所有评论被误显示为“笔记”；笔记入口只在真实 note / opus / 正数 cvid 存在时展示。
+- 二级回复预览改为灰色圆角块，支持折叠预览、`共N条回复` 和 `UP主等人 共N条回复` 文案，点击后进入评论详情。
+- 评论详情在竖屏弹层中撑满可用高度，相关回复与对话详情标题、排序入口和列表布局更接近移动端评论体验。
+- 播放中评论列表的轻量渲染不再隐藏粉丝团装扮、粉丝牌和名牌，`co.xxxxxx` 这类身份徽章在播放和暂停状态下都保持显示。
+
+### 评论富文本与交互
+- 评论正文支持 @ 用户、#话题#、服务端链接标题、BVID 链接、投票、笔记、opus、时间戳和图片预览的统一解析与点击跳转。
+- 时间戳跳转会按当前视频时长过滤无效时间，减少超出视频长度的误触。
+- 评论输入框新增当前播放进度插入入口，并支持评论同步到动态的请求字段。
+- 评论长按菜单新增复制全部、自由复制、保存评论、回复、举报、置顶/取消置顶和删除入口，UP 主可在根评论上管理置顶状态。
+- 修复富文本 inline content 使用空替代文本导致的 `alternateText can't be an empty string` 闪退。
+
+### 听视频视觉
+- 听视频封面改为更大的圆角长方形封面，比例更适合视频封面内容，不再显得过小。
+- 保留 3D 翻转/切换动效，同时调整旋转角度、缩放、透明度和位移，让封面切换更柔和。
+- 背景改为基于封面的高模糊大图叠加暗色渐变，整体更接近 Apple Music 的沉浸式播放页。
+- 封面卡片增加圆角、细边框、高光和阴影，提升深色背景下的层次感。
+
+### Miuix 与底栏
+- Miuix docked 底栏改用 `NavigationBar` 路径和本地 item 实现，避免误走 floating navigation 的外边距与悬浮布局。
+- Miuix 底栏选中/未选中颜色增加独立策略，图标和文字模式下的点击反馈更稳定。
+
+### 验证
+- 新增或更新评论等级徽章、UP 徽章、评论富文本、gRPC 解析、评论输入、评论详情高度、听视频封面布局和 Miuix 底栏策略测试。
+- 已针对评论组件、评论 gRPC 仓库、评论输入、评论详情弹层和听视频相关策略执行目标单元测试，并通过 `git diff --check`。
+
+## v7.6.1 (2026-04-11)
+
+### 版本信息
+- 版本号从 `7.6.0` 升级到 `7.6.1`，`versionCode` 升级到 `145`。
+- 本次为一版“播放器拖动进度条后前后台恢复修复 + 响应式字体闪退修复 + Miuix 细节补强 + 二级评论对话体验优化”的维护更新。
+
+### 播放器稳定性
+- 修复拖动进度条后进入后台、再切回前台会稳定停在暂停态的问题。
+- 根因是生命周期采样只把 `isPlaying=true` 或 `playWhenReady=true && BUFFERING` 视为播放活跃，漏掉了 ExoPlayer 在 seek 和 surface 恢复中常见的 `playWhenReady=true && READY && !isPlaying` 瞬态，导致 `ON_PAUSE` 丢失恢复意图。
+- 后台缓冲暂停策略复用新的播放活跃判定，不再在 READY 播放意图仍存在时误暂停播放器。
+- 补充播放器生命周期与后台策略回归测试，覆盖 READY 播放意图、ENDED 非活跃和 seek 后前后台恢复相关边界。
+
+### 闪退修复
+- 修复 Miuix / 大屏响应式字体缩放在遇到 `TextUnit.Unspecified` 时可能触发的闪退；现在 typography 与 `rememberResponsiveFontSize` 都会先判断单位是否已指定，再执行缩放。
+- 补充 `WindowSizeUtilsTest` 覆盖未指定字号保持原值、普通 `sp` 字号正常缩放，防止后续字体缩放策略再次引入同类崩溃。
+
+### Miuix 与 Android Native 细节
+- 首页顶部分段控件按“图标 + 文字”标签模式调整行高、间距和胶囊尺寸，减少 Miuix / MD3 下图标文字被挤压的问题。
+- 浮动底栏区分液态玻璃、Haze 模糊和普通 surface 路径，避免开启模糊后仍误走玻璃外观或 backdrop 重复处理。
+
+### 评论与文档
+- 二级评论模型补充 `parent` / `dialog` 字段，并新增“查看对话”筛选链路，用于聚合同一段回复上下文。
+- 新增 Miuix 对齐记录和验证故障处理说明，方便后续 UI 对齐与 Gradle/Kotlin 环境问题排查。
+
+## v7.6.0 (2026-04-11)
+
+### 版本信息
+- 版本号从 `7.5.3` 升级到 `7.6.0`，`versionCode` 升级到 `144`。
+- 本次为一版“Android Native / Miuix 视觉增强 + 首页玻璃与模糊修复 + 视频设置、搜索、动态和消息列表体验升级”的功能更新。
+
+### Android Native / Miuix 视觉增强
+- 新增 Android Native 下的 `Material 3 / Miuix` 变体切换，并让主题层真正区分 Miuix 的字体、圆角、容器和行密度。
+- 首页顶部搜索、分类标签和底栏补强 Miuix 分支，文本标签模式会使用更接近原生 Miuix 的 TabRow 节奏，底栏浮动样式也改为更明确的 Miuix 容器和选中态。
+- 基础设置列表、弹窗和底部 Sheet 增强 Miuix 容器、分隔线、图标和尾部值显示，长标题、长说明和多语言标签不再容易被挤压或截断。
+
+### 首页模糊与液态玻璃
+- 修复首页顶部搜索/分类区域被不透明主题色盖住的问题；Miuix 下会保留主题色 tint，同时让底层模糊和液态玻璃效果正常透出。
+- 修复 Miuix 底栏开启“模糊”后仍走液态玻璃外观的问题；现在模糊优先，液态玻璃只在对应开关启用且未走模糊时生效。
+- 首页顶部和底栏的玻璃/模糊策略补上更多运行时门禁、fallback 与策略测试，减少不同设备和主题下的表现差异。
+
+### 视频设置、搜索、动态与消息
+- 视频设置底部面板改用更贴近 Miuix 的行组件、分组间距、选项胶囊和分隔线，底部 Sheet 的视觉层级更清晰。
+- 搜索页对齐首页搜索 pill 的 Miuix 尺寸与容器风格，历史记录、筛选项和搜索结果卡片也改为更统一的 Miuix 容器层级。
+- 动态卡片、消息分类卡、私信会话列表和消息通知卡片统一 Miuix row density、圆角、分隔与置顶态容器色，列表浏览更紧凑。
+
+### 稳定性与回归
+- 修复之前 Miuix 主题桥接中部分 token 只换颜色、不换组件骨架的问题，并补充对应策略测试。
+- 已针对首页顶部/底栏、搜索 chrome、动态布局、消息中心、视频设置面板和 Miuix 主题策略完成目标单元测试与 `compileDebugKotlin` 验证。
+
+## v7.5.3 (2026-04-10)
+
+### 版本信息
+- 版本号从 `7.5.2` 升级到 `7.5.3`，`versionCode` 升级到 `143`。
+- 本次为一版“搜索与空间加载稳定性修复 + 设置搜索升级 + 动效与导航优化 + 番剧播放链路补强”的维护更新。
+
+### 搜索、空间与设置体验
+- 搜索结果补上请求代际校验、分页页码兜底与稳定去重，减少结果残缺、重复和旧请求覆盖新结果的问题。
+- UP 空间投稿列表改为在聚合首屏预览不足一页时继续自动补齐正式投稿页，并为翻页和筛选切换补上更稳的请求有效性判断。
+- 设置页搜索从入口索引升级为功能级检索，常用开关关键词更容易搜到，并可直接跳到外观、播放和底栏设置中的对应分组。
+
+### 动效与导航体验
+- 全局导航、列表入场、图片预览、底部面板和底栏显隐继续统一到同一套 motion token，前进/返回/弹出类动效的节奏更一致。
+- 关闭“预测性返回手势”后，应用内页面现在会明确退回经典返回链路，不再只切换转场样式却仍保留系统预测性返回预览。
+
+### 番剧播放链路
+- 番剧播放地址请求补上 WBI 签名兜底，减少部分剧集在新接口要求下偶发拿不到可播地址的问题。
+- 番剧播放器覆盖层补充登录 / 会员态与可切换清晰度过滤，清晰度展示和交互更接近普通视频播放器。
+
+### 竖屏推荐流
+- 竖屏连续上滑的推荐候选改为会话内稳定打散，不再总是沿用接口原顺序连续推送相近内容。
+
+## v7.5.2 (2026-04-10)
+
+### 版本信息
+- 版本号从 `7.5.1` 升级到 `7.5.2`，`versionCode` 升级到 `142`。
+- 本次为一版“登录与账号体验补强 + 消息中心修复 + 离线播放队列升级 + 导航稳定性修复”的维护更新。
+
+### 登录与账号体验
+- 修复部分设备上登录页二维码区域被异常压扁、显示成横条的问题，扫码登录展示更稳定。
+- 登录成功后会主动同步当前账号会话、`mid` 与会员状态，并写入本地账号会话存储，减少“已经登录但个人页状态没及时跟上”的问题。
+- 个人页新增账号切换/移除入口，多账号场景下可以更直接地在已保存账号之间切换。
+
+### 消息中心与通知修复
+- 消息会话列表补强分页与自动加载逻辑，长列表继续下拉时更容易稳定拿到后续会话。
+- 私信会话用户信息获取改为更稳的用户卡片链路，减少头像、昵称或缓存状态不完整的问题。
+- `@我`、系统通知与消息跳转链路补充更多字段解析与链接规则，评论、视频等消息入口的落地更准确。
+
+### 离线播放与下载升级
+- 下载任务补充合集/分集分组信息、排序索引、时长与竖屏视频标记，为离线播放列表和批量下载提供更完整的数据。
+- 离线播放器支持更稳定的同组分集队列切换，可在离线场景中更顺畅地上一集/下一集播放，并更准确地保存每一集的播放进度。
+- 下载任务查询改为优先命中视频任务本身，减少音频任务或旧任务干扰当前离线播放入口的情况。
+
+### 播放器与导航稳定性
+- 修复视频详情页连续跳转相关推荐后，返回主页按钮偶发无响应的问题，回首页路径更直接。
+- 详情页顶部返回动作的离场状态管理进一步整理，减少切视频后旧页面状态残留对新页面点击的影响。
+- 与播放器、消息路由和离线入口相关的细节行为继续整理，降低边界场景下的状态异常。
+
+## v7.5.1 (2026-04-09)
+
+### 版本信息
+- 版本号从 `7.5.0` 升级到 `7.5.1`，`versionCode` 升级到 `141`。
+- 本次为“外观与导航体验整理 + 搜索与播放器稳定性修复 + 离线播放细节补强”的维护更新。
+
+### 外观、主题与导航体验整理
+- 主题系统继续向统一视觉策略调整：Miuix 动态色会更准确跟随系统 / 浅色 / 深色模式，静态 MD3 方案也会基于主色派生更明确的 secondary、tertiary 与表面层级，不再长期停留在过于固定的默认面板色。
+- AMOLED 深色模式在保留 Monet 强调色的同时，会更彻底地压黑背景与主要 surface，深色场景层次更清晰。
+- 外观设置页补上更明确的 UI 预设说明，`iOS` 与 `Android Native` 两套视觉预设的差异更容易理解和切换。
+- 底部导航外观策略继续整理：MD3 预设下默认更偏向贴近原生的 docked bottom bar，同时仍保留用户手动自定义浮动、标签模式和模糊开关的能力。
+
+### 搜索页与列表交互修复
+- 修复搜索页在输入新关键词后结果列表沿用上一次滚动位置的问题；现在发起新搜索或切换搜索类型后，结果列表会自动回到顶部，首批结果不再被旧偏移量“藏起来”。
+- 搜索结果卡片继续和首页视觉语言对齐，玻璃态 / 普通态、模糊与 badge 表现会更一致，Android Native / MD3 下的材质参数也更稳。
+
+### 播放器、竖屏详情与弹幕设置升级
+- 竖屏详情页继续向更稳定的共享播放器接管方案靠拢：官方风格的 inline 竖屏详情、竖屏全屏切换和退出动画会更顺，减少播放器在不同宿主之间切换时的闪烁感。
+- 视频封面与手动起播覆盖层逻辑继续补强，起播前、返回动画中与首帧到达后的 cover 显隐更可控，降低“首帧到了但 cover 还异常闪一下”或“返回时露底”的概率。
+- 弹幕设置面板完成一轮较大的交互升级：非全屏场景更偏底部抽屉式呈现，宽屏 / 平板与全屏场景则改为更稳定的居中面板；云同步状态文案、失败重试入口以及屏蔽规则分组管理也一起补齐。
+- 平板视频详情、影院布局与视频内容区继续做了间距、排布和行为整理，大屏下的播放器与信息区衔接更稳定。
+
+### 播放稳定性与 Issue 修复
+- 修复合集或多 P 切集边界偶发 `NO_RESPONSE` 的问题：切集过程中如果用户再次点播放，不会再因为过渡态响应判定过严而长时间挂着 pending action。
+- 修复 `PortraitVideoPager` 在后台协程写入 `SnapshotStateList` 时可能触发的 `ConcurrentModificationException` 崩溃，推荐流追加与页面项同步现在会更严格地回到主线程快照写入。
+- 修复前后台切换或短暂生命周期抖动时，播放器连续记录 `lifecycleResume -> skipResume` 后停在 `BUFFERING` 无法自行恢复的问题；当前台确实需要补一次播放 kick 时，会主动恢复。
+
+### 下载、离线播放与缓存管理补强
+- 下载列表会更正确地展示多集缓存的副标题，避免标题和分 P/分集标签重复堆叠。
+- 离线播放路由在无网络场景下会优先命中同一视频同一 `cid` 的精确缓存；如果没有指定 `cid`，则优先回退到同视频最新缓存，减少“明明已经缓存却没进离线播放”的情况。
+- 离线播放器补上更清晰的起播与 seek 策略：横屏视频默认全屏进入，音频或竖屏视频则避免强制全屏；从播完态拖动进度后也能更自然地重新开始播放。
+- 下载清理逻辑会同时覆盖导出成品、封面和中间临时分片文件，缓存删除更彻底，不容易留下孤儿文件。
+
+### 测试与回归
+- 新增或补强主题动态色、外观预设描述、导航外观、搜索滚动复位、下载清理 / 离线路由 / 离线起播、竖屏详情切换、播放器 cover 行为、弹幕设置面板与播放器生命周期恢复等单元测试。
+- 已完成搜索页、播放器稳定性与相关 policy 的针对性单测回归；发布前仍建议结合真机继续验证搜索、合集切集、前后台切换与离线播放场景。
+
+## v7.5.0 (2026-04-06)
+
+### 版本信息
+- 版本号从 `7.4.3` 升级到 `7.5.0`，`versionCode` 升级到 `140`。
+- 本次为“空间页全面升级 + 首次投稿加载稳定性修复 + 动态页新增回到顶部按钮 + 首页作者行对齐优化”的功能更新。
+
+### 空间页首屏链路重构
+- 空间页首屏改为优先使用 `x/v2/space` 聚合接口装配基础资料、默认 tab、投稿计数以及首批投稿上下文，减少过去依赖多条独立请求拼首屏时更容易整页失败的情况。
+- 新增空间聚合响应模型与映射策略，聚合结果可以直接生成空间页初始状态，后续再继续加载统计、合集/系列、收藏夹等内容。
+- 聚合链路可用时，空间页会先尽快显示核心资料；合集、系列、收藏夹、关注/播放统计等不是首屏必需的数据改为后台继续加载，失败时也不会直接把整个页面变成错误页。
+- 如果聚合首屏不可用，仍会自动回退到原有空间详情链路，避免把新首屏改造变成单点故障。
+
+### 投稿加载稳定性与空态修复
+- 当空间聚合信息已经拿到、但投稿第一页还没有加载完成时，页面会保持加载状态，不再过早显示“暂无视频”，修复首次进入空间偶现空列表、手动刷新后才恢复的问题。
+- 视频投稿第一页的首次加载改为单独处理，只有在确实需要时才继续请求第一页投稿，减少“资料先到了、列表却被错误判空”的闪烁感。
+- 首屏投稿请求补上更稳的后续加载和重试处理，空间页在聚合首屏和投稿分页之间的衔接更顺，不容易卡在空白或错误空态。
+
+### 空间页 UI 全面升级
+- 空间页整体视觉重新设计：头部信息区、统计区、一级 tab、投稿分区与操作条重新设计，页面从大圆角卡片风格调整为更平直的主题色分区。
+- 关注按钮、用户名、等级和标签区重新按同一视觉基线排布，已关注/未关注状态切换时头部布局更稳定，不再出现明显错位。
+- 投稿区的 `视频 / 图文 / 音频` 分段按钮、`播放全部 / 全部听 / 排序` 操作条，以及视频空状态文案都一起重画，空间页的信息层级和浏览节奏更清晰。
+
+### 动态页与首页信息对齐优化
+- 动态页新增“回到顶部”悬浮按钮，滚动到一定距离后自动出现，点击后会复用现有顶部滚动计划，更接近首页的回顶交互。
+- 首页视频卡作者行补上统一的右侧关注槽位预留，即使某张卡片没有“已关注”文案，也会保留相同尾部宽度，减少双列瀑布流中作者行的视觉参差。
+- 关注文案槽位策略已抽到共享 policy，后续首页其他卡片或列表样式需要统一时可以直接复用。
+
+### 测试与回归
+- 新增空间聚合映射测试，覆盖聚合首屏到空间页模型的关键映射路径，避免接口字段变化时让首屏出现错误。
+- 补强空间首屏加载策略测试，明确锁住“投稿总数大于 0 但首批视频仍未加载到时应保持 loading，而不是直接显示空态”的行为。
+- 新增动态页回顶显示策略测试，以及首页作者行尾部槽位策略测试，确保列表滚动与作者信息对齐行为可以稳定回归。
+- 已完成 `SpaceLoadPolicyTest` 的针对性单测回归；其余 UI 相关改动建议继续结合真机走查与常规测试任务做发布前确认。
+
+## v7.4.3 (2026-04-05)
+
+### 版本信息
+- 版本号从 `7.4.2` 升级到 `7.4.3`，`versionCode` 升级到 `139`。
+- 本次为“播放器 seek / 切画质交互修复 + 缓存清理能力升级 + 合集与首页原生体验优化”的维护更新。
+
+### 播放器 seek、缓冲提示与画质切换修复
+- 修复了视频回拉进度条后“视频恢复播放但弹幕卡死”的问题；如果 seek 当下播放器还没真正恢复播放，后续会补做一次 hard resync，避免只能靠手动暂停/继续来唤醒弹幕。
+- 切换清晰度和拖动进度后的缓冲阶段，中央状态不再误显示成“暂停”，会改为更明确的加载卡片，并优先展示当前带宽估算，缓冲语义更直观。
+- 相关加载指示器现在会跟随主题主色，切画质和 seek buffering 的视觉反馈不再是固定色。
+- 进度条拖动时的预览图改为直接跟随当前手指拖动位置，不再因为外层显示进度更新慢半拍而“卡住不动”。
+
+### 缓存清理与设置体验升级
+- 设置页“清理缓存”弹窗升级为可勾选列表，支持分别清理播放地址与画质协商缓存、网络缓存、图片与预览图缓存、字幕与弹幕缓存、临时文件与日志，以及关注/签名元数据缓存。
+- 默认勾选项会优先覆盖最容易影响切画质、缓冲和时间轴异常的缓存类型，减少用户为了排障而“一键全清”的成本。
+- 弹窗中的缓存大小文案现在会实时显示“已选缓存”，勾选项变化时数字会同步更新，不再误把总缓存当成当前清理范围。
+
+### 合集、首页与交互细节优化
+- 合集入口与合集弹窗新增订阅能力，并支持正序、倒序、最近观看三种排序方式，合集内跳转与续看会更顺手。
+- 安卓原生风格下，首页顶部统一面板从硬直角调整为轻圆角，搜索区和标签区的观感更柔和，同时保留原生风格的利落感。
+- 普通视频显式切换清晰度时，仓库层会更严格校验返回轨道是否真正匹配目标档位，避免界面看起来“切成功”但实际悄悄降级。
+
+### 测试与回归
+- 新增或补强 seek 预览图、中央缓冲提示、弹幕 seek resync、缓存清理选项、首页顶部圆角、合集排序与画质回退链等单元测试。
+- 相关播放器、设置页、首页头部与合集策略已完成针对性单元测试回归，适合作为 `7.4.3` 维护版本发布。
+
+## v7.4.2 (2026-04-05)
+
+### 版本信息
+- 版本号从 `7.4.1` 升级到 `7.4.2`，`versionCode` 升级到 `138`。
+- 本次为“普通视频起播/回退链稳定性提升 + 播放器交互修复 + 玻璃/弹幕可读性修复 + 构建链稳定性优化”的维护更新。
+
+### 普通视频起播与播放地址获取稳定性
+- 普通视频首个 `WBI` 请求现在固定以更稳定的 `1080P (qn=80)` 作为起播入口，再交给播放层按实际 `DASH` 轨道选画质，起播策略更稳定。
+- 登录态在 `WBI` 主链拿不到可用流时，会继续回退到 `APP access_token -> legacy -> guest`；游客态也保留 `legacy` 兜底，减少“无法获取任何画质的播放地址”的硬失败页。
+- 即使接口返回的是降级但可播的结果，仓库层也会先接受并交给播放层选轨，不再因为“没正好命中目标清晰度”而过早判死。
+
+### 播放器交互与弹幕可读性修复
+- 观看中已禁用双指缩放/平移那套画面比例手势，锁定状态下也不会再误改画面；画面比例调整现在只保留显式入口，减少误触。
+- 横屏锁定按钮图标与高亮状态已修正，锁定时显示闭锁、未锁定时显示开锁，避免视觉语义反过来。
+- 弹幕“行高”设置现在会真正换算成渲染引擎需要的像素行高，不再把倍率直接当像素使用，修复弹幕大量挤在一起、设置调整看起来无效的问题。
+
+### 液态玻璃可读性与构建链优化
+- 首页/历史记录/收藏等视频卡片封面上的玻璃胶囊统一改为深色基底，修复开启玻璃后“已看进度 / 时长”在亮封面上发灰看不清的问题。
+- `VideoPlayerSection` 中大量纯策略逻辑已拆分到独立 policy 文件，减少播放器大 UI 文件的重编译范围，后续增量构建更稳。
+- 构建链补上 `KSP` 增量相关开关、文件系统 watch 与 configuration-cache-safe 的 KSP 目录预创建任务，避免清缓存后频繁出现 `generated/ksp` 目录毛刺，同时不再污染 configuration cache。
+
+### 测试与回归
+- 新增或补强普通视频起播/回退链、封面玻璃可读性、弹幕行高、播放器锁定按钮与手势策略等单元测试。
+- 构建脚本已验证 `configuration cache` 可正常存储，`assembleDebug --dry-run` 不再出现新的 configuration cache problem。
+
+## v7.4.1 (2026-04-04)
+
+### 版本信息
+- 版本号从 `7.4.0` 升级到 `7.4.1`，`versionCode` 升级到 `137`。
+- 本次为“Android Native / Miuix 视觉统一 + 直播/后台播放稳定性修复 + 弹幕能力增强”的维护更新。
+
+### 首页底栏、设置页与液态玻璃统一
+- 首页底栏新增更完整的 Android Native / Miuix 壳层方案，底栏容器、选中指示器和分隔策略统一整合到共享材质配方，整体观感更贴近原生悬浮底栏。
+- Android Native 液态玻璃运行时门禁已放宽到 Android 13（API 33），设置页可见性与运行时判定现在共用同一套策略，不再出现“界面能开/实际不能用”或反过来的错位。
+- 指示器的折射层现在会和其他玻璃区域一样先做背景模糊再做折射，减少选中胶囊内部内容过于清晰、与外层壳体质感不一致的问题。
+- 动画设置页不再暴露分散的液态玻璃调参入口，首页与底栏统一走共享材质方案，降低配置理解成本。
+
+### 直播播放与后台保活稳定性
+- 直播流主来源切换为新版 `xlive` 链路，旧版接口继续只负责补充可读画质描述，并在主链路不可用时作为兜底回退，直播清晰度与取流来源更稳定。
+- 直播播放器新增更细的多源切换与重载策略，针对 `403/404/412/5xx`、网络失败和超时等情况会更积极尝试下一条源或重载当前画质，减少单个 CDN 异常直接黑屏的情况。
+- 直播页在前后台切换后会补做 `PlayerView` surface rebind 与必要的播放 kick，降低短暂切后台回来后画面不恢复或停在假暂停状态的概率。
+- 普通视频后台播放策略不再因为切后台瞬间的临时非 active snapshot 就被过早暂停；按 Home 临时切出应用时，也不会再错误套用“离开播放页后停止”的立即停播语义。
+
+### 弹幕设置、过滤与同步增强
+- 弹幕配置新增字重、行高、滚动时长、固定速度、静态停留时长、海量模式等更细控制项，滚动层和顶部/底部弹幕的排布会随视口尺寸与显示区域更合理地统一。
+- 弹幕设置面板与发送/上下文菜单继续增强，新增更清晰的规则管理体验，支持按关键词、正则与 UID(hash) 分类维护屏蔽规则。
+- 新增弹幕云同步状态模型与手动同步触发判定，便于后续在界面中稳定展示“排队中 / 同步中 / 已同步 / 失败”等状态。
+
+### 测试与回归
+- 新增或补强 Android Native / Miuix 底栏结构与材质、液态玻璃门禁、直播多源切换、前后台播放保活、弹幕配置/过滤/同步、WBI 工具与播放响应解析等单元测试。
+- 相关改动已补齐针对性回归覆盖，适合作为 `7.4.1` 维护版本发布。
+
+## v7.4.0 (2026-04-03)
+
+### 版本信息
+- 版本号从 `7.3.3` 升级到 `7.4.0`，`versionCode` 升级到 `136`。
+- 本次为“发布来源校验强化 + 播放链路进一步稳定 + 播放恢复与无声问题修复”的功能更新版本。
+
+### 发布来源校验与应用内更新可信度
+- 应用内更新检查现在会解析并展示更多构建来源信息，包括源码提交、工作流来源、Release 是否为 Immutable，以及是否附带 GitHub Attestation / provenance 证据。
+- 更新对话框和设置页新增更明确的构建来源说明，方便区分“来自官方工作流的可验证构建”与“缺少来源证明的包”。
+- 构建工作流继续补齐发布元数据与校验链路，为后续发布审计和问题追踪提供更清晰的来源信息。
+
+### 普通视频与番剧播放链路继续稳定化
+- 普通视频 `playurl` 主路径继续统一到 Web/WBI，不再优先走 APP `access_token` 接口，减少高画质接口风控和空 payload 带来的不稳定切换。
+- 普通视频 fallback 继续精简到单条 Web/WBI 主路径，更接近移动端主链路的实际取流策略，不再在主链路里额外回退到 legacy / guest playurl。
+- 番剧 `playurl` 已切到更稳定的 `web/v2` 路径，并补齐 `cid / bvid / season_id / try_look / voice_balance / gaia_source / isGaiaAvoided / web_location` 等上下文参数。
+
+### 普通视频画质选择策略统一
+- 画质菜单与设置面板现在以接口返回的画质列表为展示源，再用真实 DASH 轨道决定哪些档位可以切换；不会再额外“凭空补出” API 没给的低清项。
+- 没有真实轨道的画质会保留为灰显不可点，避免“菜单里看得到但点了必失败”的误导。
+- 非大会员但已登录用户的 `1080P` 行为继续保持与 Web/WBI 返回轨道一致：服务端有轨道就能切，没有轨道就直接灰掉。
+
+### 播放恢复与离开播放页后停止相关问题修复
+- 进度条拖动、临时进入后台再返回时，播放器会更稳定地保留“用户原本正在播放”的意图，减少拖完停住、返回后停住、还要双击或再拖一次才继续的情况。
+- 针对开启“离开播放页后停止”后按 Home 返回应用时可能出现的无声问题，主界面恢复时会正确清理导航离开标记，并恢复被内部停止逻辑静音的播放器音量。
+
+### 测试与回归
+- 新增或补强发布来源校验、应用内更新来源展示、普通视频/番剧 `playurl` 策略、普通视频画质切换、生命周期恢复、seek 会话、`MainActivity` 返回前台音量恢复等单元测试。
+- 相关改动已通过针对性回归，适合作为 `7.4.0` 版本发布。
+
+## v7.3.3 (2026-04-02)
+
+### 版本信息
+- 版本号从 `7.3.2` 升级到 `7.3.3`，`versionCode` 升级到 `135`。
+- 本次为“隐私保护强化 + 播放器稳态整理 + 交互与下载细节修复”的维护更新。
+
+### 隐私保护与日志策略
+- 崩溃追踪继续默认开启，并保留首次启动提示弹窗；使用情况统计默认关闭，播放器诊断日志默认继续保留，方便排查黑屏、卡顿和切换清晰度失败等播放问题。
+- 启动流程、设置页和播放器设置页现在统一读取同一套遥测默认值，避免“界面显示”和“实际启用状态”不一致。
+- 普通运行日志不再默认自动持久化到本地 `runtime.log`；`W/E` 级别日志仍会保留在内存里，继续用于崩溃快照和手动导出。
+- Analytics 不再上传 `video_id`、`room_id`、`season_id`、`episode_id`、`target_user_id`、标题、UP 名等可识别观看内容或关注对象的字段。
+- Crashlytics 不再绑定用户 `mid`，也不再写入视频 BV、弹幕 CID、直播间 ID、直播标题、主播名等敏感上下文；相关错误摘要和诊断文案也同步去标识化，降低日志导出或崩溃查看时泄露具体内容的风险。
+
+### 播放器体验与播放记录
+- 清晰度切换在接口风控或缓存缺轨时会给出更明确的失败说明；高阶付费画质在冷却期内若当前页面拿不到可切换轨道，会直接阻止死路切换并提示大致等待时间。
+- 质量选项合并逻辑继续保留接口已声明的高画质档位，但会在接口冷却阶段临时收起不可真正切换的高级档位，减少“看得到却切不过去”的挫败感。
+- 进度条拖动和 `seek` 会话现在会记住用户拖动开始时的播放意图；提交后会先稳定显示用户刚落下的位置，直到播放器真正追上，减少进度回弹和误暂停/误恢复。
+- 中央播放按钮在“正在恢复播放但仍处于缓冲”的阶段会继续保持播放态反馈，不再一边缓冲一边看起来像已经暂停。
+- 播放心跳现在会上报更准确的会话开始时间、实际观看时长与当前播放进度，并在暂停、离开页面、切换视频或切换分P时主动补发结束心跳，历史记录和观看进度统计更完整。
+- 音频模式页只会在前一个页面仍然是有效视频页时才复用播放器 `ViewModel`，减少返回栈已销毁后误共享旧播放状态的问题。
+
+### 评论区、卡片与交互细节
+- 评论区等级徽章切换为本地像素资源图，并补上 `6级高能会员` 的专属徽章显示。
+- 视频卡片的长按菜单现在会尽量贴近用户真实按下的位置展开；无论是按封面、标题还是右上角菜单按钮，`稍后再看 / 不感兴趣 / 取消收藏` 都会更跟手。
+
+### 下载与稳定性
+- 多线程下载现在会校验分段响应是否真的是匹配请求范围的 `206 Partial Content`；如果服务端错误返回整包或错误区间，会自动回退到单线程下载，避免合并出损坏文件。
+- 音视频合并时会根据轨道声明的最大 sample size 动态放大 `muxer` 缓冲区，并在每次读 sample 前清空缓冲，降低大码率或大 sample 文件的合并失败概率。
+
+### 测试与回归
+- 新增或补强 telemetry defaults、analytics/crash redaction、logger persistence、download merge、audio mode owner、video card long press、playback heartbeat、quality switch、seek session 等单元测试。
+- 相关改动已通过针对性单元测试回归，适合作为 `7.3.3` 维护版本发布。
+
+## v7.3.2 (2026-04-01)
+
+### 版本信息
+- 版本号从 `7.3.1` 升级到 `7.3.2`，`versionCode` 升级到 `134`。
+- 本次为“设置页动效统一 + 自适应 DASH/AV1 回退增强 + 播放器揭帧更顺滑”的维护更新。
+
+### 设置页动效与说明统一
+- 设置首页、外观、播放、底栏、权限、提示等页面的进入动画现在独立工作，不会再因为关闭首页卡片动画而一起消失；即使关闭首页卡片动画，设置页仍会保留自己的基础过渡反馈。
+- 动画设置页现在会明确说明“首页卡片动画”和“设置页动画”是两套效果，避免误以为一个开关会把所有设置页动效一起关掉。
+
+### 自适应 DASH、清晰度切换与 Codec 回退
+- 播放器新增“自动清晰度”和“固定清晰度”两种模式；自动模式会保留可自适应切换的 DASH 候选轨道，手动选择时则会固定到目标画质，切换行为更可预期。
+- 切换清晰度失败时，现在会更明确提示原因，例如需要登录、需要大会员、设备不支持、网络超时或当前视频没有这个画质，不再只给出笼统的失败提示。
+- 视频详情页新增清晰度切换失败弹窗，可以直接开关播放器诊断日志，也可以一键导出日志，后续排查设备兼容或接口异常会更直接。
+- 播放会话现在会记录本轮已失败的视频 codec；当 AV1 在当前播放过程中表现不稳定时，后续请求会自动避开 AV1，并优先回退到更稳定的 AVC / HEVC 组合，减少反复重试仍然播放失败的问题。
+
+### 播放器首帧揭帧与封面过渡
+- 视频封面会在首帧真正显示后再平滑过渡到播放器画面，减少黑屏、闪一下和生硬切换的问题。
+- 手动开始播放、返回动画或首帧还没准备好的时候，封面会继续保留，避免提前露出未准备好的画面。
+
+### 测试与回归
+- 新增或补强设置页动画、清晰度切换、AV1 回退、封面显示和播放器显示逻辑等相关单元测试。
+- 相关改动已覆盖 settings policy、playback selection、quality switch 与 player surface policy，适合作为 `7.3.2` 维护版本发布。
+
+## v7.3.1 (2026-04-01)
+
+### 版本信息
+- 版本号从 `7.3.0` 升级到 `7.3.1`，`versionCode` 升级到 `133`。
+- 本次为“液态玻璃连续调节 + 播放器横竖屏与 PiP 统一 + 投屏/历史稳定性修复”的维护更新。
+
+### 首页液态玻璃与可读性
+- 动效与视觉设置页把原来的“模式 + 强度”组合改成单一连续的“玻璃进度”滑杆，从 `通透` 到 `磨砂` 直接预览和调节，减少参数互相打架的理解成本。
+- 液态玻璃配置新增连续进度字段，并兼容旧的模式/强度数据迁移；已有设置升级后会自动映射到新的连续区间，不需要手动重配。
+- 首页顶部壳层、底栏容器和指示器的模糊、折射、透明度改为跟随连续进度细化调节，轻玻璃到重磨砂之间的过渡更顺滑。
+- 深色模式下会根据玻璃强度和背景亮度自动切换底栏前景色，减少亮背景磨砂场景里图标与文字发灰、发糊的问题。
+- 首页搜索区的液态折射导出层现在只在滚动或过渡中启用，静止时不再额外捕获内容层，视觉更稳也更省一点开销。
+
+### 播放器横竖屏、PiP 与后台行为
+- 手机端视频页现在会同时参考应用内自动旋转开关和系统自动旋转状态；当系统锁定旋转时，不再因为应用内设置开启就意外反复横竖切换。
+- 横屏退出时新增“手动竖屏保持”阶段，避免刚点回竖屏就被传感器又拉回横屏；从竖屏全屏返回旋转模式时也会避开这段保持期造成的误触发。
+- 画中画切换链路补充了“待进入 PiP / 已进入 PiP”状态跟踪，进入 PiP 过程中不会误判成普通退后台，从而减少后台音频、通知与播放保活策略互相抢状态的问题。
+- 播放通知现在在应用退到后台但仍有有效播放会话时可以继续保留，不会只因为瞬时暂停或切路由就过早消失。
+- 全屏播放器的进度轮询进一步受宿主生命周期约束，页面不在前台活跃时会停止不必要的高频刷新。
+
+### 投屏、列表与其它稳定性
+- SSDP 发现除了精确搜索 `MediaRenderer` 与 `AVTransport` 外，还会补发 `upnp:rootdevice` 与 `ssdp:all` 兜底请求，提升部分电视和盒子被扫描到的概率。
+- 历史记录批量删除不再依赖逐卡片溶解动画完成后才真正删除；当选中项里含有屏幕外卡片时会直接执行删除，避免批量删除偶尔卡住不结束。
+
+### 测试与回归
+- 新增或补强液态玻璃连续进度迁移、底栏可读性/透明度、首页搜索折射层、手机横竖屏策略、PiP 后台保活、SSDP 搜索目标和历史批量删除等单元测试。
+- 相关改动已补齐对应 policy/store 层回归覆盖，适合作为 `7.3.1` 维护版本发布。
+
+## v7.3.0 (2026-03-30)
+
+### 版本信息
+- 版本号从 `7.2.3` 升级到 `7.3.0`，`versionCode` 升级到 `132`。
+- 本次为“空降助手稳定性修复 + SponsorBlock 交互补全 + 首页过滤能力增强说明”的功能更新。
+
+### 空降助手稳定性与性能
+- 修复空降助手启用状态被插件中心与设置页双份状态互相覆盖，导致开启后过一段时间像是自动关闭的问题。
+- 插件中心的空降助手开关现在统一写回 SponsorBlock 设置源，启动流程、设置页和插件中心会共享同一份启用状态。
+- SponsorBlock 片段在视频加载时会先做过滤、排序和缓存，播放中改成基于当前片段和下一个候选片段做轻量判断，不再高频全表扫描，普通播放和常见拖动场景下的轮询开销更低。
+- 用户显式拖动进度条后，SponsorBlock 会重新同步当前片段状态并按 seek 位置重新武装已跳过片段，常见的反复 seek、拖回片段前再播放等场景下更容易稳定重新触发跳过。
+- 片段缓存会在视频切换时一并重置，旧视频的跳过状态、marker 和活动片段信息不会再串到下一个视频。
+
+### 播放器性能、前后台恢复与交互整理
+- 播放器状态层补充了播放生命周期协调器、seek 会话控制器和用户操作跟踪器，播放、暂停、拖动和恢复链路会更明确地区分“用户主动操作”与“状态同步回写”。
+- 前后台切换时的暂停、继续播放、恢复音量和后台音频标记逻辑进一步整理，进入小窗、画中画和真正离开应用时的行为边界更清晰，减少误暂停、误恢复和回前台无声的情况。
+- 用户在 `READY` 但暂停中的状态下主动恢复播放时，会先对当前位置做一次兼容性 seek 再发起 `play()`，降低部分设备上“看起来已恢复但画面或状态没真正唤醒”的概率。
+- 进度条拖动会在 UI 侧维护独立的 scrubbing 会话，提交后会优先显示用户刚刚落下的位置，直到播放器实际追上，减少拖动后的进度回弹和显示抖动。
+- 播放器调试信息补充了播放状态、首帧、丢帧、带宽估计、音视频事件和诊断事件列表，后续定位前后台恢复、黑屏、卡顿和 seek 不一致问题会更直接。
+
+### 空降助手交互与可视化
+- 新增“进度条提示”选项，支持 `关闭`、`仅恰饭`、`全部可跳过` 三种模式。
+- 播放器进度条现在可以直接标出 SponsorBlock 片段，默认更突出恰饭片段，也能按选项显示片头、片尾等其它可跳过区段。
+- 手动跳过模式补上了实际播放器交互链路，关闭自动跳过后会在播放器里显示手动跳过按钮，而不是只在插件内部返回状态但界面无反馈。
+- SponsorBlock 当前命中的片段会同步到播放器状态层，按钮展示、手动跳过和关闭提示的行为更一致，不容易出现按钮残留或状态丢失。
+- 修复“关于空降助手”设置项标题被长文本挤压后显示不全的问题，说明信息改成更紧凑的标题加副标题布局。
+
+### 去广告过滤说明
+- 去广告增强插件继续接入首页推荐、搜索结果等信息流过滤链路，启用后会对视频卡片应用内置广告词、标题党词、自定义关键词和拉黑 UP 主规则。
+- 现在可以通过插件里的自定义关键词列表，按标题关键词屏蔽首页推荐中的视频；若视频标题命中关键词，会在进入列表前被直接过滤掉。
+- 除关键词外，去广告增强也会继续支持按 UP 主名称、UP 主 MID 以及低播放量阈值过滤内容，首页推荐清理规则可以和关键词屏蔽一起叠加使用。
+
+### 测试与回归
+- 新增或补强空降助手启用状态同步、SponsorBlock 片段归一化、seek 重新武装、进度条标记映射、手动跳过按钮状态以及设置页布局回归测试。
+- 播放器前后台恢复、播放生命周期决策、用户主动恢复播放兼容 seek、进度条 scrubbing 会话与调试信息映射也补充了对应回归测试。
+- 相关改动已通过 SponsorBlock 设置页、播放器叠层和 ViewModel 的针对性单元测试，并完成 `compileDebugKotlin` 编译回归。
+
+## v7.2.3 (2026-03-28)
+
+### 版本信息
+- 版本号从 `7.2.2` 升级到 `7.2.3`，`versionCode` 升级到 `131`。
+- 本次为“播放器前后台恢复与进度同步增强 + 播放取流稳定性修复 + 主题/插件细节整理”的维护更新。
+
+### 播放器恢复、进度条与交互同步
+- 应用从后台返回前台时，播放器现在会更积极地重绑 `Surface/TextureView`、恢复视频轨道并在必要时主动唤醒渲染链路，降低“声音恢复了但画面黑屏”的概率。
+- 播放器补充了前后台恢复首帧、Surface 重绑、缓冲卡顿恢复等诊断日志，后续定位黑屏、卡顿和前后台切换问题会更直接。
+- 进度条拖动、点击跳转与播放器内部的过渡位置显示进一步统一，切换画质、seek 结束和播放状态回写时不容易再出现 UI 进度回弹或中心播放按钮误闪。
+- 竖屏分页播放器在页面切换、长按倍速、进度提交和本地显示同步上的行为继续整理，跨页切换时的倍速残留和 seek 位置抖动问题进一步减少。
+
+### 取流稳定性、画质回退与播放链路
+- 播放专用网络客户端现在默认绕过系统本地代理设置，减少部分代理类 App 把播放流量导向不可用回环端口后导致的 `ECONNREFUSED` 与无法播放问题。
+- 高画质 DASH 回退链路改为优先尝试更接近目标档位的高阶清晰度，再回退到普通 `1080P`，并在接口返回清晰度被意外降档时继续尝试后续候选项，提升高画质加载成功率。
+- 共享播放器、小窗与前后台恢复时的播放链路唤醒策略继续加强，减少回到视频页后卡在 `READY` 但画面迟迟不刷新的情况。
+
+### 主题、插件与工程细节
+- 主题动态取色判定补齐 `UI Preset` 维度，`MD3 / iOS` 预设下的动态取色与主题色显示逻辑更清晰，设置页对应入口也更稳定。
+- 插件启用状态现在支持“注册前暂存开关意图”，避免某些插件尚未注册完成时切换开关被吞掉。
+- 弹幕管理器的内部协程作用域创建与切换逻辑进一步整理，减少作用域复用不当带来的观察链路问题。
+
+### 测试与回归
+- 新增或补强播放器前后台恢复、进度条稳定显示、竖屏分页 seek 与长按倍速恢复、播放网络客户端策略、主题动态取色、插件启用态与弹幕作用域等单元测试。
+
+## v7.1.3 (2026-03-24)
+
+### 版本信息
+- 版本号从 `7.1.2` 升级到 `7.1.3`，`versionCode` 升级到 `126`。
+- 本次为“空间页搜索补齐 + 播放器封面与后台音频体验优化 + 首页/动态/搜索细节修复”的综合维护更新。
+
+### 播放器、后台播放与音频体验
+- 播放设置页新增 `后台播放` 与 `占用音频焦点` 两个直观开关；默认保持开启，关闭音频焦点后可在打游戏或使用其它音频 App 时与本应用同时播放。
+- `后台播放模式`、画中画相关提示与开关文案继续统一；当关闭后台播放或启用“离开播放页后停止”时，相关模式会明确显示为已覆盖，减少设置之间互相打架的困惑。
+- 视频详情页现在优先沿用入口卡片封面，减少从首页、动态、空间等入口进入时封面突变的问题；未主动播放前会保留封面并显示更明确的播放按钮，手动起播体验更接近移动端客户端。
+- 全屏、小窗与若干覆盖层里的进度拖动统一走“用户主动 seek”链路，避免拖动后播放状态、弹幕同步和恢复逻辑不一致。
+- 视频内部 `bvid/cid` 同步时不再默认强制自动播放，普通同步场景会继续尊重用户当前的播放意图。
+- 弹幕字体大小下限从 `0.5x` 放宽到 `0.3x`，同时对持久化配置做归一化，旧配置升级后也不会落到非法区间。
+
+### 空间页、动态页与搜索体验
+- UP 空间页补上站内搜索能力：现在可以分别搜索 `TA 的视频` 与 `TA 的动态`，并带有对应占位文案、结果过滤、空态提示和输入防抖。
+- 空间页在主 Tab / 子 Tab 切换时会正确重置或保留搜索态，视频搜索不会再把旧关键字错误带到其它分页里。
+- 动态页当前选中的顶部 Tab 现在会持久化保存，返回页面后会恢复到上次浏览的位置，不再每次都回到“全部”。
+- 搜索页在主动搜索但结果区未滚动时会强制使用更低的头部模糊预算，减少搜索过程中的模糊层开销和视觉抖动。
+
+### 首页、个人入口与下载细节
+- 首页头像点击行为现在会根据当前导航形态自动分流：抽屉模式下继续打开侧边栏，侧边导航/非抽屉场景下会直接进入个人页，登录前仍保持进入登录流程。
+- `MD3` 首页顶部搜索栏的回弹显隐节奏继续优化；轻微反向滚动时搜索栏会更早开始恢复显示，顶部折叠反馈更跟手。
+- 下载列表页显示的当前下载目录改为优先解析用户通过系统目录授权选择的真实导出路径，不再总是停留在应用私有目录文案上。
+
+### 测试与回归
+- 新增或补强首页头像点击策略、首页顶部搜索显隐、动态页 Tab 恢复、空间页搜索策略、下载目录展示、播放器封面/手动起播、后台播放策略、听视频画中画与弹幕字体映射等单元测试。
+
+## v7.1.0 (2026-03-22)
+
+### 版本信息
+- 版本号从 `7.0.2` 升级到 `7.1.0`，`versionCode` 升级到 `123`。
+- 本次为“番剧播放器控制层对齐普通视频播放器 + 横屏顶部操作补齐”的功能更新版本。
+
+### 番剧播放器与横屏控制
+- 番剧播放器继续向普通视频播放器控制层靠拢，横屏与全屏场景现在复用更多共享 overlay 能力，整体交互更统一。
+- 番剧横屏顶部的点赞、投币、分享入口已补齐为真实可用能力，不再出现按钮显示出来但点击无反应的情况。
+- 番剧分享改为走番剧专用分享链接，分享标题会自动拼接番剧标题与当前剧集标题，信息更完整。
+- 番剧横屏顶部不再显示点踩按钮，避免展示暂未完整支持的交互入口。
+
+### 状态与交互反馈
+- 番剧播放器会同步刷新当前剧集的点赞状态与投币状态，横屏顶部按钮和投币结果反馈会跟随真实状态更新。
+- 番剧投币入口已接入投币弹窗与硬币余额查询，交互体验与普通视频播放器保持更接近的一致性。
+
+### 重要提醒
+- 历史记录的“全部批量删除”功能当前存在问题，暂时不要使用“全部删除”。
+- 在该问题修复前，如需清理历史记录，请改用单条删除或谨慎分批处理。
+
+## v7.0.2 (2026-03-21)
+
+### 版本信息
+- 版本号从 `7.0.1` 升级到 `7.0.2`，`versionCode` 升级到 `122`。
+- 本次为“楼中楼评论抽屉链路统一 + 仅保留 64 位打包”的维护更新。
+
+### 评论详情与楼中楼抽屉
+- 竖屏分页评论抽屉与视频详情页的楼中楼评论详情现在统一走同一套共享宿主，避免一边修好了、另一边还保留旧弹层链路。
+- 打开楼中楼评论详情时会优先在当前评论抽屉内切换内容，不再走额外的独立全屏样式弹层，视频可视区域保留更稳定。
+- 评论主列表、楼中楼详情、回复入口、图片预览和时间戳跳转现在共用同一条展示路径，后续行为整理更容易保持一致。
+
+### 播放进度与列表动画
+- 播放器拖动进度条、章节跳转与播放器区 seek 行为现在统一走同一条用户操作路径，暂停态、播放态与播完后的恢复行为更一致，减少拖动后进度显示和播放状态错位。
+- 历史记录删除时的卡片抖动动画现在只作用于仍然留在列表里的邻近项，正在溶解删除的那一项不再额外抖动，删除反馈更自然。
+
+### 打包与发布产物
+- Android APK 现在只打包 `arm64-v8a`，不再包含 `armeabi-v7a` 的 32 位库。
+- APK 输出文件名去掉了 `universal` 后缀，发布产物名称更直接。
+
+## v7.0.1 (2026-03-21)
+
+### 版本信息
+- 版本号从 `7.0.0` 升级到 `7.0.1`，`versionCode` 升级到 `121`。
+- 本次为“首页顶部折叠与触感细化 + 竖屏全屏缩放补齐 + 动态宽屏信息密度优化”的稳定性维护版本。
+
+### 首页顶部、搜索折叠与触感反馈
+- 首页顶部搜索栏折叠距离、显隐节奏与状态栏融合策略继续优化，顶部区域在回到列表顶端前不再过早回弹，折叠后的整体性更稳定。
+- `iOS / MD3` 首页顶部的分区入口、标签点击与底栏点击现在统一补上轻量触感反馈，点击响应更直接，也减少了“按下但没有反馈”的空窗感。
+- 顶部统一面板在搜索栏完全收起后会进一步贴合状态栏边缘，配合新的边距、圆角和分隔线策略，顶部层级更干净。
+
+### 竖屏全屏播放与自动旋转
+- 竖屏全屏播放器现在补齐与横屏一致的双指缩放、拖动画面与“还原画面”能力，放大后会优先消费平移，不再误触进度拖动、点按切控件或长按倍速。
+- 手机端自动旋转进入全屏的方向策略继续优化：默认保持竖屏，只有传感器达到更明确的横屏姿态时才进入横屏；已经处于横屏时也会更稳地保持横屏，减少抖动。
+
+### 动态页宽屏信息密度
+- 动态流最大内容宽度从 `760dp` 收窄到 `700dp`，宽屏单列不再被拉得过宽。
+- 视频动态卡片在宽屏下改为“左封面、右信息”的横向布局，标题、合集更新信息、播放量和弹幕量集中到同一视线区域，浏览效率明显更高。
+- 手机/窄宽度下仍保持原来的纵向大封面卡片，避免小屏信息区被过度压缩。
+
+### 测试与回归
+- 新增或补强首页顶部交互、顶部几何、动态布局策略、竖屏全屏手势和手机端方向策略等单元测试，覆盖本次交互整理涉及的关键规则。
+
+## v7.0.0 (2026-03-20)
+
+### 版本信息
+- 版本号从 `7.0.0 RC2` 升级到 `7.0.0`，`versionCode` 升级到 `120`。
+- 本次为 `7.0.0` 正式版，合并了 `Beta1` 至 `Beta5` 与 `RC / RC2` 的关键更新，重点整理界面预设、导航链路、播放后台与整体稳定性。
+
+### 界面预设、首页与视觉统一
+- 新增并打磨 `iOS / Android 原生 (MD3)` 双预设能力，首页顶部、底栏、标签壳层与模糊策略按预设分流，整体观感和平台一致性更稳定。
+- 首页头部、搜索框、标签栏、底栏与液态玻璃路径继续统一，支持 `CLEAR / BALANCED / FROSTED` 三档玻璃模式与强度调节，并针对 `MD3` 预设自动避开不合适的玻璃效果。
+- 新增应用内 `字体大小 / 界面缩放 / DPI 覆盖` 调节能力，窗口尺寸、字号和布局密度现在可以跟随应用内配置联动。
+- 自适应强调色与 Material You 视觉校正已覆盖首页、搜索、番剧、通用列表、空间筛选、设置页和个人页等高频界面，暗色与 AMOLED 场景下的高亮可读性更稳定。
+- 取消了实验性的“视频界面实时模糊”效果与设置入口，避免与现有打开视频的交互链路冲突。
+
+### 导航、搜索与内容页整理
+- `MainActivity`、`AppNavigation`、`WebView` 与新的 `BilibiliNavigationTargetParser` 统一了承接 `b23.tv / bilibili.com / bilibili://` 等入口链接的跳转能力，可直接识别视频、动态、UP 空间、直播、番剧、音乐与搜索关键字。
+- 搜索页已接通 `initialKeyword` 深链传参，外部链接、站内跳转与待处理导航进入时都可直接带入关键字并触发搜索。
+- 动态富文本、动态详情、UP 空间、合集/系列详情与通用列表的卡片、跳转与交互策略继续对齐，减少不同内容页之间的行为漂移。
+- 首页、历史、收藏、稍后再看、个人页与设置等顶层入口的导航归属进一步统一，常见回退与落点更一致。
+
+### 播放、后台与详情体验
+- 重构并统一视频取流、画质选择与切换链路，覆盖首播、分 P、互动视频、手动切画质与下载补链，高画质切换与状态回写更可靠。
+- 听视频模式、离线播放、后台播放、通知栏/系统媒体中心控制与播放队列管理继续整理，前后切歌、后台控制与锁屏交互更稳定。
+- 播放器调试面板补齐分辨率、码率、帧率、编解码器和解码器名称等信息，方便排查不同设备和视频源上的问题。
+- 视频详情页、播放器布局、评论区、发送状态、倍速手势、收藏夹选择与相关推荐等交互继续修复，竖屏/横屏与窄宽度场景的稳定性更好。
+- 背景音频模式下会禁用视频轨、清空视频 Surface，并将多路状态收集与 Overlay 轮询改为 lifecycle-aware，进一步降低后台 CPU、内存和无效解码占用。
+
+### 稳定性、工程化与测试
+- 新增 `assembleFast / installFast`、更接近正式版的 `Dev` 变体，以及更精简的 `Debug` 运行态配置，方便开发与回归验证。
+- 继续把首页头部、搜索、显示策略、动态富文本、播放器布局、画质选择、后台播放与更新检查等规则拆成可测试的 policy/helper。
+- 单元测试已覆盖入口链接解析、版本比较、显示配置、首页几何、主题强调色、列表外观、画质链路、后台播放策略等关键路径。
+
+## v7.0.0 RC2 (2026-03-20)
+
+### 版本信息
+- 版本号从 `7.0.0 RC` 升级到 `7.0.0 RC2`，`versionCode` 升级到 `119`。
+- 本次为“首页液态玻璃与全局视觉统一 + 搜索深链与导航补齐 + 播放器后台降载优化”的发布候选更新。
+
+### 首页、顶部壳层与液态玻璃统一
+- 首页顶部、底栏与标签壳层进一步统一到新的 `HomeChromeLiquidSurface` 路径，减少不同预设、不同模糊模式下的玻璃层断裂和层级不一致。
+- 新增 `LiquidGlassMode` 与 `LiquidGlassTuning`，把液态玻璃从旧样式枚举升级为 `CLEAR / BALANCED / FROSTED` 三种模式，并用强度参数统一驱动模糊、折射、边缘形变与指示器染色。
+- 新增 `HomeSettingsUiPresetPolicy`，MD3 预设下会自动关闭首页液态玻璃，避免 Material 预设和 iOS 风格特效叠加后出现观感冲突。
+- 首页顶部、底栏、标签指示器和 iOS 头部几何继续重构，滚动、折叠与顶部视觉的联动更稳定，视觉规则也更容易单测覆盖。
+
+### 设置页与视觉调节体验
+- 动效与视觉设置页加入液态玻璃实时预览、模式卡片和强度滑杆，切换效果时不再只能靠抽象的“样式”命名判断。
+- `SettingsManager` 现在持久化新的液态玻璃模式与强度字段，并兼容旧 `LiquidGlassStyle` 的迁移，已有配置不会在升级后丢失。
+- 设置项、底栏设置和相关策略继续按当前主题与预设自适配，减少 iOS / MD3 / Material You 之间的视觉断层。
+
+### 搜索、入口链接与导航补齐
+- `BilibiliNavigationTargetParser` 新增搜索目标解析，入口链接现在可以直接把关键字带入站内搜索页。
+- `MainActivity`、`AppNavigation` 与 `SearchScreen` 已接通 `initialKeyword`，从外部 Deep Link、站内跳转或待处理导航进入时都可以自动填充并触发搜索。
+- 顶层导航策略进一步补齐，个人页、历史、收藏、稍后再看与设置等入口的归属判断更一致，减少错误落点。
+- 搜索页与空间页的选中态 Chip 改为走自适应主题强调色策略，深浅主题和 AMOLED 场景下的可读性更稳定。
+
+### 主题色、列表与内容页视觉统一
+- 新增 `AdaptiveAccentColorPolicy`，在高亮强调色对比度不足或暗色表面过亮时，会自动回退到容器色方案，降低纯亮色块刺眼和文字对比度不达标的问题。
+- 引导页、番剧详情、通用列表、空间筛选和搜索筛选等位置统一接入自适应强调色，不再各自维护一套容易漂移的选中态配色。
+- `Theme.kt` 与通用列表外观策略继续校正 `surfaceVariant / primaryContainer` 等语义色映射，主题切换后的层次和对比度更稳定。
+
+### 播放器信息面板与后台性能优化
+- 播放器新增更完整的调试信息映射与展示，可直接查看分辨率、音视频码率、编解码器、帧率与解码器名称，方便排查不同源和设备上的播放问题。
+- 背景音频模式下，播放器现在会真正禁用视频轨道、清理视频 Surface，并让 `PlayerView` 与弹幕层在后台非 PiP 场景主动解绑，减少后台无效解码与视图占用。
+- 播放页 Overlay、顶部栏和若干进度/时间轮询改为 lifecycle-aware，页面未销毁但进入后台时不再继续保持高频 UI 刷新。
+- `VideoDetailScreen` 和 `VideoPlayerSection` 的多路状态收集改为 `collectAsStateWithLifecycle()`，并在后台裁掉不必要的弹幕缓存，降低后台 CPU 和内存占用。
+
+### 测试与稳定性
+- 新增或补强液态玻璃调参、自适应强调色、搜索初始关键字、首页壳层结构、播放器调试信息、后台播放策略和 Overlay 轮询策略等单元测试。
+- 更新检查测试同步覆盖 `RC2` 版本号解析与候选版本读取，避免发布后出现预发布版本识别不一致的问题。
+
+## v7.0.0 RC (2026-03-19)
+
+### 版本信息
+- 版本号从 `7.0.0 Beta5` 升级到 `7.0.0 RC`，`versionCode` 升级到 `118`。
+- 本次为“入口链接统一导航 + 显示密度与字号调节 + 首页/动态/直播/投屏体验整理”的发布候选版本。
+
+### 入口链接、WebView 与路由整理
+- MainActivity 现在统一解析 `b23.tv / bilibili.com / bilibili://` 等入口链接，可直接识别视频、动态、UP 空间、直播间、番剧和音乐页，并在导航控制器就绪后再执行跳转，减少冷启动时的漏跳与错跳。
+- 新增 `BilibiliNavigationTargetParser`，把分享文本、短链展开、站内 URL 和 Deep Link 的目标解析统一到同一套逻辑。
+- 应用内 WebView 也接入同一套路由分发，站内链接优先回到 App 内对应页面；无法直接命中的链接再回退到 WebView 打开。
+
+### 显示与设置体验
+- 外观设置页新增应用内“字体大小 / 界面缩放 / DPI 覆盖”三组显示控制项，并把系统 DPI、最小宽度和当前生效结果直接展示出来，方便按设备细调。
+- 新增 `AppDisplayPolicy` 与全局 `DisplayMetricsSnapshot`，窗口尺寸类、排版字号与密度计算现在可以跟随应用内显示配置联动，而不是完全绑定系统默认值。
+- 设置页若干分组分隔线与图标着色继续按当前主题和预设统一，减少 iOS/MD3 预设切换时的视觉断层。
+
+### 首页、列表与导航交互
+- 首页 MD3 顶部 tab 改为更接近原生的下划线固定样式，并根据 pager 实时位置同步可视窗口，减少横向切页时的错位感。
+- 底栏补齐“仅图标 / 仅文字 / 图标+文字”标签模式，并让 Material 底栏也接入统一模糊与表面色策略；重复点击首页底栏时会直接回顶。
+- 首页刷新提示、列表头部模糊策略、通用列表卡片外观和历史进度展示进一步策略化，减少不同列表页之间的样式漂移。
+
+### 动态、UP 空间与站内内容页
+- 动态富文本现在支持直接识别并点击链接，站内链接优先应用内打开，外链走系统浏览器；`@`、话题、表情与纯文本的渲染逻辑也统一整理。
+- 动态页针对用户筛选、风控/限流错误提示、用户动态加载时机和远端请求参数做了整理，降低切换用户时的空白、误重试和错误提示不准的问题。
+- UP 空间、常规列表与卡片封面批量改为带尺寸参数的图片 URL，并补齐合集/收藏等补充数据加载策略与选中态配色，提升加载稳定性和主题对比度。
+
+### 直播、投屏与播放细节
+- 直播竖屏页重做为“播放器 + 信息面板 + 互动区”的分层结构，横屏聊天浮层也加入更明确的标题与容器样式，信息层级更清晰。
+- 投屏链路新增 SSDP 设备资料解析与展示策略，只保留真正支持 `AVTransport` 的可投设备，并优先展示友好设备名与型号信息。
+- 播放相关细节继续整理，包括按小窗模式与退出策略决定唤醒锁模式，减少后台播放与功耗策略不一致的问题。
+
+### 测试与稳定性
+- 为入口链接解析、显示策略、动态富文本、列表外观、直播 tab 配色、投屏设备解析、播放功耗策略等新增或补强定向单测。
+- 继续把首页、动态、空间、设置和播放器里的视觉/交互规则拆成可测试的 policy/helper，降低 RC 阶段继续完善时的回归风险。
+
+## v7.0.0 Beta5 (2026-03-18)
+
+### 版本信息
+- 版本号从 `7.0.0 Beta4` 升级到 `7.0.0 Beta5`，`versionCode` 升级到 `117`。
+- 本次为“视频画质链路统一 + 动态/UP 空间体验补强 + Material You 视觉校正”的综合更新版本。
+
+### 视频画质与播放链路
+- 重构点播视频的播放地址与画质选择链路，把首播、分P切换、互动视频切换、下载补链和手动切换画质统一整合到同一套选流逻辑。
+- 修复部分视频切换到 `1080P` 等更高画质时无效或回退不一致的问题；画质列表、实际选中的轨道和切换后的状态现在会一起回写。
+- 清理仓库中重复漂移的旧 `VideoPlaybackUseCase` 实现，降低后续继续调画质/取流策略时的分叉风险。
+
+### 动态与 UP 空间功能对齐
+- 继续按移动端功能边界重构动态页，统一列表状态、增量刷新、卡片交互分发、评论/回复加载和动态详情承载。
+- UP 主空间页补齐更稳定的资料头部与主 tab 壳层，空间动态页改为复用主动态卡片和交互策略，减少空间页与动态页两套平行实现。
+- 合集/系列详情与空间内播放跳转链路进一步整理，空间页进入视频、动态和合集时的导航行为更一致。
+
+### Material You 与设置页视觉修复
+- 修复开启安卓原生 `MD3` / Material You 后，设置页图标虽然切成了 MD3 形状，但颜色仍沿用固定蓝绿红紫的问题。
+- 设置首页与设置搜索结果里的图标现在会按主题语义色映射到 `primary / secondary / tertiary / error`，跟随当前系统取色和主题变化，不再保留品牌硬编码色板。
+- 修复 Material You 下个人页 VIP 胶囊、视频详情“发弹幕”角标等位置出现纯白块的可读性问题，统一改走主题语义色与对比度兜底策略。
+
+### 开发与构建体验
+- 新增 `assembleFast / installFast` 本地快捷任务，明确把“日常开发快路径”固定到 `debug` 变体，避免误用更接近发布链路的 `dev` 变体做日常迭代。
+- 继续补强设置图标策略、列表组件几何策略、动态/空间策略和视频画质策略的单元测试，降低后续调 UI 预设和播放逻辑时的回归成本。
+
+## v7.0.0 Beta4 (2026-03-16)
+
+### 版本信息
+- 版本号从 `7.0.0 Beta3` 升级到 `7.0.0 Beta4`，`versionCode` 升级到 `116`。
+- 本次为“首页顶部一体化与滚动同步修复 + 播放页布局/手势/发送状态修复 + 主题色与 MD3 细节校正”的综合更新版本。
+
+### 首页头部、滚动与顶部视觉
+- 修复首页顶部搜索框与标签栏在液态玻璃/普通模糊下出现“中间矩形、两侧圆角梯形”的模糊断层问题，圆角边缘现在会和模糊采样策略保持一致。
+- 修复首页一体式顶部面板在普通模糊模式下只局部生效、下半段像“没吃到模糊”的问题；一体式 panel 现在直接承接本地 blur，不再沿用旧的全宽矩形 slab 路径。
+- 修复首页左右切换到“关注”等分页时，若目标页停在顶部却沿用了上一页收缩状态，会在顶部露出大片空白的问题；分页停稳后现在会按目标页自己的滚动位置同步 header 状态。
+- 修复首页上下滑动时搜索框会跟着收缩直至消失的问题；顶部收缩现在只作用于标签栏，搜索框始终保持可见。
+- 修复首页换成一体式头部后，列表顶部预留仍按旧高度计算，导致顶部面板压住首屏视频卡片的问题；feed 顶部 padding 现在会跟随真实 header 几何同步计算。
+- 继续重构 iOS 预设下的首页顶部结构，把搜索框、设置入口与标签栏收敛为同一块顶部面板，搜索成为主视觉，标签栏退为内嵌导航，整体感和层级关系更统一。
+
+### 视频详情页、播放器布局与交互
+- 修复竖屏视频上滑收缩时，视频画面变小但播放控件仍按原尺寸布局的问题；控制层、手势层与相关交互现在会跟随实际视口一起缩放。
+- 修复视频详情页顶部 `简介 / 评论 / 发弹幕 / 设置` 一排在窄宽度和长评论数字场景下互相挤压的问题；已切换为更紧凑的布局与文案策略。
+- 修复长按倍速后上滑锁定倍速失效的问题，避免长按和拖拽手势彼此抢占导致锁定逻辑提前被清掉。
+- 调整视频详情页主信息区与相关推荐里的“已关注”视觉，统一改为使用当前主题语义色，不再出现固定灰色/固定蓝色与主题脱节的问题。
+
+### 评论发送、对话框与细节修复
+- 修复评论区可以成功发送评论，但发送完成后输入框一直转圈、无法继续发送下一条的问题；发送成功事件已改为非阻塞分发，不再卡住发送状态回收。
+- 同步整理弹幕发送成功事件通道，避免同类“无人消费事件导致协程悬挂”的潜在问题继续蔓延到其它发送链路。
+- 修复 `MD3` 预设下“清除缓存”确认弹窗内容区被按钮撑成超高空白面板的问题；同一套对话框组件现在会按预设选择正确的按钮尺寸策略。
+
+### 工程化与回归测试
+- 新增首页顶部模糊边缘、首页 header 分页同步、首页头部一体化布局、视频详情页顶部布局、播放器长按倍速手势、评论发送事件通道、已关注主题色、MD3 对话框策略等定向测试。
+- 持续把首页头部、播放器手势、发送事件和主题视觉规则沉淀成可单测的 policy/helper，降低后续继续调顶部 chrome 和播放交互时的回归风险。
+
+## v7.0.0 Beta3 (2026-03-16)
+
+### 版本信息
+- 版本号从 `7.0.0 Beta2` 升级到 `7.0.0 Beta3`，`versionCode` 升级到 `115`。
+- 本次为“双预设 UI 打底 + 首页 MD3 头部统一 + Debug 运行态整理 + 个人页/播放器问题修复”的综合更新版本。
+
+### 双预设 UI 与首页 MD3
+- 新增 `iOS / Android 原生(MD3)` 全局 UI 预设能力，主题、底栏、共享组件和部分交互壳已可跟随预设切换。
+- 首页顶部标签在 `MD3` 预设下改为固定 4 个可见项，并强制显示图标和文字，避免小屏设备上标签被挤压显示不全。
+- 首页顶部搜索框、分区入口、标签栏、下拉刷新与顶部模糊策略进一步按预设分流，`MD3` 下更接近 Android 原生 chrome。
+- 顶部模糊扩展为“跟随预设 / 始终开启 / 始终关闭”，其中 `MD3` 默认关闭整块玻璃底板，减少 iOS 式割裂感。
+
+### Debug / Dev 构建与运行态
+- `Debug` 包名改为 `com.android.purebilibili.debug`，可与正式版共存安装。
+- 新增更接近正式版运行态的 `Dev` 变体，便于做性能与视觉回归。
+- 默认收紧 `Debug` 的高频 verbose 日志、日志落盘、LeakCanary 和 Compose runtime tooling，降低调试包与正式版的流畅度差距。
+
+### 个人页、播放与面板修复
+- 个人页“背景装扮”改为更贴近头像区的紧凑操作条，并让模糊材质跟随全局开关，降低视觉割裂感。
+- 修复“点击视频直接播放”关闭后无法手动播放的问题，播放器加载后会稳定 `prepare()`，仅用 `playWhenReady` 控制是否自动起播。
+- 修复弹幕设置面板里滑杆拖动会被下层播放器手势抢走的问题，并收窄平板横屏下的弹幕设置面板宽度。
+
+### 设置项与文案校正
+- “预测性返回”设置改为按当前状态显示说明文案，明确区分“系统返回预览”和“经典回退动画”，避免开关语义看起来像反了。
+- 预测性返回相关文案从“手势总开关”调整为更准确的“返回预览”语义，减少和系统级返回手势能力混淆。
+
+## v7.0.0 Beta2 (2026-03-15)
+
+### 版本信息
+- 版本号从 `7.0.0 Beta1` 升级到 `7.0.0 Beta2`，`versionCode` 升级到 `114`。
+- 本次为“个人页壁纸自定义补全 + 图片预览与保存增强 + 首页/搜索头部打磨 + 播放与离线后台控制修复”的综合更新版本。
+
+### 个人页壁纸与背景装扮
+- 个人页背景装扮新增手势调节能力，支持双指缩放、单指拖动，并分别保存手机端与平板端的 `scale / offsetX / offsetY`。
+- 个人页头图底部补上更自然的渐变过渡，减少背景图与内容区之间的生硬断层。
+- 背景装扮新增“恢复默认背景”能力，用户可以从自定义背景快速回退到默认样式。
+- 官方壁纸选择链路修复为“列表用缩略图、详情/调整/保存用原图”，解决外面看正常、点进去变成小图的问题。
+- 开屏欢迎图改为按图片与屏幕比例动态选择展示策略，比例差过大的图片不再被 `FULL_CROP` 过度放大裁切。
+
+### 图片预览与保存体验
+- 修复动态图片全屏预览偶发只显示中间一小块的问题，预览图会按容器尺寸稳定铺开。
+- 全屏图片预览新增长按保存，和右上角下载按钮共用同一条保存逻辑，减少保存路径分裂。
+- 图片保存结果补充震动反馈：成功给轻震，失败给重震，长按保存和按钮保存保持一致。
+
+### 首页头部、搜索与视觉细节
+- 首页顶部标签在左右切换时会更早跟随 `pager` 目标页滚动，高亮跟手性更好，不再明显“慢半拍”。
+- 进一步修复首页顶部标签位移动画与首页左右切换不同步的问题，标签胶囊会按 `pager` 实时滑动进度连续跟手。
+- 修复顶部标签在左右切换后把左侧 `推荐` 挤出可见区、指示器贴边显示不全的问题；已可见标签不再被强行滚到最左侧。
+- 修复顶部标签在切页停稳后偶发闪回 `推荐` 的问题；停稳态现在优先跟随 `pagerCurrentPage`，不再等待分类状态回写后一拍。
+- 首页顶部 tab 长条和搜索框的液态玻璃/普通模糊材质都解决了横向亮带问题，减少中间像多一条分界线的观感。
+- 首页左上头像与右上设置按钮统一为同尺寸外框与同一水平线，搜索栏两侧更对称。
+- 搜索页顶部主栏改为仅保留 `返回 + 更长的搜索框 + 搜索`，热搜开关下移到“热门搜索”标题右侧。
+- 搜索框 placeholder 改为单行省略，热搜词不会再在输入框内折成两行；关闭热搜时标题行和开关仍保留，方便随时重新开启。
+
+### 播放、视频详情与离线后台控制
+- 修复视频详情页评论数较长时，左侧 tab 会把右侧弹幕开关/发弹幕/设置整体挤出屏幕的问题。
+- 离线视频/音频播放接入现有 `MiniPlayerManager + MediaSession + MediaStyle notification + PlaybackService` 链路，后台听离线内容时可触发系统自带的媒体播放界面。
+
+### 更新检查与版本分发
+- 修复 `7.0.0 Beta` 通道自动检查更新可能漏检的问题，版本比较现在正确识别 `Beta1 / Beta2 / 正式版` 的先后关系。
+- 自动更新检测新增仓库版本文件回退路径；即使 GitHub Release 尚未创建，只要默认分支上的版本号已更新，也能识别到新版本。
+
+### 工程化与回归测试
+- 新增个人页壁纸 transform、官方壁纸原图选择、图片保存反馈、搜索头部布局、首页头部视觉、离线播放媒体会话、更新检查版本解析、首页顶部标签跟手等策略测试。
+- 持续把首页头部、搜索、壁纸、图片预览和离线播放规则沉淀为可单测的 policy/helper，降低后续继续调视觉与后台播放链路时的回归风险。
+
+## v7.0.0 Beta1 (2026-03-15)
+
+### 版本信息
+- 版本号从 `6.9.9` 升级到 `7.0.0 Beta1`，`versionCode` 升级到 `113`。
+- 本次为“播放与登录体验修复 + 首页/动态页空间利用率优化 + 流畅度与网络链路结构性优化启动”的综合更新版本。
+
+### 播放与切换
+- 修复听视频随机播放总是反复命中同几首的问题，随机模式改为一轮内尽量不重复。
+- 修复全屏 `4:3` 画幅切换无效的问题，并统一 `适应 / 填充 / 16:9 / 4:3 / 拉伸` 的画面比例策略。
+
+### 登录
+- 移除手机号登录的 UI 入口，当前仅保留扫码登录。
+- 在扫码登录界面补充原因说明，明确为什么现在需要通过扫码完成登录。
+
+### 界面优化
+- 缩窄底栏与首页顶栏，减少横向留白和纵向厚重感，提升空间利用率。
+- 收紧动态页卡片与横向 UP 列表的间距，让信息密度更自然。
+- 修复关闭玻璃/模糊效果后，深色模式底栏错误显示为白色的问题。
+
+### 流畅度与网络优化
+- 恢复共享网络栈的 HTTP/2，多请求场景下连接复用更好。
+- 提高 API HTTP 缓存预算，减少重复拉取的浪费。
+- SponsorBlock 请求改为复用共享网络客户端，不再单独起一套连接池。
+- 收紧首页后台预加载预算，减少进入页面时的额外负担。
+- 动态页启动改为主 feed 先到，关注列表延后少量补齐，降低首屏请求扇出。
+- 动态页评论弹窗和楼中楼回复预览从主 feed 树中拆出，减少评论操作时整页重组。
+- 首页顶部 tab、底栏导航、播放器交互设置改为聚合订阅，降低根部状态订阅数量，减轻重组压力。
+
+### 工程化、测试与文档
+- 补充了随机播放、画面比例、动态页状态、网络策略、首页设置映射、播放器交互设置映射等定向测试。
+- 补充了本轮性能优化设计、实施计划、Beta1 交接文档与发布更新日志文档。
+
+## v6.9.9 (2026-03-14)
+
+### 版本信息
+- 版本号从 `6.9.8` 升级到 `6.9.9`，`versionCode` 升级到 `112`。
+- 本次为“播放器后台控制与听视频模式修复 + 视频详情交互整理 + 搜索结果外观同步”的综合更新版本。
+
+### 播放器、后台控制与听视频模式
+- 修复系统媒体中心/通知栏里“下一首可以切换，但切回上一首无效”的问题；播放器会同时接管 `seekToPrevious/Next` 与 `seekToPrevious/NextMediaItem` 两条命令链，后台播放切歌更稳定。
+- 修复 MediaSession 队列索引与真实 timeline 不一致时可能触发的崩溃，降低后台播放、锁屏控制和外部媒体控件场景下的非法状态风险。
+- 重构前后切歌导航策略，统一分 P、合集、播放列表与直接队列回退顺序，减少前后切歌行为不对称的问题。
+- 听视频模式新增更明确的渲染/布局策略：系统 PiP 下调整为更紧凑的封面模式，封面尺寸同时受宽度和可用高度约束，避免顶部按钮、控制层与封面互相挤压。
+
+### 视频详情、收藏与评论交互
+- 全屏播放、详情操作区和底部交互栏的收藏入口统一改为打开收藏夹选择面板，不再直接做危险的立即取消收藏。
+- 收藏保存后的已收藏状态与收藏数改为按最终保存结果统一回写；清空选择时会正确回到未收藏状态，减少图标状态和计数不同步的问题。
+- 视频评论里的“更多回复”现在优先保持在嵌入式评论面板内展开，尽量不再用脱离播放器上下文的独立全屏回复层，浏览回复时视频上下文更连续。
+- 动态楼中楼回复预览补齐图片预览承载，动态评论与视频评论的子回复展示路径更一致。
+
+### 搜索、首页与下载体验
+- 搜索结果卡片现在会跟随首页相同的玻璃/普通样式开关，视频、UP、番剧和直播结果的卡片材质与徽标显示规则更统一。
+- 首页/搜索视频卡片补齐付费与充电专属徽标策略，降低不同列表里同一视频卡片信息层级不一致的问题。
+- 已完成下载任务点击后会更明确地进入离线播放目标，离线内容回看路径更直接。
+- 继续补强首页预加载、点击手势预算、播放器顶部/侧边交互条和弹幕设置等细节策略，减少多入口界面之间的视觉与交互割裂。
+
+### 工程化与回归测试
+- 新增搜索结果外观、视频收藏保存、评论展示策略、后台播放切歌、听视频 PiP 渲染与播放器队列同步等一批 policy/test 覆盖。
+- 持续把播放器、搜索、下载和详情页交互规则沉淀为可单测的 helper/policy，降低后续继续调播放器与外观联动时的回归成本。
+
+## v6.9.8 (2026-03-14)
+
+### 版本信息
+- 版本号从 `6.9.7` 升级到 `6.9.8`，`versionCode` 升级到 `111`。
+- 本次为“听视频模式与播放器交互修复 + 竖屏播放可读性打磨 + 搜索结果外观同步”的综合更新版本。
+
+### 听视频模式与播放器交互修复
+- 修复听视频模式下封面图与顶部按钮可能重叠的问题，封面尺寸现在会同时受可用高度约束，避免顶到返回和小窗入口。
+- 修复听视频进入系统小窗后仍挤压完整控制层的问题，小窗模式下改为更稳定的紧凑渲染，避免按钮分布失真。
+- 视频开始播放后会更及时隐藏初始播放框与封面层，减少已经起播但仍停留在“播放框”状态的割裂感。
+
+### 倍速、竖屏播放与可见性优化
+- 新增长按倍速后上滑锁定倍速能力，并补强与画面放大/缩放手势之间的冲突处理，避免多指手势抢占长按倍速状态。
+- 提升竖屏视频右侧互动按钮在浅色背景下的可见性，为图标补上更克制的深色底托，弱化“白图标融进画面”的问题。
+- 继续补强播放器细节交互，降低长按、缩放、控制层切换等场景下的误触和视觉冲突。
+
+### 搜索结果与外观设置同步
+- 修复外观设置中关闭玻璃样式后，搜索结果卡片没有同步切换的问题。
+- 搜索页视频结果现在会沿用首页卡片的玻璃/普通样式开关与徽标展示规则，UP 主、番剧、直播结果也统一接入同一套卡片材质策略。
+- 搜索页的顶部区域与结果区域不再出现“搜索框已切换、结果卡片没切换”的外观割裂。
+
+### 说明
+- 推荐使用普通模糊代替液态玻璃，后续完善之后可切换到液态玻璃。
+
+## v6.9.6 (2026-03-11)
+
+### 版本信息
+- 版本号从 `6.9.5` 升级到 `6.9.6`，`versionCode` 升级到 `109`。
+- 本次为“动态桌面链路重写 + 评论线程与楼中楼补全 + 首页视觉与交互细节修复”的综合更新版本。
+
+### 动态详情、评论与楼中楼
+- 按桌面动态接口重写动态详情读取与解析链路，补齐 `opus` 正文合并策略，减少动态正文显示不全、预览摘要覆盖详情正文的问题。
+- 动态评论改为按真实 `oid/type` 读取，并结合评论总数接口选择正确评论线程，减少评论总数和评论内容对不上的情况。
+- 动态评论弹层补齐楼中楼能力，支持主评论下的回复预览、查看回复入口与二级评论拉取，不再只能看到单层主评论。
+
+### 设置与视觉联动修复
+- 修复外观设置里关闭“底栏磨砂”后自动重新打开“液态玻璃”的问题。
+- 同步修复关闭“液态玻璃”时反向强开“底栏磨砂”的联动异常，两个效果现在只会在开启互斥项时互相关闭，关闭时保留用户当前选择。
+- 修复合集/分集场景下选择其他视频后偶发跳回第一集的问题；合集弹窗、侧边抽屉和相关跳转链路现在会显式保留目标 `cid`，当前集判断也改为按 `bvid + cid` 精确匹配。
+
+### 工程化与回归测试
+- 新增动态 `opus` 正文合并、评论线程选择、评论总数回退、楼中楼入口与视觉开关联动等回归测试。
+- 继续把动态评论与首页视觉策略沉淀为独立 policy/helper，降低后续调接口和调 UI 时的回归风险。
+
+## v6.9.4 (2026-03-10)
+
+### 版本信息
+- 版本号从 `6.9.3` 升级到 `6.9.4`，`versionCode` 升级到 `107`。
+- 本次为“首页/搜索与批量缓存体验打磨 + 竖屏播放链路修复 + 评论区站内跳转补强”的综合更新版本。
+
+### 首页、搜索与批量缓存体验打磨
+- 首页顶部标签材质与次级模糊策略重新统一，不再因为交互预算降级而过度关闭 Liquid Glass / Blur 效果，头部观感更稳定。
+- 搜索首页新增热搜显隐开关，并为热搜区与历史区切换补上更顺滑的进出场动效，手机和平板布局都统一了展示策略。
+- 批量缓存弹窗改为按屏幕高度自适应限制最大高度，候选列表可滚动，短屏设备上也能更容易够到统一画质和确认按钮。
+
+### 竖屏滑动、播放器与评论区修复
+- 修复进入竖屏后上下滑动视频时，当前视频状态可能提前串到其他视频的问题；退出竖屏后主播放器同步逻辑也改为更稳妥的 `bvid/cid` 校验。
+- 竖屏推荐流在滑到队尾附近时会继续补充相关推荐并去重，避免连续下滑时突然断流。
+- 播放器拖动进度条时，控制层显示的当前时间会优先跟随 seek 预览位置，减少“手势预览位置和时间文字不同步”的割裂感。
+- 评论区富文本新增对裸 `BV` 号的识别与点击跳转，竖屏评论面板里的站内视频链接也会优先尝试应用内打开。
+
+### 工程化与回归测试
+- 新增批量缓存弹窗布局策略、搜索热搜显隐与首页动效、播放器预览进度、竖屏分页补货、竖屏进度同步、主播放器 `bvid/cid` 同步和评论区 `BV` 点击等回归测试。
+- 继续把首页头部视觉策略、播放器覆盖层与评论组件逻辑沉淀为可单测的 helper，降低后续交互调优时的回归风险。
+
+## v6.9.3 (2026-03-08)
+
+### 版本信息
+- 版本号从 `6.9.2` 升级到 `6.9.3`，`versionCode` 升级到 `106`。
+- 本次为“应用内更新补全 + 当前视频批量缓存 + 播放器/搜索/空间页修复 + 缓存清理增强”的综合更新版本。
+
+### 应用内更新与批量缓存
+- 应用内更新从“仅检查版本”升级为“检查更新 + 应用内下载 APK + 拉起系统安装器”，更新链路更完整。
+- 当前视频详情页新增批量缓存能力，支持对分 P / 合集条目做统一勾选、统一画质选择与批量入队。
+- 批量缓存结果会区分已加入、已存在与失败任务，减少重复操作带来的困惑。
+
+### 播放器、字幕与横屏体验
+- 修复开启“字幕自动开启”时，横屏手动关闭字幕后回到竖屏又重新显示的问题，字幕开关状态在同一视频内保持一致。
+- 优化横屏播放器底栏布局，压缩右侧按钮间距并限制弹幕输入占位文案单行省略，整体观感更平衡。
+- 继续补强弹幕与播放器控制条相关细节，减少横竖屏切换和叠层状态下的割裂感。
+
+### 搜索、动态/空间页与缓存清理
+- 修复搜索结果中用户认证徽标误把大量账号标成“机构”的问题，认证标签展示更保守准确。
+- 补强空间页头图与动态加载策略，改善“头图不显示 / 动态空白或卡住”的问题。
+- 默认清除缓存现在会额外清掉字幕缓存、弹幕缓存、应用私有日志和应用内更新残留文件，同时明确保留离线下载、播放记录等用户数据。
+
+### 工程化与回归测试
+- 新增应用内更新资产选择、下载状态、安装策略、批量缓存候选与入队、字幕覆盖、搜索认证、空间页加载、横屏底栏、缓存清理等回归测试。
+- 扩展字幕缓存、弹幕缓存和日志持久化策略测试，降低后续播放器与缓存治理改动的回归风险。
+
+## v6.9.2 (2026-03-07)
+
+### 版本信息
+- 版本号从 `6.9.1` 升级到 `6.9.2`，`versionCode` 升级到 `105`。
+- 本次为“视频详情性能优化 + 播放器稳定性增强 + 动态/空间页交互修复”的维护更新版本。
+
+### 视频详情与评论区性能优化
+- 评论区分页策略改为接近列表底部时再继续加载，避免进入评论页后连续自动翻页，对边播边刷评论场景更友好。
+- 视频播放中会自动切换到轻量评论渲染：减少头像淡入和装饰性内容、弱化楼中楼预览，优先保证评论区滑动流畅度。
+- 视频详情页在播放态不再额外预加载相邻分页内容，降低简介页与评论页并行组合带来的额外负担。
+
+### 播放器与播放控制稳定性
+- 小窗、后台播放、播放器控制栏与覆盖层相关策略继续优化，播放服务、迷你播放器位置与顶部控制条行为更稳定。
+- 弹幕设置面板与详情页联动细节补强，减少切换状态、恢复画面或叠层展示时的异常与错位。
+- AI 总结提示与重试链路继续打磨，失败回退与状态反馈更清晰。
+
+### 动态页、空间页与界面修复
+- 修复动态页点进某个已关注 UP 后无法回到“全部关注动态”的问题；再次点击当前 UP 即可取消筛选。
+- 修复空间页投稿区“播放全部”按钮左侧图标显示不完整的问题，按钮图标与文字排布更稳定。
+- 继续补强系统主题对比度、模糊效果降级与崩溃日志持久化等基础体验，减少极端设备和异常场景下的可用性问题。
+
+### 工程化与回归测试
+- 新增视频评论性能策略测试，覆盖评论区分页阈值、播放态轻量评论模式与详情页预加载策略。
+- 扩展评论组件、动态页状态、播放器控制条、后台播放、弹幕设置与 AI 总结等回归测试，降低后续性能优化与交互调整的回归风险。
+
+## v6.9.1 (2026-03-07)
+
+### 版本信息
+- 版本号从 `6.9.0` 升级到 `6.9.1`，`versionCode` 升级到 `104`。
+- 本次为“评论区滑动性能优化 + 桌面端评论标签语义对齐”的维护更新版本。
+
+### 评论区滑动性能优化
+- 评论项渲染链路做了热路径整理：IP 属地文案、点赞显示数、楼中楼用户名预览前缀、特殊评论标签解析等派生值统一改为稳定 helper，减少滚动时的重复计算。
+- 评论表情映射合并逻辑改为仅在输入数据变化时构建，避免主评论和楼中楼在滑动过程中反复创建临时 `Map` 对象。
+- 主评论列表、评论详情页、楼中楼弹窗和平板评论区统一补齐 `LazyColumn contentType`，提升列表复用效率，降低滚动掉帧概率。
+
+### 桌面端评论标签语义对齐
+- 评论响应模型新增对桌面端 `config.show_up_flag` 与 `card_label` 的解析支持，后续评论特殊标签展示不再只依赖客户端猜测。
+- 特殊评论下方新增桌面端同语义的 `UP主觉得很赞` 文本标签，样式改为纯文字展示，不再使用胶囊背景。
+- 标签展示优先采用服务端 `card_label.text_content`，只有在接口允许展示且 `up_action.like=true` 时才回退到本地 `UP主觉得很赞` 文案，尽量与桌面端规则保持一致。
+- 一级评论、评论详情页、楼中楼列表与平板评论布局已统一接入这套标签逻辑，避免不同入口显示不一致。
+
+### 工程化与回归测试
+- 新增评论特殊标签解析测试，覆盖 `card_label`、`show_up_flag` 与 `up_action` 的反序列化场景。
+- 扩展评论组件策略测试，覆盖特殊标签优先级、回退条件、点赞数推导、IP 文案标准化和列表内容类型分类。
+
+## v6.9.0 (2026-03-07)
+
+### 版本信息
+- 版本号从 `6.8.2` 升级到 `6.9.0`，`versionCode` 升级到 `103`。
+- 本次为“设置分享能力上线 + 播放器与 AI 总结体验增强 + 链接解析补强 + 个人页/底栏视觉修复”的综合更新版本。
+
+### 设置分享与安全导入
+- 新增 `设置分享` 页面，支持把应用中的可交流设置导出为可读 JSON，并支持从文件一键导入。
+- 导出文件支持用户直接查看内容，也支持通过系统分享发给其他人，便于交流播放器、外观、弹幕和导航偏好。
+- 导入/导出改为白名单模式，只包含外观、播放、手势、弹幕、导航等可分享项；账号、下载路径、WebDAV、隐私与设备相关配置会自动跳过，降低误分享和误覆盖风险。
+- 设置搜索已接入“设置分享”入口，能通过“导入 / 导出 / 分享设置 / JSON”等关键词直接打开。
+
+### 播放器与视频详情体验
+- 默认播放速度设置升级为更直观的滑杆 + 预设档位控件，调整速度更快、反馈更清晰。
+- 修复平板竖屏状态下点击视频中间会被误带入横屏全屏的问题，退出播放页后也不会再残留横屏方向。
+- 修复长按点赞触发三连后，投币已满场景下投币按钮没有正确高亮的问题。
+- AI 总结链路补强：新增“生成中 / 未登录 / 暂无总结 / 接口失败”等更明确的状态诊断与提示，减少空白和误解。
+- 视频信息区展示策略继续优化，AI 总结入口、标题/作者信息与简介展示更稳定。
+
+### 链接解析与路由兼容
+- Bilibili 链接解析器补齐更多深链和分享链接格式，支持更多 `aid` 数字路径、动态/图文链接与包装 URL 的目标提取。
+- 动态与视频目标识别更稳，降低外部分享链接打开后误判页面类型或跳错详情页的概率。
+
+### 个人页与导航视觉修复
+- 修复“我的页”滚动时状态栏颜色闪烁的问题，移动端沉浸式头图场景下顶部遮罩与系统栏样式改为单一策略驱动。
+- 底栏关闭磨砂后，改为稳定的纯白背景层，显著提升浅色场景下的底栏图标和文字可读性。
+
+### 工程化与回归测试
+- 新增并补齐设置分享、默认播放速度、AI 总结提示、链接解析、平板播放策略、个人页系统栏策略、底栏表面颜色等多组回归测试。
+- 设置分享 ViewModel 新增工厂构造器回归测试，避免后续再次出现入口页创建即崩溃的问题。
+
+## v6.8.1 (2026-03-07)
+
+### 版本信息
+- 版本号从 `6.8.0` 升级到 `6.8.1`，`versionCode` 升级到 `101`。
+- 本次为“默认画质链路纠偏 + 搜索/评论体验修复 + 播放提示可读性优化”的维护更新版本。
+
+### 默认画质与 1080P 播放策略
+- 修复默认画质设为 `1080P60` 时对非大会员首播判断的误伤；非大会员现在会自动按可播放能力回落到 `1080P`，未登录则回落到 `720P`。
+- “自动最高画质”改为先按账号能力封顶后再选，避免把 `1080P60` 等大会员专享档位误当成普通用户首播目标。
+- 补强已登录非大会员的首包补拉与日志诊断，降低“第一次 720P、重进才恢复 1080P”的概率。
+- 新增播放诊断日志，统一记录首播起始画质、取流结果、画质菜单与最终选轨，后续排查会员能力、首包回落和切档异常更直接。
+
+### 搜索与评论体验修复
+- 修复未登录视频搜索第一页偶发空白的问题；当主搜索接口空成功返回时会自动走兼容回退链路。
+- 搜索页空态文案改为区分“确实无结果”和“结果被过滤”，减少“看起来像坏了”的误解。
+- 评论分页新增“零增量即停止”策略，解决滑到底后持续转圈但没有新评论的问题。
+- 修复未登录场景下评论数显示为 `0`、或评论总数正常但列表为空的情况，游客最热评论链路改为优先使用更兼容的分页参数，并在空成功响应时自动补拉兼容主链路。
+- 评论总数解析改为优先采用更可靠的总数来源，并在详情页已知评论数时作为本地保底，减少“数量对不上内容”或“评论 6118 但列表空白”的情况。
+
+### 播放提醒与设置提示
+- 切换画质后的提示不再停在底部角落，而是改为播放器中部的高对比提示层，位置更稳定、可读性更高。
+- 设置页在选择 `1080P60` 时会明确提示非大会员/未登录用户的实际起播画质，减少设置预期与实际播放不一致。
+
+### 平板影院布局与详情展示
+- 平板影院模式补齐合集入口与多 `P` 入口，侧边信息面板现在可直接展开合集和分P选择，减少大屏场景下还要回到其它入口切集的问题。
+- 影院信息区重做标题与简介展示，整合 `VideoTitleWithDesc`、AI 总结和简介空态，详情层级更完整，信息密度更合理。
+- 平板影院布局策略与对应测试同步补齐，避免后续继续调整信息面板时把合集/分P模块漏掉。
+
+### 工程化与回归测试
+- 新增并补齐默认画质、搜索空态、游客搜索回退、评论读取策略、评论分页、平板影院布局、播放提示位置等多组策略测试。
+- 增补播放与评论链路日志，方便后续继续排查首包画质、游客评论、分页异常与游客空成功响应问题。
+
+## v6.8.0 (2026-03-06)
+
+### 版本信息
+- 版本号从 `6.7.2` 升级到 `6.8.0`，`versionCode` 升级到 `100`。
+- 本次为“收藏夹订阅链路补全 + 动态图片预览交互优化 + 首页/个人页细节打磨 + 播放与更新体验修复”的综合更新版本。
+
+### 收藏夹、订阅与列表能力
+- 补齐收藏夹“订阅”数据映射与聚合策略，修复部分订阅项进入后详情为空、无法正确识别合集/系列的问题。
+- 收藏列表页与 ViewModel 的跳转/展示链路同步统一，订阅项与普通收藏夹的打开行为更一致。
+- 相关播放入口策略补强，降低列表来源切换时的空态与误跳转概率。
+
+### 动态图片预览与手势交互
+- 重做动态图片预览关闭与过渡策略，补齐缩放图、拖拽关闭、回弹与手势边界处理。
+- 优化 `ZoomableImage` 与预览弹窗的联动，减少预览态切换时的跳变和误触。
+- 补齐图片预览转场策略测试，方便后续继续调动画时回归。
+
+### 首页、侧栏、搜索与个人页细节
+- 修复首页下拉刷新区域的顶部留白/间距问题，头部与刷新体验更稳定。
+- 首页头部、TopBar、侧边栏与部分入口视觉继续优化，信息层级和点击区域更统一。
+- 搜索页、消息页、关注页与个人页若干布局细节优化；个人页壁纸操作区与资料展示层级进一步整理。
+- 底栏设置与若干导航入口细节同步打磨，减少设置项与实际呈现不一致的情况。
+
+### 更新弹窗可读性修复
+- 修复深色模式下“发现新版本 / 更新日志”弹窗正文对比度过低的问题。
+- 启动时自动更新提示与设置页中的更新日志弹窗统一改为高对比文案样式，避免深色背景与半透明弹窗叠加后看不清文字。
+
+### 视频详情、平板布局与播放体验
+- 视频详情页、内容区与信息区的若干布局策略继续优化，竖屏分页和详情呈现更稳。
+- 平板影院布局与相关策略补强，减少大屏场景下布局切换时的错位与留白问题。
+- Mini Player 管理链路继续优化，降低回收不及时与状态残留的风险。
+
+### 视频画质体验修复
+- 修复已登录非大会员场景下，更新后的首包能力与画质菜单展示不一致的问题。
+- 保留服务端已广告的 `1080P` 选项，并统一首播与切档的取流策略，减少“最高只能看到 720P”的误判。
+
+### 工程化与回归测试
+- 补齐首页下拉刷新、图片预览转场、收藏播放策略、视频详情布局、竖屏分页、路由与画质等多组策略测试。
+- 更新弹窗新增独立的视觉策略测试，确保深色模式下的文案对比度不会再次回退。
+
+### 验证
+- `./gradlew testDebugUnitTest --tests 'com.android.purebilibili.feature.settings.AppUpdateDialogVisualPolicyTest' --tests 'com.android.purebilibili.feature.settings.AppUpdateCheckerTest' --tests 'com.android.purebilibili.feature.settings.AppUpdateReleaseNotesPolicyTest' --tests 'com.android.purebilibili.feature.settings.AppUpdateUiPolicyTest'`
+- `./gradlew testDebugUnitTest --tests 'com.android.purebilibili.feature.video.usecase.VideoPlaybackUseCaseQualitySwitchTest' --tests 'com.android.purebilibili.data.repository.VideoLoadPolicyTest'`
+
+## v6.7.2 (2026-03-05)
+
+### 版本信息
+- 版本号从 `6.7.1` 升级到 `6.7.2`，`versionCode` 升级到 `99`。
+- 本次为“导航与返回动效统一 + 播放器音频稳定性修复 + 主题与设置体验增强 + 启动壁纸能力补强”的综合维护版本。
+
+### 导航与返回动效（重点）
+- 导航转场模块拆分并统一（新增 `AppNavigationTransitions`），统一设置页与详情页的进退场策略，减少规则分散导致的回归。
+- 视频详情返回卡片链路继续稳态化：补齐条件判断与路径兜底，降低预测返回与共享元素并发时的错位/闪动。
+- 导航动效参数（`AppNavigationMotionSpec`、`AppNavigationTransitionPolicy`）同步更新，兼顾手感与稳定性。
+
+### 播放器与视频详情体验
+- 修复“Hi-Res 音源下长按 2x 容易失真”的问题：长按倍速对 Hi-Res 增加兼容限幅并保真恢复。
+- 视频详情页覆盖层、进度条布局、相关推荐卡片细节继续优化，减少状态切换时的层级冲突和视觉跳变。
+- 播放恢复建议与返回封面策略补强，弱网/切页/前后台切换下的播放器稳态更一致。
+
+### 设置、主题与首页视觉
+- 动画设置新增“预测返回”联动策略与可用性提示，开关依赖关系更清晰。
+- 外观与主题相关策略更新（主题模式、分段策略、设置项视觉）并同步到设置页展示。
+- 首页头部与卡片视觉细节继续优化，统一动效与信息层级，提升整体一致性。
+
+### 护眼插件与启动壁纸能力
+- 护眼覆盖层与策略补强，参数决策更稳定，减少不同场景下的显示割裂感。
+- 启动壁纸新增历史记录策略、随机池可见集合与预览策略，随机展示与回溯能力更完善。
+
+### 工程化与回归测试
+- 新增/补齐多组策略测试，覆盖启动壁纸历史、随机池预览、动画设置、导航转场、视频详情返回策略、进度条布局与相关 UI 规则。
+- URL 解析、模糊预算、护眼策略等关键基础模块的回归测试同步加强。
+
+## v6.7.1 (2026-03-05)
+
+### 版本信息
+- 版本号从 `6.7.0` 升级到 `6.7.1`，`versionCode` 升级到 `98`。
+- 本次为“视频详情返回动画稳定性 + 系统栏恢复链路 + 卡片回位一致性”修复版本。
+
+### 动画与返回稳定性
+- 修复首页/历史/收藏/稍后看等列表路由在视频返回场景下的转场干扰，统一卡片回位策略。
+- 优化“视频详情 -> 相关推荐视频 -> 返回上一详情”的整条链路，视频到视频路由层改为 No-Op，降低抖动和层间抢动画。
+- 相关推荐卡片共享元素曲线统一到弹簧参数，关注徽标加入共享键，减少回程错位与跳变。
+
+### 系统 UI 恢复
+- 修复“详情页点推荐视频再返回后状态栏/通知下拉异常”问题，退出详情时恢复完整 system bars 快照（颜色、亮暗、behavior）。
+
+## v6.7.0 (2026-03-05)
+
+### 版本信息
+- 版本号从 `6.6.0` 升级到 `6.7.0`，`versionCode` 升级到 `97`。
+- 本次为“顺序连播逻辑纠偏 + 详情页防回拉 + 视觉流畅策略统一 + 工程化补强”的夜间整合发布版本。
+
+### 播放与连播逻辑（重点）
+- 修复“顺序播放/自动连播结束后闪到下一条标题但仍回到当前视频循环”的问题。
+- `顺序播放` 结束行为调整为：优先播放`下一个分P/合集下一集`，若当前合集无后续再回退到播放列表下一条。
+- 详情页主播放器与内部 `bvid` 同步策略统一，避免普通连播场景被路由初始 `bvid` 回拉覆盖。
+- 补齐顺序连播策略测试，覆盖“合集优先 / 播放列表兜底 / 无下一条停止”等分支。
+
+### 交互与界面优化
+- 全屏覆盖层、视频区与回复区交互细节优化，减少控件状态切换抖动与遮挡。
+- 设置页（播放/动画/搜索入口）与首页卡片展示样式进一步统一，信息密度与可读性更平衡。
+- 视频详情页若干行为策略补强（如播放器折叠状态判定、返回同步路径稳态处理）。
+
+### 流畅度与性能策略
+- 动画与转场参数继续优化：降低高负载设备上的动效堆叠成本，减轻“慢但不顺”的体感。
+- 模糊渲染预算与运行时视觉降级策略增强，在持续高 jank 时更早进入保护态并支持自动恢复。
+- 首页/导航链路的性能策略与测试同步更新，减少极端场景下的主线程压力。
+
+### 数据模型与工程化
+- 响应模型与搜索模型解析能力扩展，提升复杂返回结构下的兼容性与容错。
+- Baseline Profile 基准采样与性能脚本补强，方便回归时识别真实样本并稳定复现。
+- 策略测试面持续补齐，覆盖播放、转场、模糊、首页性能与设置映射等关键路径。
+
+## v6.6.0 (2026-03-04)
+
+### 版本信息
+- 版本号从 `6.5.0` 升级到 `6.6.0`，`versionCode` 升级到 `96`。
+- 本次为“字幕链路完善 + 列表播放策略修复 + 私信/搜索/卡片体验优化”的综合更新版本。
+
+### 字幕链路完善（重点）
+- 字幕功能默认开启，减少需要手动打开字幕能力的门槛。
+- 播放器信息接口切换到 WBI 签名链路（`x/player/wbi/v2`），修复部分场景下看点/播放器信息拉取不稳定问题。
+- 横屏控制栏中的字幕面板样式统一：间距、字号、控件尺寸更紧凑，操作更集中。
+- 播放区字幕渲染优化为阴影增强方案，降低底色遮挡感并提升复杂画面可读性。
+
+### 收藏夹“听视频”播放策略修复
+- 修复收藏夹中“顺序播放/随机播放”在当前曲目结束后直接暂停、需手动切歌才能继续的问题。
+- 播放结束策略调整为来源分流：
+  - 收藏夹外部队列：按播放队列模式连续播放（顺序/随机/单曲循环）。
+  - 首页/动态等普通来源：继续遵循全局“播放完成策略”（如播完暂停）。
+
+### 私信、搜索与卡片体验优化
+- 私信会话排序调整为“置顶优先 + 最近消息时间优先”，并补充置顶操作的乐观更新与失败回刷兜底。
+- 搜索页筛选栏支持横向滚动，减少小屏场景筛选项挤压与截断。
+- 首页视频卡片信息布局优化：贴封面模式下播放量/评论/时长对齐更清晰。
+
+### 视觉与流畅策略升级
+- 新增统一模糊预算策略（`BlurBudgetPolicy`），按区域与动效档位裁剪模糊强度上限，避免高负载时持续重模糊。
+- 导航转场参数优化：手机与平板端滑动/淡入淡出/背景模糊时长下调，减少“慢但不顺”的体感。
+- 入场动画策略优化：`Normal/Reduced` 档位降低排队延迟与总时长，首屏响应更直接。
+- 新增“智能流畅优先”开关：检测到持续高 jank 时临时降级为低动效与低模糊预算，并支持自动恢复。
+- 性能采样脚本新增样本有效性标记（`sample_valid`），避免 `frames=0` 被误判为有效基线。
+
+### 稳定性与测试
+- 补齐字幕策略测试，确保默认开启行为与测试断言一致。
+- 新增播放结束策略测试，覆盖收藏夹来源下的顺序/随机/单曲循环分支，降低回归风险。
+
+## v6.5.0 (2026-03-03)
+
+### 版本信息
+- 版本号从 `6.4.2` 升级到 `6.5.0`，`versionCode` 升级到 `95`。
+- 本次为“播放器交互修复 + 评论可用性提升 + 关注页性能优化 + 定向流量能力接入”的综合更新版本。
+
+### 播放器与交互体验修复（重点）
+- 新增“固定全屏比例”偏好，减少每次播放重复手动调整比例。
+- 竖屏发弹幕输入弹窗与键盘避让链路优化，修复输入区域与输入法之间异常缝隙问题。
+- 亮度/音量侧滑反馈动画优化：小步进平滑过渡，关键阈值切换更清晰。
+- 画质展示文案统一，移除类似 `480P-32`、`4K-120` 的数字尾缀，改为更直观的档位显示。
+
+### 播放进度与合集连续观看
+- 分P/合集恢复播放逻辑增强：支持记住最近观看分P与时间进度，并补齐从详情返回后的恢复提示链路。
+- 播放结束与下一集衔接策略优化，减少从已看分P回退到 `P1` 的误触发场景。
+
+### 评论系统与未登录可用性
+- 评论反诈检测链路升级：补充二次确认与多通道探测，降低误判“秒删/影藏”的概率。
+- 评论读取新增游客优先/双通道降级策略：
+  - 已登录优先走鉴权链路，失败自动降级游客链路；
+  - 未登录优先走游客链路，必要时自动回退。
+- 修复未登录用户“无法查看评论”的问题，同时仅保留发布/点赞/点踩/删除/举报等写操作登录限制。
+
+### 关注页性能与状态保持
+- 新增关注列表本地缓存存储，降低反复进入页面时的全量重刷成本。
+- 修复“从关注页进入主播详情返回后立即整页重刷”的体验问题，回退后优先复用缓存，手动下拉再强制刷新。
+
+### 定向流量能力接入
+- 新增 B 站定向流量开关与播放链路参数覆盖策略（结合移动网络状态启用）。
+- 优化定向模式下的取流参数与回退策略，提升在运营商定向套餐场景下的可用性。
+
+### 其他体验与稳定性优化
+- 直播小窗/播放器覆盖层、首页卡片与转场动效细节优化，减少突兀跳变。
+- 空间页、收藏夹与播放设置若干行为修复与策略单测补充，提升整体稳定性。
+
+## v6.4.1 (2026-03-02)
+
+### 版本信息
+- 版本号从 `6.4.0` 升级到 `6.4.1`，`versionCode` 升级到 `93`。
+- 本次为“全屏策略统一 + 字幕链路稳定性 + 播放设置增强”的维护发布版本。
+
+### 全屏策略与设置统一（重点）
+- 默认全屏方向调整为 4 个主模式：`自动 / 不改 / 竖屏 / 横屏`，降低配置复杂度。
+- 历史模式值兼容迁移：旧配置中的 `比例(4)`、`重力(5)` 自动回收为 `自动`，避免老配置进入隐性分支。
+- 修复竖屏视频场景下全屏按钮“看起来无响应”的体验问题：当目标方向为竖屏时，进入竖屏全屏覆盖层。
+- 同步更新方向策略单测，确保调整后全屏进入/退出链路行为一致。
+
+### 播放设置增强
+- 新增“画中画不加载弹幕”开关（系统 PiP 模式下生效）。
+- 新增“中部滑动切换全屏”开关。
+- 新增“左右侧滑动调节亮度/音量”及“调节系统亮度”开关。
+- 新增“全屏显示互动按钮”开关。
+- 新增“观看人数”开关，关闭时停止在线人数轮询并清空展示。
+- 新增“底部进度条展示”策略：`始终展示 / 始终隐藏 / 仅全屏展示 / 仅全屏隐藏`。
+- 新增“自动启用字幕”偏好：`关闭 / 开启 / 无 AI / 自动`。
+
+### 字幕链路稳定性与可控性
+- 增强字幕轨道元数据（轨道标识、AI 状态、类型等），并补充轨道绑定键策略，减少错误匹配。
+- 新增可信字幕 URL 校验、AI 字幕识别与轨道排序策略，优先选择更可信、非 AI 轨道。
+- 新增字幕展示模式自动决策策略（结合偏好、AI 识别与静音状态）。
+- 字幕拉取新增按 `bvid/cid/轨道/URL` 维度的 Cue 缓存键，减少重复下载与解析开销。
+
+### 推荐反馈能力
+- 新增“不感兴趣”反馈入口链路，记录 `bvid/UP 主/关键词` 到当日反馈快照，用于后续推荐调节。
+
+### 工程化与回归
+- 新增并更新策略单测，覆盖全屏模式统一、字幕策略、字幕缓存键与播放器覆盖层行为：
+  - `FullscreenModeMappingPolicyTest`
+  - `VideoDetailLayoutModePolicyTest`
+  - `BiliSubtitlePolicyTest`
+  - `VideoRepositorySubtitleCachePolicyTest`
+  - `PlaybackSettingsSelectionPolicyTest`
+  - `TopControlBarPolicyTest`
+  - `VideoPlayerOverlayPolicyTest`
+  - `VideoGestureFeedbackPolicyTest`
+  - `VideoLoadRequestPolicyTest`
+
+## v6.4.0 (2026-03-01)
+
+### 版本信息
+- 版本号从 `6.3.3` 升级到 `6.4.0`，`versionCode` 升级到 `92`。
+- 本次为“横屏布局与全屏方向策略”优先版本，重点修复横屏切换与退出链路问题。
+
+### 横屏布局与方向策略（重点）
+- 新增“横屏适配”总开关，可控制是否启用横屏布局与横屏逻辑（平板默认可开启）。
+- 新增“默认全屏方向”模式：`自动 / 不改方向 / 竖屏 / 横屏 / 比例判断 / 重力感应`。
+- 修复“点击横屏按钮后仍保持竖屏”的问题：手动全屏进入时按模式和视频方向决策目标方向。
+- 修复“退出横屏后又自动旋转回横屏”的问题：补齐自动旋转与手动全屏状态协同策略。
+
+### 播放器交互与控制层增强
+- 新增全屏相关设置：
+  - 全屏手势反向（上滑/下滑进退全屏可反转）
+  - 自动进入全屏（播放就绪后）
+  - 自动退出全屏（播放结束后）
+  - 全屏锁定按钮显示开关
+  - 全屏截图按钮显示开关
+  - 全屏顶部电量显示开关
+- 横屏手势区优化：中间区域支持滑动触发进退全屏，并增加方向切换提示文案。
+
+### 手势反馈可读性优化
+- 优化亮度/音量手势反馈：动态图标、数值显示与层次动画更清晰。
+- 调整亮度/音量反馈容器样式，去除黑色边框遮挡感，减少亮色画面下的视觉突兀。
+
+### 工程化与回归
+- 新增/更新策略单测，覆盖全屏方向策略与手势反馈策略：
+  - `VideoDetailLayoutModePolicyTest`
+  - `VideoGestureFeedbackPolicyTest`
+  - `CuteLoadingIndicatorPolicyTest`
+
+## v6.3.1 (2026-02-26)
+
+### 版本信息
+- 版本号从 `6.3.0` 升级到 `6.3.1`，`versionCode` 升级到 `89`。
+- 本次为“听视频链路 + 分P选择体验 + 横竖屏全屏 + 返回动效”集中修复版本。
+
+### 听视频与播放列表修复
+- 修复视频播放中切到其他应用再返回后，部分场景出现“有画面无声音”的问题（含“离开播放页后停止”开关联动场景）。
+- 修复“听视频”从收藏夹进入时播放源错位问题：不再误跳到收藏夹中第一个视频所在合集，改为按当前选中视频上下文播放。
+
+### 分P选择与选集体验升级
+- 重构分P选择组件，新增“预览 + 展开”双模式：小屏竖屏优先展示横向预览，支持一键展开完整分集面板；横屏/大屏优先网格直出。
+- 选集面板新增搜索能力（按 P 号/标题），并支持章节分组筛选，分集较多时定位更快。
+- 优化分P网格自适应策略：按屏幕宽度与方向自动调整列数、卡片尺寸与底部安全区留白。
+- 修复视频跳转时的 CID 解析优先级：显式 CID 缺失时，优先使用相关推荐里的匹配 CID，再回退到合集分集 CID，减少错分P播放。
+
+### 横竖屏与返回动效修复
+- 修复未开启共享过渡时，返回首页视频卡片动效方向不合理的问题：左右列回退方向改为符合空间关系。
+- 修复自动旋转场景下的全屏退出问题：横屏进入全屏后，旋转回竖屏可自动退出全屏。
+
+## v6.3.0 (2026-02-25)
+
+### 版本信息
+- 版本号从 `6.2.1` 升级到 `6.3.0`，`versionCode` 升级到 `88`。
+- 本次为“听视频播放列表 + 动态稳定性 + 首播画质鉴权 + 底栏视觉统一”的集中发布版本。
+
+### 听视频播放列表（收藏夹 / 稍后再看 / 列表页）
+- 新增收藏夹场景“听视频”播放入口，并补齐稍后再看等列表页的可用入口。
+- 优化“听视频”按钮可点击时机，减少进入页面后按钮长时间灰置的等待感。
+- 播放模式补齐并可直接切换：
+  - `顺序播放`
+  - `随机播放`
+  - `单曲循环`
+- 优化播放页模式按钮布局与居中逻辑，修复与封面贴边/错位问题。
+- 修复从首页视频进入听视频时封面与当前播放内容不一致的问题，统一按当前播放上下文绑定。
+
+### 动态页稳定性与请求策略
+- 修复快速切换多个 UP 主动态时偶发“无数据”问题。
+- 针对动态请求补充更稳健的重试与状态同步策略，降低瞬时失败导致的空白页概率。
+- 优化异常态展示与重试链路，降低 `HTTP 412 Precondition Failed` 对体验的影响。
+- 结合现有 API 文档与实现策略，补强特殊动态类型（如充电相关动态）的加载兼容性。
+
+### 播放清晰度与登录鉴权修复（重点）
+- 修复“已登录非大会员首次播放仅 720P、重载后才恢复更高分辨率”的问题。
+- 登录态判定由“仅 Cookie”升级为“`SESSDATA` 或 `access_token` 任一有效即视为已登录”。
+- 在无 Cookie 但有 APP token 的场景下，1080P（`qn=80`）可走 APP API 鉴权路径，减少误降级。
+- 播放前增加上下文自举，避免首次加载时因上下文未绑定而回落默认 720P。
+
+### 底栏视觉与玻璃效果统一
+- 去除底栏玻璃反光高光边框，移除顶部“镜面反射”观感。
+- 底栏边框改为更轻量低透明描边，保持层次感同时避免反光干扰。
+
+### 工程化与回归
+- 新增并更新画质鉴权与上下文策略相关单测，覆盖：
+  - 登录态双通道判定（Cookie / access_token）
+  - 无 Cookie 场景下 1080P 的 APP API 尝试策略
+  - PlayerViewModel 上下文自举策略
+- 已执行针对性单测：
+  - `VideoLoadPolicyTest`
+  - `PlayerViewModelContextPolicyTest`
+
+## v6.2.1 (2026-02-25)
+
+### 版本信息
+- 版本号从 `6.2.0` 升级到 `6.2.1`，`versionCode` 升级到 `87`。
+- 本次为视频详情返回首页链路的性能与一致性优化版本，包含动效、播放器状态与可观测性增强。
+
+### 横屏控制栏新增能力（关键）
+- 横屏播放器右侧新增 `字幕` 按钮：
+  - 新增独立字幕面板，支持字幕语言快速切换（如中/英/双语/关闭，按轨道能力动态展示）。
+  - 新增“字幕大字号”开关，横屏下可直接调整字幕可读性。
+- 横屏播放器右侧新增 `更多` 按钮（聚合操作面板）：
+  - 新增“下集”快捷入口。
+  - 新增“播放顺序”快捷切换入口（展示当前顺序标签并可一键切换）。
+  - 新增“画面比例”快捷入口（保持当前比例状态高亮）。
+  - 新增“竖屏”快捷入口（横屏下快速回到竖屏观看）。
+- 横屏控制按钮布局重排：
+  - 高频项（画质、倍速、字幕、更多）固定在主操作区，次级项收拢到弹出面板，减少遮挡并提升触达效率。
+
+### 返回首页动画与性能优化（重点）
+- 优化“未开启共享过渡”时的视频详情返回首页动效：
+  - 下调无共享模式导航动效时长（滑动/淡入淡出/背景模糊）。
+  - 视频详情 -> 首页返回链路改为更轻量的回退过渡，减少高频返回时掉帧风险。
+  - 首页返回抑制窗口在无共享场景下缩短，降低等待感。
+  - 底栏恢复延迟按场景动态调整（无共享更快恢复）。
+- 返回首页曲线继续对齐 iOS 风格非线性（先快后慢），并保留快速返回场景稳定性策略。
+- 返回阶段统一采用封面层，取消“视频画面 -> 封面”中途转换，返回全程保持封面可见。
+- 共享过渡开启且极快返回场景下，卡片回收过程中封面保持完整可见，避免中途露底或闪烁。
+- 返回首页时顶部标签页全程可见，不再中途隐藏。
+
+### 播放状态稳定性
+- 修复返回首页后音频短暂停留问题，离开视频域时更早执行静音/暂停兜底，避免残留播音。
+
+### 横竖屏与全屏行为
+- 优化旋转到横屏时的进入策略，直接进入视频全屏播放态，减少中间态闪烁与割裂。
+
+### 设置项排查与可用性
+- 针对“液态玻璃选项消失”反馈补充排查：确认该能力未移除，仍由首页视觉/动画效果配置联动控制并在对应设置页生效。
+- 补充相关可观测信息，便于后续区分“选项缺失”与“配置联动导致未显示”的用户反馈。
+
+### 弹幕与视觉一致性
+- 弹幕开关按钮（详情页与播放控制层）启用态颜色统一改为主题色（`MaterialTheme.colorScheme.primary`），提升主题一致性。
+
+### 动画性能埋点增强
+- 新增并完善 `home_return_animation_perf` 事件采集：
+  - 实际耗时、计划抑制时长、共享过渡是否开启/就绪。
+  - 共享过渡未就绪/未开启场景标记，便于单独分析非共享返回性能。
+  - 快速返回标记、平板标记、卡片动画开关。
+  - 内置插件与 JSON 插件数量（含 feed/danmaku 分项），用于分析插件压力与动画帧率表现。
+
+## v6.2.0 (2026-02-24)
+
+### 版本信息
+- 版本号从 `6.1.5` 升级到 `6.2.0`，`versionCode` 升级到 `86`。
+- 本次为当晚集中修复与体验优化版本，覆盖动态、历史、播放、首页、设置、直播与仓库层逻辑。
+
+### 动态模块修复（重点）
+- 修复动态流中“订阅合集/剧集”卡片无法点击进入的问题。
+- 修复动态视频链接在仅有 aid 场景下无法打开的问题，统一支持 `BV`、`av`、`aid` 三种目标解析。
+- 补齐动态卡片与转发卡片的跳转兜底链路（`archive`、`ugc_season`、`jump_url`、`aid`）。
+- 修复动态评论参数解析，优先使用 `basic.comment_id_str` 与 `basic.comment_type`，并增强多类型回退推断。
+- 修复动态发评硬编码参数问题，改为按当前动态解析出的 `(oid, type)` 发起请求。
+- 修复动态“视频”分栏筛选遗漏，纳入 `DYNAMIC_TYPE_PGC` 与 `DYNAMIC_TYPE_UGC_SEASON`。
+
+### 历史记录能力增强
+- 新增历史记录卡片长按删除能力。
+- 新增历史页顶部“批量删除”按钮与批量选择流程（全选、删除、完成）。
+- 删除链路接入官方历史删除接口：`x/v2/history/delete`。
+- 历史删除复用“稍后再看”同款消散动画效果，提升反馈一致性。
+- 新增历史删除策略与映射逻辑（渲染 key、`kid` 组装规则），覆盖 archive、pgc、live、article 等类型。
+
+### 播放与视频链路优化
+- 优化视频详情加载策略，补强混合 ID 输入下的视频信息查询流程。
+- 新增/完善导航目标 CID 解析策略，减少跨页面跳转丢失分 P 的情况。
+- 持续优化播放器覆盖层与控制栏交互（底部控制、全屏覆盖层、竖屏覆盖层、直播弹幕层）。
+- 优化播放进度管理、播放器状态同步与相关用例处理逻辑。
+
+### 首页、关注、列表与稍后再看
+- 优化首页下拉刷新交互策略与提示状态逻辑。
+- 优化视频卡片历史进度条显示策略。
+- 更新关注列表批量选择等策略细节与对应测试。
+- 增补历史播放策略与稍后再看删除策略相关测试。
+
+### 直播、弹幕与仓库层
+- 优化直播弹幕协议与客户端处理流程。
+- 优化弹幕过滤与合并策略，补齐高级过滤场景测试。
+- 调整部分仓库层行为与容错处理（含关注分组等场景策略测试）。
+
+### 设置与应用框架
+- 新增应用更新自动检查进程门禁，避免同进程重复触发自动检查。
+- 优化设置页与平板设置布局的一致性与交互细节。
+- 同步调整 `MainActivity` 与导航接入点，匹配本次行为改动。
+
+### 工程化与测试
+- 持续抽离可测试策略模块，覆盖动态、首页、历史、播放、设置等高频逻辑。
+- 新增并更新多组单元测试，重点覆盖跳转、删除、过滤、选择与参数解析回归点。
+
+### 验证结果
+- 已执行：`./gradlew :app:testDebugUnitTest`
+- 结果：`BUILD SUCCESSFUL`
+
+### 当晚版本轨迹
+- `v6.1.3`：版本升级并合入动态/详情链路修复。
+- `v6.1.4`：发布版本。
+- `v6.2.0`：当晚集中稳定性修复与交互增强版本。
+
+## [6.1.4] - 2026-02-24
+
+### ✨ New Features (新增功能)
+
+- **播放与画质策略升级**:
+  - 新增解码/画质策略层，补充 AVC/HEVC/AV1 与分辨率选择兜底逻辑。
+  - 优化播放页画质入口与切换链路，提升高画质场景下的可控性与稳定性。
+- **设置页交互升级（iOS 风格）**:
+  - 新增可拖动、可实时打断的滑动分段控件，并接入主题/编码/推荐流类型等关键选项。
+  - 模糊强度与推荐流类型入口完成图标语义重整，信息表达更清晰。
+- **下载与存储能力补强**:
+  - 引入下载存储策略模块，完善下载路径与任务落盘策略。
+  - 下载弹窗与任务链路同步适配新的路径选择能力。
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **视频卡片视觉修复**:
+  - 去除视频时长标签周围黑边，统一封面叠加层观感。
+- **转场与动效体验优化**:
+  - 调整导航与图片预览过渡参数，改善进出场平滑度与一致性。
+- **权限与隐私相关设置完善**:
+  - 补充敏感权限申请链路与设置项联动，优化权限状态反馈。
+
+### ✅ Tests (测试)
+
+- 新增/补充策略与视觉相关单测，覆盖：
+  - HDR/编码选择策略
+  - 下载存储策略
+  - 分段控件与设置策略
+  - 导航/转场策略
+  - 视频卡片时长标签视觉策略
+
+### 📦 Release
+
+- **Version Bump**: Updated app version to `6.1.4` (`versionCode` `84`).
+
+## [6.0.3] - 2026-02-18
+
+### ✨ New Features (新增功能)
+
+- **平板端视频详情重设计（Stage + Side Curtain）**:
+  - 点击视频后改为“舞台式播放器 + 侧幕式内容”布局，强化平板交互层次与沉浸感。
+  - 侧幕支持 `PEEK / OPEN / HIDDEN` 状态切换，并提供窄态快捷入口（评论/相关推荐）。
+  - 引入按屏宽自适应策略，覆盖主流平板尺寸区间，避免固定尺寸硬编码。
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **播放器卡死恢复链路增强**:
+  - 新增错误恢复策略与生命周期播放策略，按错误类型执行差异化重试。
+  - 解码异常场景支持自动回退编码重载，降低“起播失败后卡死”概率。
+  - 补充播放错误日志与生命周期判定细节，便于后续排障。
+- **平板详情页信息区结构优化**:
+  - 播放器下方区域收敛为“互动按钮 + 视频简介”，移除冗余推荐速览。
+  - 该区域背景改为纯白，提升信息对比与视觉一致性。
+- **互动按钮可用性修复**:
+  - 点赞图标改为更常见样式，修复“大拇指过细”观感问题。
+  - 点赞交互改为稳定单按钮实现，修复点赞后偶发闪动。
+  - 投币按钮文案改为“投币/已投币”，修正文字与语义。
+  - 收藏图标切换为常用五角星样式。
+- **侧幕交互策略调整**:
+  - 取消“展开后自动收起”，改为仅由用户手动控制，避免操作被打断。
+
+### ✅ Tests (测试)
+
+- 新增/更新测试:
+  - `TabletCinemaLayoutPolicyTest`
+  - `PlayerErrorRecoveryPolicyTest`
+  - `PlayerLifecyclePlaybackPolicyTest`
+
+### 📦 Release
+
+- **Version Bump**: Updated app version to `6.0.3` (`versionCode` `74`).
+
+## [5.3.4] - 2026-02-15
+
+### ✨ New Features (新增功能)
+
+- **今日推荐单卡片交互升级**:
+  - 新增收起/展开能力，收起时仅保留轻量头部，不再自动跟随首页推荐流同步重算。
+  - 新增“刷新”入口，支持只刷新推荐单（不触发首页推荐流下拉刷新）。
+  - 手动刷新会优先消耗当前预览队列，快速“换一批”。
+- **播放结束行为可选**:
+  - 播放设置新增“选择播放顺序”：`播完暂停` / `顺序播放` / `单个循环` / `列表循环` / `自动连播`。
+  - 针对“稍后再看”场景优化：从列表进入播放时默认按顺序队列运行，看完一条可无缝接下一条。
+  - 横屏/竖屏播放器内新增“播放顺序”快捷入口，可直接弹出同款五选项面板切换。
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **竖屏链路稳定性修复**:
+  - 修复竖屏滑到新视频后，进入 UP 主页（或搜索）返回时内容回退到首视频的问题。
+  - 竖屏“简介”面板内点击 UP 头像现在可直接进入 UP 空间，返回后保持竖屏视频上下文。
+  - 竖屏会话内播放结束改为由竖屏分页接管自动续播，自动下滑到下一条后起播，避免主链路抢占导致的“仅音频无画面/无法继续滑动”问题。
+  - 竖屏恢复时新增初始页定位策略，优先回到上次浏览的 bvid（命中推荐队列时）。
+- **播放顺序面板与动作栏视觉修正**:
+  - 下调播放器内“选择播放顺序”面板选项字号，避免弹窗文字过大挤占视线。
+  - 统一详情页操作栏五列按钮槽位与基线，修复“点赞（大拇指）一列”与其余列视觉不齐的问题。
+- **播放器顶栏与弹幕可读性修复**:
+  - 非全屏播放器左上角快捷入口由“画质”改为“弹幕开/关”，避免与底部画质入口重复。
+  - 指令型弹幕新增可读性过滤：仅展示可读文本提示，自动忽略 `upower_state` 等结构化 payload，修复黄色乱码弹幕问题。
+- **图片预览开关动画重构（iOS 风格）**:
+  - 重做图片预览打开/关闭动画阻尼与速度曲线，改为更贴近 iOS 的顺滑回收手感。
+  - 过渡期间圆角改为恒定策略，移除“中途圆角渐变”过程，避免视觉抖动与形变感。
+  - 关闭阶段移除过冲回弹，改为单段收拢到源位置，降低违和感。
+  - 图片预览改为非 Dialog 全局 Overlay Host，避免深层列表项内弹窗导致的返回手势失效。
+  - 新增预测性返回手势联动：支持边滑边预览退出进度，手势取消时平滑回弹，退出过程可中断。
+  - 根据反馈取消图片预览“可打断跟手”返回动画，统一为固定退场动画，避免中途停留和手势状态不一致。
+  - 修复预测返回取消时偶发停留在中间态（卡住不回位）的问题，新增常规 Back 兜底与回弹稳定保障，避免手势穿透回到首页后预览层残留。
+
+### 📦 Release
+
+- **Version Bump**: Updated app version to `5.3.4` (`versionCode` `70`).
+
+## [5.3.3] - 2026-02-14
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **Bangumi 时间线稳定性修复**:
+  - 在 `BangumiTimelineScreen` 中将列表 key 调整为 `seasonId + episodeId` 复合 key，避免 `episodeId` 重复时导致的列表崩溃问题。
+- **文案一致性修正（Watch Later）**:
+  - 全局修正“稀后再看”为“稍后再看”，统一了侧边栏、底部导航与相关注释文案。
+- **竖屏播放器交互完善**:
+  - 顶栏去除重复的三点菜单入口，避免与底部“简介”功能重叠。
+  - 横竖屏切换入口下移至右下角操作区，单手触达更顺手。
+  - 竖屏支持长按倍速播放（松手恢复原速），并增加实时倍速反馈。
+  - 竖屏分享文案补齐视频标题（格式：`【标题】+ 链接`）。
+- **首页顶栏视觉比例微调**:
+  - 顶栏选中背景（胶囊）整体缩小，缓解“色块偏大”观感。
+  - 顶栏文字字号小幅上调（仍低于旧版体量），提升可读性与对比平衡。
+  - 关键尺寸改为集中 token 策略，后续可快速回滚/AB 调整。
+- **首页顶栏自定义（显示/隐藏/排序）**:
+  - 新增顶部标签顺序与可见项持久化配置（DataStore）。
+  - 设置页支持顶部标签显隐与排序（`推荐`固定显示），并支持一键重置。
+  - 首页顶部标签映射改为按“当前配置列表”驱动，移除对固定索引的依赖。
+  - 直播入口路由改为按标签语义判断，避免自定义排序后点击错位。
+  - 修复顶栏配置热更新时 `HorizontalPager` 可能发生的越界崩溃（索引保护 + 页码钳制）。
+- **今日推荐单可用性优化**:
+  - 点击推荐单视频后会立即从当前队列移除，降低“看完即废”的体感。
+  - 已点击条目在后续重建推荐时会被过滤，避免短时间重复回流。
+  - 卡片内补充了简短使用说明（点击即移除、下拉可换一批）。
+- **竖屏交互继续对齐（P2）**:
+  - 修复切换竖屏后“优先显示封面、未直接起播”的问题，改为播放器就绪后直出播放画面。
+  - 进一步修正为“首帧渲染后才隐藏封面”，避免竖屏切换瞬间出现黑屏+播放键。
+  - 竖屏第一页进度条支持使用进入时进度做初始种子，并在暂停/等待首帧阶段保持进度显示。
+  - 竖屏入口改为“进入瞬间进度快照”驱动，避免重组时读取实时位置导致进度条回退。
+  - 暂停图标显示条件改为“真实暂停态”判定，缓冲/待播期间不再误显示大播放键。
+  - 修复共享播放器模式下的进度回写冲突：竖屏播放期间不再对同一 ExoPlayer 执行周期性回写 seek，避免“首帧重复/画面抽动”。
+  - 修复横屏点击“竖屏”路由错误：不再回落到普通详情页，改为直接进入竖屏沉浸播放流（必要时先退出横屏全屏）。
+  - 竖屏右下角旋转入口图标由“窗口样式”替换为“屏幕旋转”图标，语义更贴近“切换横屏”。
+  - 启动“单 ExoPlayer 复用”重构第一阶段：竖屏页复用主播放器实例，仅切换承载容器，减少进竖屏重拉流与状态丢失。
+  - 竖屏底部右下角去重，保留单一横竖屏切换入口，避免双按钮语义重叠。
+  - 标题支持直接点击打开“简介 + 推荐”面板，推荐项可直接跳转到竖屏流内对应视频。
+  - 竖屏 UP 信息区支持点击进入 UP 主页。
+- **首页/稍后再看删除动效加速（参考 Telegram 风格）**:
+  - 不感兴趣与稍后再看删除统一切换为“快版”消散预设，减少拖沓感。
+  - 缩短粒子动画总时长与波前扩散时间，删除反馈更干脆。
+  - 稍后再看页面新增“批量删除”模式（选择/全选/确认删除）。
+- **播放加载链路性能优化（针对“加载慢、卡顿”反馈）**:
+  - 自动最高画质策略分级：非大会员优先稳定起播档，降低高画质协商失败概率。
+  - 新增 APP API 风控冷却（命中 `-351` 后短期跳过 APP API），避免无效重试。
+  - DASH 高画质失败后快速回落到 80，减少重试等待。
+  - 首帧优先策略：非关键请求延后触发，并限制推荐预加载仅在 Wi-Fi 下执行。
+- **发布渠道安全提示增强**:
+  - 设置页“关于与支持”新增常驻发布渠道声明卡片（固定展示官方渠道）。
+  - 设置页新增“发布渠道声明”入口弹窗，统一展示免责声明文案。
+  - 新用户首次打开应用时弹出发布渠道声明（仅首次确认）。
+- **UP 主页连续播放链路补强**:
+  - 空间页“播放全部”和视频列表点击改为构建外部播放列表（`setExternalPlaylist`），从所点视频开始顺序串联播放。
+- **测试补充**:
+  - 扩展 `HomeTopCategoryPolicyTest`，覆盖自定义顺序/可见性与兜底逻辑。
+  - 扩展 `TopTabLayoutPolicyTest`，覆盖直播路由语义判断逻辑。
+  - 新增 `TodayWatchQueuePolicyTest`，覆盖点击消费后的移除与补货判定逻辑。
+  - 扩展 `TodayWatchPolicyTest`，覆盖已消费条目过滤逻辑。
+  - 新增 `PortraitSharePolicyTest`，覆盖竖屏分享文案拼装规则。
+  - 扩展 `PortraitFullscreenOverlayPolicyTest`，覆盖顶栏重复菜单隐藏策略。
+  - 扩展 `PortraitPagerSwitchPolicyTest`，覆盖竖屏封面显示策略。
+  - 新增 `SpacePlaybackPolicyTest`，覆盖 UP 空间外部播放列表构建与起播索引逻辑。
+
+### 📦 Release
+
+- **Version Bump**: Updated app version to `5.3.3` (`versionCode` `69`).
+
+## [5.3.2] - 2026-02-13
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **Top/Bottom Label Alignment Rework**:
+  - reduced top-tab selected-state scaling in `图标+文字` mode to remove visual drop/misalignment
+  - normalized top-tab icon/text metrics (icon size, line-height, spacing) for consistent optical center
+  - adjusted bottom-bar icon+text metrics and baseline to improve icon/title alignment consistency
+- **Version Bump**: Updated app version to `5.3.2` (`versionCode` `68`).
+
+## [5.3.1] - 2026-02-13
+
+### ✨ New Features (新增功能)
+
+- **Bangumi Policy Layer**: Added dedicated policy modules to split view logic from screens/viewmodels:
+  - `BangumiFollowStatusPolicy`
+  - `BangumiModePolicy`
+  - `BangumiPlaybackUrlPolicy`
+  - `BangumiSeasonActionPolicy`
+  - `BangumiUiPolicy`
+  - `MyFollowPolicy`
+  - `MyFollowStats`
+  - `MyFollowStatsDetailPolicy`
+  - `MyFollowWatchInsightPolicy`
+- **Home Top Category Policy**: Added `HomeTopCategoryPolicy` to centralize top-tab category order/mapping.
+- **Mine Drawer Visual Policy**: Added `MineSideDrawerVisualPolicy` for blur/opacity/scrim tuning in one place.
+- **Danmaku Settings Policy**: Added `DanmakuSettingsPolicy` for opacity normalization and boundary handling.
+- **Watch Later External Playlist Policy**: Added `WatchLaterPlaybackPolicy` to build external queue and start index from clicked item.
+- **Top Tab Label Mode Setting**: Added configurable top-tab label mode (`图标+文字 / 仅图标 / 仅文字`) in settings and wired to home header.
+- **Playlist Persistence**: Added `PlaylistManager` state persistence/restore (playlist, index, play mode, external-queue flag) and app-start initialization.
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **Top Tab Refraction Behavior**: Top indicator now disables refraction when fully stationary; refraction only applies during drag/settle motion.
+- **Top Tab Text Clarity**: Removed double-text crossfade rendering that caused ghosting/blur on selected tabs; switched to single-layer color interpolation.
+- **Top Tab Icon+Text Layout Polish**: Improved visual placement by changing icon+text style to a cleaner horizontal arrangement.
+- **Watch Later Playback Order**:
+  - card click now also sets external playlist (not only top-right "play all")
+  - queue starts from the clicked item index
+  - playback flow no longer falls back to recommended queue unexpectedly in this scenario
+- **Search Repository Reliability**: Improved video search fallback path (`all/v2`) and page-info handling/logging.
+- **Danmaku Repository Robustness**:
+  - refined segment-count fallback policy
+  - strengthened thumb-up state resolution and error message mapping
+  - improved segment cache safety behavior
+- **Eye Protection Logic Cleanup**: Consolidated eye-care decision/tuning/reminder logic into policy helpers for predictable behavior.
+- **Bangumi Experience Refinement**:
+  - clearer follow-state preload flow
+  - safer season-id resolution for action routes
+  - cleaner playback-url collection and UI sizing rules
+  - improved MyFollow type/stat/watch-insight derivation
+
+### ✅ Tests (测试)
+
+- Added and/or updated unit tests:
+  - `BangumiFilterAndSearchTypePolicyTest`
+  - `BangumiFollowStatusPolicyTest`
+  - `BangumiModePolicyTest`
+  - `BangumiPlaybackUrlPolicyTest`
+  - `BangumiSeasonActionPolicyTest`
+  - `BangumiUiPolicyTest`
+  - `MyFollowPolicyTest`
+  - `MyFollowStatsPolicyTest`
+  - `MyFollowStatsDetailPolicyTest`
+  - `MyFollowWatchInsightPolicyTest`
+  - `HomeTopCategoryPolicyTest`
+  - `MineSideDrawerVisualPolicyTest`
+  - `TopTabLayoutPolicyTest`
+  - `TopTabLabelModePolicyTest`
+  - `TopTabRefractionPolicyTest`
+  - `DanmakuRepositoryPolicyTest`
+  - `DanmakuSettingsPolicyTest`
+  - `EyeProtectionPolicyTest`
+  - `LiquidLensProfileTest`
+  - `VideoPlaybackUseCaseQualitySwitchTest`
+  - `WatchLaterPlaybackPolicyTest`
+
+### 📦 Release
+
+- **Version Bump**: Updated app version to `5.3.1` (`versionCode` `67`).
+
+## [5.3.0] - 2026-02-12
+
+### ✨ New Features (新增功能)
+
+- **Today Watch Plugin (今日推荐单插件)**: Added a new built-in plugin that locally analyzes watch history and builds a daily recommendation queue with two modes:
+  - `今晚轻松看`
+  - `深度学习看`
+- **Today Watch Card UI**: Added a dedicated recommendation card in Home/Recommend with:
+  - mode switch chips
+  - UP 主榜
+  - recommended video queue (with UP avatar/name)
+  - per-item explanation tags
+- **Local Personalization Stores**:
+  - added creator-profile persistence store (`TodayWatchProfileStore`)
+  - added negative-feedback persistence store (`TodayWatchFeedbackStore`)
+- **Eye Protection 2.0**: Rebuilt eye-care plugin with:
+  - three presets (`轻柔 / 平衡 / 专注`) plus DIY tuning
+  - real-time settings preview
+  - reminder cadence + snooze options
+  - richer humanized reminder copy
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **Cold Start Discoverability**: Fixed issue where Today Watch card was loaded but often out of viewport on cold start; now applies one-shot startup reveal strategy during startup window.
+- **Refresh Toast Lifecycle Fix**: Fixed issue where “新增 X 条内容” hint could remain on screen and not auto-dismiss reliably.
+- **Recommendation Signal Upgrade**:
+  - fused history completion + recency + creator affinity
+  - linked eye-care night signal (shorter, lower-stimulation preference at night)
+  - integrated dislike penalties (video / creator / keyword)
+  - diversified queue ordering to avoid consecutive same-creator streaks
+- **Playback Quality Switching Reliability**:
+  - quality options now prioritize actual DASH switchable tracks
+  - cache switching now requires exact quality match; falls back to API fetch when missing
+  - improved quality-switch toast wording for clearer fallback explanation
+- **History Model Enrichment**: Added `author_mid` mapping in history response conversion so creator affinity can be computed accurately.
+- **Plugin Registry Update**: Built-in plugin count updated from 4 to 5 by registering Today Watch plugin in app startup.
+- **App Icon Switching Fix**: Resolved icon switching errors caused by mismatched Telegram activity-alias names during app startup icon-state sync (`icon_telegram_pink`, `icon_telegram_purple`, `icon_telegram_dark`).
+
+### ✅ Tests (测试)
+
+- Added and verified unit tests:
+  - `TodayWatchPolicyTest`
+  - `TodayWatchMotionPolicyTest`
+  - `TodayWatchStartupRevealPolicyTest`
+  - `EyeProtectionPolicyTest`
+  - `VideoPlaybackUseCaseQualitySwitchTest`
+
+### 📦 Release
+
+- **Version Bump**: Updated app version to `5.3.0`.
+
+## [5.2.2] - 2026-02-11
+
+### ✨ New Features (新增功能)
+
+- **Danmaku Interaction Callback**: Wired danmaku click callback end-to-end for context menu and interaction extension scenarios.
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **Portrait Video Mode Upgrade**: Improved portrait-mode player flow, including playback continuity when swiping between videos, progress synchronization across portrait/landscape transitions, and overlay control consistency.
+- **Dynamic Feed UX**: Added dynamic-tab bottom reselect double-tap to top behavior and improved smoothness of Home/Dynamic return-to-top animations.
+- **Forwarded Dynamic Images**: Fixed an issue where images inside forwarded dynamics could not be opened for preview.
+- **Image Preview Animation Polish**: Unified open/close motion for image preview dialog across entry points, with smoother rounded-corner transitions and spring-like close rebound.
+- **Inbox User Info Stability**: Improved reliability of avatar/username resolution in private-message list after repeated entry.
+- **Version Bump**: Updated app version to `5.2.2`.
+
+## [5.2.1] - 2026-02-11
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **Space Dynamic Navigation**: Fixed an issue where image/text dynamics in personal space could not be opened; now dynamic cards route correctly:
+  - video dynamics -> native video detail
+  - non-video dynamics -> dynamic detail page (`t.bilibili.com/{id_str}`)
+- **Home Double-Tap Stability**: Fixed blank area appearing when double-tapping Home from non-top position with "header auto-collapse" enabled; Home double-tap now restores top header/tabs before scroll/refresh.
+- **Liquid Glass Indicator Tuning**: Improved bottom bar indicator geometry in icon+text mode so labels participate in refraction more reliably.
+- **Version Bump**: Updated app version to `5.2.1`.
+
+## [5.2.0] - 2026-02-10
+
+### ✨ New Features (新增功能)
+
+- **Top Tabs Style Sync**: Top category tab bar now follows bottom bar style linkage, supporting floating/non-floating, blur, and liquid glass modes with unified visual language.
+- **Refraction Upgrade**: Added stronger liquid lens profile for tab/bottom indicators during horizontal slide, with a clearer spherical feel and edge-space warp.
+- **Incremental Timeline Refresh**: Added optional incremental refresh for Recommend/Following/Dynamic feeds, preserving old content and prepending only new items.
+- **Refresh Delta Feedback**: Added "new items count" prompt after manual refresh and an old-content divider cue in Recommend.
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **Top Indicator Geometry**: Refined top indicator size/shape/centering and boundary clamping to prevent clipping and offset drift when sliding.
+- **Bottom Indicator Refraction Source**: Fixed cases where icon/text were not clearly refracted by switching to icon-layer backdrop capture.
+- **Default Visual Bootstrapping**: Added one-time startup migration to ensure default Home visual settings are enabled on first launch after update:
+  - floating bottom bar
+  - liquid glass enabled
+  - top blur enabled
+- **Version Bump**: Updated app version to `5.2.0`.
+
+## [5.1.4] - 2026-02-08
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **Playback Fix**: Resolved playback issues in certain scenarios.
+
+## [5.1.3] - 2026-02-08
+
+### ✨ New Features (新增功能)
+
+- **Search Upgrade**: Extended search types and interaction flow (视频/UP/番剧/直播), improved suggestion/discover results, and optimized pagination/loading behavior.
+- **Comment Preference**: Added configurable default comment sort preference and synchronized it across comment entry points.
+- **Danmaku Plugin 2.0**: Added user ID/hash blocking for danmaku plugins, plus in-play hot refresh when danmaku plugin configs/rules change.
+- **Fullscreen Clock**: Added a top time display in landscape/fullscreen overlays.
+- **Settings Tips Expansion**: Added more hidden usage tips in the tips page.
+- **Version Easter Egg**: Enhanced version-click visual/easter-egg effects and toggles.
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **Bottom Bar UX**: Reworked bottom bar visibility rules for top-level destinations and fixed alignment/position issues when tab count changes.
+- **Playback Completion UX**: When "Auto-play next" is disabled, playback completion no longer forces intrusive action popups.
+- **Background Playback Fix**: Fixed an issue where switching recommended videos inside detail page could dirty lifecycle flags and cause unexpected pause on Home/background.
+- **Gesture Anti-MisTouch**: Brightness/volume vertical gestures are now limited to left/right one-third zones; center zone no longer triggers accidental adjustments.
+- **Like Icon Unification**: Replaced heart-like visuals with thumb-up style across key interaction surfaces.
+- **Comment Logic Reliability**: Fixed missing UP/置顶 comments under some sort modes and improved mixed-source comment loading behavior.
+- **Firebase Telemetry Hardening**: Strengthened Firebase Analytics + Crashlytics integration (user/session context, custom keys, screen/event tracing, and error domain reporting).
+- **General Stability**: Multiple UI/state synchronization fixes across home, video detail, plugin center, and settings.
+
+## [5.1.1] - 2026-02-07
+
+### ✨ New Features (新增功能)
+
+- **Experimental Features**: Added some experimental features for better user experience.
+
+### 🛠 Improvements & Fixes (优化与修复)
+
+- **System Stability**: Fixed some known issues and optimized layout performance.
+
+## [5.1.0] - 2026-02-06
+
+### 🛠 Improvements (优化)
+
+- **Scrolling Performance**: Optimized list scrolling performance and reduced recomposition overhead.
+- **UI Interaction**: Enhanced card press feedback and physics.
+
+## [5.0.5] - 2026-02-05
+
+### ✨ New Features (新增功能)
+
+- **Video Player Optimization**: Narrowed brightness/volume trigger zones in portrait mode to prevent accidental triggers when swiping for fullscreen.
+- **AI Summary**: Added support for AI-generated video summaries.
+- **Music Identification**: Added support for identifying and searching for BGM in videos.
+- **Version Bump**: Updated app version to 5.0.5.
+
+### 🛠 Improvements (优化)
+
+- **Engineering**: Removed mandatory dependency on `google-services.json` for cleaner builds.
+- **Tablet Support**: Improved drawer and bottom bar interaction on tablets.
+- **Messaging**: Enhanced private message loading and added video link previews.
+
+## [5.0.1] - 2026-02-01
+
+### ✨ New Features (新增功能)
+
+- **Deep Link Support**: Added comprehensive support for Bilibili links (Video, Live, Space, Dynamic). Supports `bilibili.com`, `m.bilibili.com`, `live.bilibili.com`, `space.bilibili.com`, `t.bilibili.com`.
+- **Playback Controls**:
+  - Added "Loop Single" (单曲循环) mode.
+  - Added "Shuffle" (随机播放) mode.
+  - Added "Sequential" (顺序播放) mode.
+  - Added "Pause on Completion" (播完暂停) logic when auto-play is disabled.
+- **Settings**:
+  - Fixed "Auto-Play Next" setting synchronization.
+
+### 🐛 Bug Fixes (修复)
+
+- **UI**: Fixed "Share" button in video detail screen not responding.
+- **UI**: Renamed "IP属地" to "IP归属地" for consistency.
+- **Compilation**: Resolved build errors related to `PlaylistManager` and `PlayMode`.

@@ -1,0 +1,209 @@
+package com.android.purebilibili.feature.settings.ui
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import com.android.purebilibili.core.ui.components.AppIcon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
+import com.android.purebilibili.core.ui.AppScaffold
+import com.android.purebilibili.core.ui.AppTopBar
+import com.android.purebilibili.core.ui.AppSurfaceTokens
+import com.android.purebilibili.core.ui.LocalBottomBarContentPadding
+import com.android.purebilibili.core.ui.LocalGlobalWallpaperBackdropVisible
+import com.android.purebilibili.core.ui.LocalSetBottomBarVisible
+import com.android.purebilibili.core.ui.TopReadabilityChrome
+import com.android.purebilibili.core.ui.blur.BlurStyles
+import com.android.purebilibili.core.ui.blur.currentUnifiedBlurIntensity
+import com.android.purebilibili.core.ui.blur.hazeSourceCompat
+import com.android.purebilibili.core.ui.blur.rememberRecoverableHazeState
+import com.android.purebilibili.core.ui.rememberAppBackIcon
+import com.android.purebilibili.core.ui.components.AppIconButton
+import com.android.purebilibili.core.ui.components.AppPreferenceIconTreatment
+import com.android.purebilibili.core.ui.components.AppPreferenceGroupPresentation
+import com.android.purebilibili.core.ui.components.LocalAppPreferenceIconTreatment
+import com.android.purebilibili.core.ui.components.LocalAppPreferenceGroupPresentation
+import com.android.purebilibili.feature.settings.SettingsBottomBarScrollState
+import com.android.purebilibili.feature.settings.SettingsBottomBarScrollTracker
+import com.android.purebilibili.feature.settings.SettingsPageScrollHost
+import com.android.purebilibili.feature.settings.reduceSettingsBottomBarScroll
+import kotlinx.coroutines.flow.distinctUntilChanged
+
+@Composable
+internal fun SettingsBottomBarScrollEffect(listState: LazyListState) {
+    val setBottomBarVisible = LocalSetBottomBarVisible.current
+    val density = LocalDensity.current
+    val topRevealThresholdPx = with(density) { 24.dp.roundToPx() }
+    val directionThresholdPx = with(density) { 32.dp.roundToPx() }
+
+    LaunchedEffect(
+        listState,
+        setBottomBarVisible,
+        topRevealThresholdPx,
+        directionThresholdPx,
+    ) {
+        var tracker = SettingsBottomBarScrollTracker(
+            previousState = SettingsBottomBarScrollState(
+                firstVisibleItemIndex = listState.firstVisibleItemIndex,
+                firstVisibleItemScrollOffset = listState.firstVisibleItemScrollOffset,
+            ),
+        )
+        snapshotFlow {
+            SettingsBottomBarScrollState(
+                firstVisibleItemIndex = listState.firstVisibleItemIndex,
+                firstVisibleItemScrollOffset = listState.firstVisibleItemScrollOffset,
+            )
+        }
+            .distinctUntilChanged()
+            .collect { currentState ->
+                val update = reduceSettingsBottomBarScroll(
+                    tracker = tracker,
+                    currentState = currentState,
+                    topRevealThresholdPx = topRevealThresholdPx,
+                    directionThresholdPx = directionThresholdPx,
+                )
+                update.bottomBarVisible?.let(setBottomBarVisible)
+                tracker = update.tracker
+            }
+    }
+
+    DisposableEffect(setBottomBarVisible) {
+        onDispose { setBottomBarVisible(true) }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun SettingsPageScaffold(
+    title: String,
+    onBack: () -> Unit,
+    backContentDescription: String,
+    bottomContentPadding: androidx.compose.ui.unit.Dp,
+    modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState(),
+    scrollHost: SettingsPageScrollHost = SettingsPageScrollHost.LazyColumn,
+    topBarBlurEnabled: Boolean = true,
+    actions: @Composable RowScope.() -> Unit = {},
+    header: (@Composable () -> Unit)? = null,
+    lazyListContent: (LazyListScope.() -> Unit)? = null,
+    content: @Composable () -> Unit = {},
+) {
+    if (scrollHost == SettingsPageScrollHost.LazyColumn) {
+        SettingsBottomBarScrollEffect(listState)
+    }
+    val resolvedBottomContentPadding = maxOf(
+        bottomContentPadding,
+        LocalBottomBarContentPadding.current,
+    )
+    val hazeState = rememberRecoverableHazeState()
+    val blurIntensity = currentUnifiedBlurIntensity()
+    val topBarSurfaceAlpha = if (topBarBlurEnabled) {
+        BlurStyles.getBackgroundAlpha(blurIntensity)
+    } else {
+        0.86f
+    }
+    val pageContainerColor = AppSurfaceTokens.groupedListContainer()
+
+    // BiliPai：设置页用不透明 grouped 底色，避免全局壁纸半透明与多页叠色闪烁。
+    CompositionLocalProvider(
+        LocalGlobalWallpaperBackdropVisible provides false,
+        LocalAppPreferenceIconTreatment provides AppPreferenceIconTreatment.FILLED,
+        LocalAppPreferenceGroupPresentation provides AppPreferenceGroupPresentation.FLAT,
+    ) {
+        AppScaffold(
+            modifier = modifier,
+            topBar = {
+                Box {
+                    TopReadabilityChrome(
+                        height = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 64.dp,
+                        surfaceColor = pageContainerColor,
+                        surfaceAlpha = topBarSurfaceAlpha,
+                        hazeState = hazeState,
+                        hazeEnabled = topBarBlurEnabled,
+                    )
+                    AppTopBar(
+                        title = title,
+                        navigationIcon = {
+                            AppIconButton(onClick = onBack) {
+                                AppIcon(
+                                    imageVector = rememberAppBackIcon(),
+                                    contentDescription = backContentDescription,
+                                )
+                            }
+                        },
+                        actions = actions,
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Transparent,
+                            titleContentColor = MaterialTheme.colorScheme.onSurface,
+                            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                            actionIconContentColor = MaterialTheme.colorScheme.onSurface,
+                        ),
+                    )
+                }
+            },
+            containerColor = pageContainerColor,
+            contentWindowInsets = WindowInsets(0.dp),
+        ) { padding ->
+            val scrollModifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .hazeSourceCompat(state = hazeState)
+
+            when (scrollHost) {
+                SettingsPageScrollHost.LazyColumn -> {
+                    LazyColumn(
+                        state = listState,
+                        modifier = scrollModifier,
+                        contentPadding = PaddingValues(bottom = resolvedBottomContentPadding),
+                    ) {
+                        if (header != null) {
+                            item {
+                                header()
+                            }
+                        }
+                        if (lazyListContent != null) {
+                            lazyListContent()
+                        } else {
+                            item {
+                                content()
+                            }
+                        }
+                    }
+                }
+
+                SettingsPageScrollHost.External -> {
+                    Column(modifier = scrollModifier) {
+                        header?.invoke()
+                        Box(
+                            modifier = Modifier
+                                .weight(1f, fill = true)
+                                .fillMaxSize(),
+                        ) {
+                            content()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

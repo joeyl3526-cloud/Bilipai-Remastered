@@ -1,0 +1,1941 @@
+// 文件路径: feature/video/screen/VideoContentSection.kt
+package com.android.purebilibili.feature.video.screen
+import com.android.purebilibili.core.ui.components.AppIcon
+import com.android.purebilibili.core.ui.components.AppText
+import com.android.purebilibili.core.ui.components.AppHorizontalDivider
+
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.android.purebilibili.core.ui.common.copyOnLongPress
+import com.android.purebilibili.core.ui.common.verticalPriorityHorizontalPagerSwipe
+import com.android.purebilibili.core.util.ShareUtils
+import com.android.purebilibili.core.ui.rememberAppCommentIcon
+import com.android.purebilibili.core.ui.rememberBackToTopButtonEnabled
+import com.android.purebilibili.core.ui.rememberAppChevronUpIcon
+import com.android.purebilibili.core.ui.rememberAppPlayIcon
+import com.android.purebilibili.core.ui.rememberAppSettingsIcon
+import com.android.purebilibili.core.ui.AppChromeSizeTokens
+import com.android.purebilibili.core.ui.AppSurfaceTokens
+import com.android.purebilibili.core.ui.AppTopTabPresentation
+import com.android.purebilibili.core.ui.rememberAppPlayerChromeProfile
+import com.android.purebilibili.core.ui.components.AppSmallFloatingActionButton
+import com.android.purebilibili.core.ui.components.AppSurface
+import com.android.purebilibili.core.ui.components.AppTextButton
+import com.android.purebilibili.core.ui.performance.TrackJankStateFlag
+import com.android.purebilibili.core.ui.performance.TrackScrollJank
+import com.android.purebilibili.core.store.DanmakuSettings
+import com.android.purebilibili.core.store.HomeSettings
+import com.android.purebilibili.core.store.SettingsManager
+import top.yukonga.miuix.kmp.blur.Backdrop as MiuixBackdrop
+import top.yukonga.miuix.kmp.blur.LayerBackdrop
+import top.yukonga.miuix.kmp.blur.layerBackdrop as miuixLayerBackdrop
+import top.yukonga.miuix.kmp.blur.rememberLayerBackdrop as rememberMiuixLayerBackdrop
+import com.android.purebilibili.data.model.response.RelatedVideo
+import com.android.purebilibili.data.model.response.ReplyItem
+import com.android.purebilibili.data.model.response.VideoTag
+import com.android.purebilibili.data.model.response.ViewInfo
+import com.android.purebilibili.data.model.response.BgmInfo
+import com.android.purebilibili.feature.common.resolveIndexedVideoLazyKey
+import com.android.purebilibili.feature.home.components.BottomBarLiquidSegmentedControl
+import com.android.purebilibili.feature.video.ui.section.VideoTitleWithDesc
+import com.android.purebilibili.feature.video.ui.section.UpInfoSection
+import com.android.purebilibili.feature.video.ui.section.ActionButtonsRow
+import com.android.purebilibili.feature.video.ui.section.resolveDisplayBgmList
+import com.android.purebilibili.feature.video.ui.section.shouldShowAiSummaryEntry
+import com.android.purebilibili.feature.video.ui.section.resolveVideoDetailMotionBudget
+import com.android.purebilibili.feature.video.ui.section.shouldAnimateVideoDetailLayout
+import com.android.purebilibili.feature.video.ui.components.DanmakuSettingsPanel
+import com.android.purebilibili.feature.video.ui.components.RelatedVideoGridRow
+import com.android.purebilibili.feature.video.ui.components.chunkRelatedVideosForHomeStyleGrid
+import com.android.purebilibili.feature.video.ui.components.filterRelatedVideosByHiddenBvids
+import com.android.purebilibili.feature.video.ui.components.rememberRelatedVideoCardLayout
+import com.android.purebilibili.feature.video.ui.components.CollectionRow
+import com.android.purebilibili.feature.video.ui.components.CollectionSheet
+import com.android.purebilibili.feature.video.ui.components.PagesSelector
+import com.android.purebilibili.feature.video.ui.components.CommentListHeader
+import com.android.purebilibili.feature.video.ui.components.CommentSortFilterBar
+import com.android.purebilibili.feature.video.ui.components.ReplyItemView
+import com.android.purebilibili.feature.video.ui.components.rememberVideoCommentAppearance
+import com.android.purebilibili.feature.video.ui.components.resolveReplyItemContentType
+import com.android.purebilibili.feature.video.ui.components.shouldShowReplyTopAction
+import com.android.purebilibili.feature.video.ui.components.shouldShowVideoCommentBackToTop
+import com.android.purebilibili.feature.video.ui.components.LandscapeSidePanel
+import com.android.purebilibili.feature.video.ui.components.LandscapeSidePanelEdge
+import com.android.purebilibili.core.ui.transition.LocalVideoCardSharedElementSourceRoute
+import com.android.purebilibili.feature.video.viewmodel.CommentSortMode
+import com.android.purebilibili.feature.dynamic.components.ImagePreviewDialog
+import com.android.purebilibili.feature.dynamic.components.ImagePreviewTextContent
+import com.android.purebilibili.core.ui.AdaptiveLoadingIndicator
+import com.android.purebilibili.data.model.response.AiSummaryData
+import com.android.purebilibili.feature.video.ui.section.AiSummaryCard
+import com.android.purebilibili.feature.video.ui.section.AiSummaryPromptCard
+import com.android.purebilibili.feature.video.ui.section.VideoNoteCard
+import com.android.purebilibili.feature.video.ui.section.VideoNoteDeleteConfirmDialog
+import com.android.purebilibili.feature.video.ui.section.VideoNoteEditorSheet
+import com.android.purebilibili.feature.video.note.VideoNoteEditorDocument
+import com.android.purebilibili.feature.video.note.VideoNoteUiState
+import com.android.purebilibili.feature.video.note.buildVideoNoteShareText
+import com.android.purebilibili.feature.video.note.shouldShowVideoNoteCard
+import kotlin.math.abs
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.android.purebilibili.core.ui.AppShapes
+import com.android.purebilibili.core.ui.ContainerLevel
+
+internal fun shouldShowDanmakuSendInput(isPlayerCollapsed: Boolean): Boolean = !isPlayerCollapsed
+
+internal data class VideoContentTabBarLayoutSpec(
+    val tabsRowWeight: Float,
+    val tabsRowScrollable: Boolean,
+    val containerHorizontalPaddingDp: Int,
+    val tabHorizontalPaddingDp: Int,
+    val tabVerticalPaddingDp: Int,
+    val tabSpacingDp: Int,
+    val selectedTabFontSizeSp: Int,
+    val unselectedTabFontSizeSp: Int,
+    val indicatorWidthDp: Int,
+    val segmentedControlHeightDp: Int,
+    val segmentedControlIndicatorHeightDp: Int
+)
+
+internal fun hasVideoContentTabBarIndicatorScaleClearance(
+    containerHeightDp: Int,
+    indicatorHeightDp: Int
+): Boolean {
+    val geometry = com.android.purebilibili.core.ui.resolveMatchedLiquidIndicatorGeometry(
+        dockHeightDp = containerHeightDp.toFloat(),
+        indicatorHeightDp = indicatorHeightDp.toFloat(),
+    )
+    return geometry.pressedHeightDp > containerHeightDp
+}
+
+internal const val VIDEO_CONTENT_LIQUID_DOCK_HEIGHT_DP = 64
+internal const val VIDEO_CONTENT_LIQUID_DOCK_INDICATOR_HEIGHT_DP = 56
+internal const val VIDEO_CONTENT_LIQUID_DOCK_LABEL_FONT_SIZE_SP = 14
+
+internal data class VideoContentTabBarLiquidChromeSpec(
+    val reusesLiquidGlassDock: Boolean,
+    val segmentedControlHeightDp: Int,
+    val segmentedControlIndicatorHeightDp: Int,
+    val labelFontSizeSp: Int,
+    val liquidGlassEffectsEnabled: Boolean,
+    val useTransparentTabRowBackground: Boolean,
+)
+
+internal fun shouldReuseVideoContentTabBarLiquidGlassDock(
+    androidNativeLiquidGlassEnabled: Boolean,
+    hasBackdrop: Boolean,
+): Boolean {
+    @Suppress("UNUSED_PARAMETER")
+    val ignoredNative = androidNativeLiquidGlassEnabled
+    @Suppress("UNUSED_PARAMETER")
+    val ignoredBackdrop = hasBackdrop
+    return false
+}
+
+internal fun resolveVideoContentTabBarLiquidChromeSpec(
+    androidNativeLiquidGlassEnabled: Boolean,
+    hasBackdrop: Boolean,
+    layoutSpec: VideoContentTabBarLayoutSpec,
+): VideoContentTabBarLiquidChromeSpec {
+    val reusesLiquidGlassDock = shouldReuseVideoContentTabBarLiquidGlassDock(
+        androidNativeLiquidGlassEnabled = androidNativeLiquidGlassEnabled,
+        hasBackdrop = hasBackdrop,
+    )
+    return if (reusesLiquidGlassDock) {
+        VideoContentTabBarLiquidChromeSpec(
+            reusesLiquidGlassDock = true,
+            segmentedControlHeightDp = VIDEO_CONTENT_LIQUID_DOCK_HEIGHT_DP,
+            segmentedControlIndicatorHeightDp = VIDEO_CONTENT_LIQUID_DOCK_INDICATOR_HEIGHT_DP,
+            labelFontSizeSp = VIDEO_CONTENT_LIQUID_DOCK_LABEL_FONT_SIZE_SP,
+            liquidGlassEffectsEnabled = true,
+            useTransparentTabRowBackground = true,
+        )
+    } else {
+        VideoContentTabBarLiquidChromeSpec(
+            reusesLiquidGlassDock = false,
+            segmentedControlHeightDp = layoutSpec.segmentedControlHeightDp,
+            segmentedControlIndicatorHeightDp = layoutSpec.segmentedControlIndicatorHeightDp,
+            labelFontSizeSp = layoutSpec.unselectedTabFontSizeSp,
+            liquidGlassEffectsEnabled = hasBackdrop,
+            useTransparentTabRowBackground = false,
+        )
+    }
+}
+
+internal fun resolveVideoContentTabBarLayoutSpec(widthDp: Int): VideoContentTabBarLayoutSpec {
+    return if (widthDp < 400) {
+        VideoContentTabBarLayoutSpec(
+            tabsRowWeight = 1f,
+            tabsRowScrollable = true,
+            containerHorizontalPaddingDp = 8,
+            tabHorizontalPaddingDp = 8,
+            tabVerticalPaddingDp = 7,
+            tabSpacingDp = 10,
+            selectedTabFontSizeSp = 16,
+            unselectedTabFontSizeSp = 15,
+            indicatorWidthDp = 28,
+            segmentedControlHeightDp = 40,
+            segmentedControlIndicatorHeightDp = 35
+        )
+    } else {
+        VideoContentTabBarLayoutSpec(
+            tabsRowWeight = 1f,
+            tabsRowScrollable = true,
+            containerHorizontalPaddingDp = 12,
+            tabHorizontalPaddingDp = 12,
+            tabVerticalPaddingDp = 8,
+            tabSpacingDp = 16,
+            selectedTabFontSizeSp = 17,
+            unselectedTabFontSizeSp = 16,
+            indicatorWidthDp = 32,
+            segmentedControlHeightDp = 40,
+            segmentedControlIndicatorHeightDp = 35
+        )
+    }
+}
+
+internal data class VideoContentTabBarDanmakuActionLayoutPolicy(
+    val toggleIconSizeDp: Int,
+    val toggleHorizontalPaddingDp: Int,
+    val toggleVerticalPaddingDp: Int,
+    val toggleTextSizeSp: Int,
+    val toggleTrailingPaddingDp: Int,
+    val sendHorizontalPaddingDp: Int,
+    val sendVerticalPaddingDp: Int,
+    val sendTextSizeSp: Int,
+    val sendLabel: String,
+    val secondaryControlHeightDp: Int,
+    val secondaryControlCornerRadiusDp: Int,
+    val settingsButtonSizeDp: Int,
+    val settingsIconSizeDp: Int,
+    val settingsLeadingPaddingDp: Int
+)
+
+internal fun resolveVideoContentTabBarDanmakuActionLayoutPolicy(widthDp: Int): VideoContentTabBarDanmakuActionLayoutPolicy {
+    return if (widthDp < 400) {
+        VideoContentTabBarDanmakuActionLayoutPolicy(
+            toggleIconSizeDp = 14,
+            toggleHorizontalPaddingDp = 8,
+            toggleVerticalPaddingDp = 6,
+            toggleTextSizeSp = 11,
+            toggleTrailingPaddingDp = 6,
+            sendHorizontalPaddingDp = 10,
+            sendVerticalPaddingDp = 6,
+            sendTextSizeSp = 11,
+            sendLabel = "发弹幕",
+            secondaryControlHeightDp = 40,
+            secondaryControlCornerRadiusDp = AppChromeSizeTokens.CompactControlCornerRadiusDp,
+            settingsButtonSizeDp = 40,
+            settingsIconSizeDp = 18,
+            settingsLeadingPaddingDp = 4
+        )
+    } else {
+        VideoContentTabBarDanmakuActionLayoutPolicy(
+            toggleIconSizeDp = 16,
+            toggleHorizontalPaddingDp = 10,
+            toggleVerticalPaddingDp = 8,
+            toggleTextSizeSp = 12,
+            toggleTrailingPaddingDp = 8,
+            sendHorizontalPaddingDp = 12,
+            sendVerticalPaddingDp = 8,
+            sendTextSizeSp = 12,
+            sendLabel = "发弹幕",
+            secondaryControlHeightDp = 40,
+            secondaryControlCornerRadiusDp = AppChromeSizeTokens.CompactControlCornerRadiusDp,
+            settingsButtonSizeDp = 40,
+            settingsIconSizeDp = 18,
+            settingsLeadingPaddingDp = 6
+        )
+    }
+}
+
+internal data class VideoContentTabSwitchAnimationSpec(
+    val durationMs: Int
+)
+
+internal fun resolveVideoContentTabSwitchAnimationSpec(
+    presentation: AppTopTabPresentation,
+): VideoContentTabSwitchAnimationSpec {
+    return when (presentation) {
+        AppTopTabPresentation.MOVING_CAPSULE -> VideoContentTabSwitchAnimationSpec(durationMs = 360)
+        AppTopTabPresentation.MATERIAL_UNDERLINE,
+        AppTopTabPresentation.TONAL_CAPSULE -> VideoContentTabSwitchAnimationSpec(durationMs = 240)
+    }
+}
+
+internal fun resolveVideoContentEffectiveSelectedTabIndex(
+    currentPage: Int,
+    targetPage: Int,
+    isScrollInProgress: Boolean,
+    pageCount: Int
+): Int {
+    if (pageCount <= 0) return 0
+    val current = currentPage.takeIf { it in 0 until pageCount } ?: 0
+    return if (isScrollInProgress && targetPage in 0 until pageCount) {
+        targetPage
+    } else {
+        current
+    }
+}
+
+/** 简介与评论页之间仅通过顶部 Tab 点击切换，横滑手势已移除。 */
+internal fun shouldEnableVideoContentHorizontalPagerSwipe(
+    currentPage: Int,
+    commentPageIndex: Int,
+    isPagerScrollInProgress: Boolean,
+): Boolean = false
+
+/**
+ * 评论列表是否贴顶（仅贴顶时才允许上滑展开分段；浏览中上滑只滚列表）。
+ */
+internal fun isVideoContentCommentListAtTop(
+    firstVisibleItemIndex: Int,
+    firstVisibleItemScrollOffset: Int,
+): Boolean = firstVisibleItemIndex <= 0 && firstVisibleItemScrollOffset <= 0
+
+/**
+ * 跟手折叠进度 0 = 全展开，1 = 全收起。
+ * 由 [collapsePx] / [maxCollapsePx] 得到；列表已离开顶部时钳到 1，保证浏览评论时 chrome 收净。
+ */
+internal fun resolveVideoContentTabBarCollapseProgress(
+    collapsePx: Float,
+    maxCollapsePx: Float,
+    selectedTabIndex: Int,
+    listAtTop: Boolean,
+    commentPageIndex: Int = 1,
+): Float {
+    if (selectedTabIndex != commentPageIndex) return 0f
+    if (maxCollapsePx <= 0f) return 0f
+    if (!listAtTop) return 1f
+    return (collapsePx / maxCollapsePx).coerceIn(0f, 1f)
+}
+
+internal data class VideoContentTabBarCollapseScrollUpdate(
+    val nextCollapsePx: Float,
+    val consumedY: Float,
+)
+
+/**
+ * Nested preScroll：评论 Tab 下先折叠/展开分段，再把剩余位移交给列表。
+ * - availableY < 0（上滑内容）：先增加 collapse（收起），可随时反向打断
+ * - availableY > 0 且列表贴顶：先减少 collapse（展开），可随时反向打断
+ */
+internal fun reduceVideoContentTabBarCollapseOnPreScroll(
+    collapsePx: Float,
+    maxCollapsePx: Float,
+    availableY: Float,
+    listAtTop: Boolean,
+    enabled: Boolean,
+): VideoContentTabBarCollapseScrollUpdate? {
+    if (!enabled || maxCollapsePx <= 0f || availableY == 0f) return null
+    val clampedCollapse = collapsePx.coerceIn(0f, maxCollapsePx)
+    if (availableY < 0f) {
+        val room = maxCollapsePx - clampedCollapse
+        if (room <= 0f) return null
+        val take = minOf(-availableY, room)
+        if (take <= 0f) return null
+        return VideoContentTabBarCollapseScrollUpdate(
+            nextCollapsePx = clampedCollapse + take,
+            consumedY = -take,
+        )
+    }
+    // availableY > 0：仅贴顶时展开，避免评论中途上滑把 chrome 顶回来
+    if (!listAtTop || clampedCollapse <= 0f) return null
+    val take = minOf(availableY, clampedCollapse)
+    if (take <= 0f) return null
+    return VideoContentTabBarCollapseScrollUpdate(
+        nextCollapsePx = clampedCollapse - take,
+        consumedY = take,
+    )
+}
+
+/**
+ * Nested postScroll：列表已贴顶后仍有未消费的上滑余量时，继续展开分段（fling 回顶可跟手展完）。
+ */
+internal fun reduceVideoContentTabBarCollapseOnPostScroll(
+    collapsePx: Float,
+    maxCollapsePx: Float,
+    availableY: Float,
+    listAtTop: Boolean,
+    enabled: Boolean,
+): VideoContentTabBarCollapseScrollUpdate? {
+    if (!enabled || maxCollapsePx <= 0f || availableY <= 0f || !listAtTop) return null
+    val clampedCollapse = collapsePx.coerceIn(0f, maxCollapsePx)
+    if (clampedCollapse <= 0f) return null
+    val take = minOf(availableY, clampedCollapse)
+    if (take <= 0f) return null
+    return VideoContentTabBarCollapseScrollUpdate(
+        nextCollapsePx = clampedCollapse - take,
+        consumedY = take,
+    )
+}
+
+/** 列表已离开顶部时，强制分段收满（浏览态不露半截 chrome）。 */
+internal fun resolveVideoContentTabBarCollapsePxWhenListLeavesTop(
+    collapsePx: Float,
+    maxCollapsePx: Float,
+    listAtTop: Boolean,
+    enabled: Boolean,
+): Float {
+    if (!enabled || maxCollapsePx <= 0f) return 0f
+    if (!listAtTop) return maxCollapsePx
+    return collapsePx.coerceIn(0f, maxCollapsePx)
+}
+
+/**
+ * 视频详情内容区域
+ * 从 VideoDetailScreen.kt 提取出来，提高代码可维护性
+ */
+@Composable
+fun VideoContentSection(
+    info: ViewInfo,
+    introListState: LazyListState,
+    commentListState: LazyListState,
+    pagerState: PagerState,
+    relatedVideos: List<RelatedVideo>,
+    replies: List<ReplyItem>,
+    replyCount: Int,
+    emoteMap: Map<String, String>,
+    isRepliesLoading: Boolean,
+    isRepliesEnd: Boolean = false,
+    isLoggedIn: Boolean = false,
+    isFollowing: Boolean,
+    isFavorited: Boolean,
+    isLiked: Boolean,
+    coinCount: Int,
+    currentPageIndex: Int,
+    downloadProgress: Float = -1f,
+    isInWatchLater: Boolean = false,
+    followingMids: Set<Long> = emptySet(),
+    videoTags: List<VideoTag> = emptyList(),
+    onFollowClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
+    onLikeClick: () -> Unit,
+    onCoinClick: () -> Unit,
+    onTripleClick: () -> Unit,
+    onPageSelect: (Int) -> Unit,
+    onUpClick: (Long) -> Unit,
+    onRelatedVideoClick: (String, android.os.Bundle?) -> Unit,
+    onSubReplyClick: (ReplyItem, Long) -> Unit,
+    onCommentReplyClick: (ReplyItem) -> Unit = {},
+    onLoadMoreReplies: () -> Unit,
+    onDownloadClick: () -> Unit = {},
+    onWatchLaterClick: () -> Unit = {},
+    onShareClick: () -> Unit = {},
+    onTimestampClick: ((Long) -> Unit)? = null,
+    onDanmakuSendClick: () -> Unit = {},
+    danmakuEnabled: Boolean = true,
+    onDanmakuToggle: () -> Unit = {},
+    // [新增] 删除与动画参数
+    currentMid: Long = 0,
+    showUpFlag: Boolean = false,
+    showIdentityDecorations: Boolean = false,
+    dissolvingIds: Set<Long> = emptySet(),
+    onDeleteComment: (Long) -> Unit = {},
+    onDissolveStart: (Long) -> Unit = {},
+    // [新增] 点赞回调
+    onCommentLike: (Long) -> Unit = {},
+    // [新增] 已点赞的评论 ID 集合
+    likedComments: Set<Long> = emptySet(),
+    onCommentUrlClick: (String) -> Unit = {},
+    onDescriptionUrlClick: ((String) -> Unit)? = null,
+    onSearchKeywordClick: (String) -> Unit = {},
+    onReportComment: (Long, Int) -> Unit = { _, _ -> },
+    onToggleTopComment: (ReplyItem) -> Unit = {},
+    // 🔗 [新增] 共享元素过渡开关
+    transitionEnabled: Boolean = false,
+    isQuickReturnLimitedForSharedElements: Boolean = false,
+    sourceRouteForSharedElement: String? = null,
+    // [新增] 收藏夹相关参数
+    onFavoriteLongClick: () -> Unit = {},
+    // [新增] 恢复播放器 (音频模式 -> 视频模式)
+    isPlayerCollapsed: Boolean = false,
+    onRestorePlayer: () -> Unit = {},
+    // [新增] AI Summary & BGM
+    aiSummary: AiSummaryData? = null,
+    aiSummaryPrompt: com.android.purebilibili.feature.video.viewmodel.AiSummaryPromptState? = null,
+    onRetryAiSummary: () -> Unit = {},
+    onCreateNoteDraftFromAiSummary: () -> Unit = {},
+    videoNoteState: VideoNoteUiState = VideoNoteUiState(),
+    onOpenVideoNoteEditor: () -> Unit = {},
+    onCloseVideoNoteEditor: () -> Unit = {},
+    onVideoNoteDocumentChange: (VideoNoteEditorDocument) -> Unit = {},
+    onInsertVideoNoteTimestamp: () -> Unit = {},
+    onVideoNoteTimestampClick: (Long) -> Unit = {},
+    onSaveVideoNote: (VideoNoteEditorDocument) -> Unit = {},
+    onDeleteVideoNote: () -> Unit = {},
+    onRetryVideoNote: () -> Unit = {},
+    onPublicVideoNoteClick: (Long, String) -> Unit = { _, _ -> },
+    bgmInfo: BgmInfo? = null,
+    bgmInfoList: List<BgmInfo> = emptyList(),
+    onBgmClick: (BgmInfo) -> Unit = {},
+    onlineCount: String = "",
+    showOnlineCount: Boolean = true,
+    ownerFollowerCount: Int? = null,
+    ownerVideoCount: Int? = null,
+    showUpBadge: Boolean = true,
+    showInteractionActions: Boolean = true,
+    isVideoPlaying: Boolean = false,
+    onSelectedTabChange: (Int) -> Unit = {},
+    onIntroScrollThresholdChange: (Boolean) -> Unit = {},
+    onCommentScrollStateChange: (Int, Int) -> Unit = { _, _ -> },
+    bottomContentPadding: Dp = if (showInteractionActions) 84.dp else 12.dp
+) {
+    val context = LocalContext.current
+    val tabs = listOf("简介", "评论 $replyCount")
+    val scope = rememberCoroutineScope()
+    TrackJankStateFlag(
+        stateName = "video_detail:tab_swipe",
+        isActive = pagerState.isScrollInProgress
+    )
+    TrackScrollJank(
+        scrollableState = introListState,
+        stateName = "video_detail:intro_scroll"
+    )
+    TrackScrollJank(
+        scrollableState = commentListState,
+        stateName = "video_detail:comment_scroll"
+    )
+    val isIntroListScrolling by remember {
+        derivedStateOf { introListState.isScrollInProgress }
+    }
+    val isCommentListScrolling by remember {
+        derivedStateOf { commentListState.isScrollInProgress }
+    }
+    val videoDetailMotionBudget by remember {
+        derivedStateOf {
+            resolveVideoDetailMotionBudget(
+                isTabSwitching = pagerState.isScrollInProgress,
+                isContentScrolling = isIntroListScrolling || isCommentListScrolling
+            )
+        }
+    }
+    val animateVideoDetailLayout = shouldAnimateVideoDetailLayout(videoDetailMotionBudget)
+    val lightweightCommentRendering by remember {
+        derivedStateOf {
+            shouldUseLightweightCommentRendering(
+                selectedTabIndex = pagerState.currentPage,
+                isVideoPlaying = isVideoPlaying,
+                isCommentListScrolling = isCommentListScrolling
+            )
+        }
+    }
+    
+    // 评论图片预览状态
+    var showImagePreview by remember { mutableStateOf(false) }
+    var previewImages by remember { mutableStateOf<List<String>>(emptyList()) }
+    var previewInitialIndex by remember { mutableIntStateOf(0) }
+    var sourceRect by remember { mutableStateOf<Rect?>(null) }
+    var previewTextContent by remember { mutableStateOf<ImagePreviewTextContent?>(null) }
+    
+    // 合集展开状态
+    var showCollectionSheet by remember { mutableStateOf(false) }
+    var showDanmakuSettings by remember { mutableStateOf(false) }
+    var confirmDeleteNote by remember { mutableStateOf(false) }
+    val onShareVideoNote: (VideoNoteEditorDocument, Boolean) -> Unit = { document, isDraft ->
+        ShareUtils.shareText(
+            context = context,
+            subject = document.title.ifBlank { info.title },
+            text = buildVideoNoteShareText(
+                videoTitle = info.title,
+                bvid = info.bvid,
+                document = document,
+                isDraft = isDraft
+            ),
+            chooserTitle = "分享视频笔记"
+        )
+    }
+    val playerChromeProfile = rememberAppPlayerChromeProfile()
+    val tabSwitchAnimationSpec = remember(playerChromeProfile.tabPresentation) {
+        resolveVideoContentTabSwitchAnimationSpec(playerChromeProfile.tabPresentation)
+    }
+    val latestOnSelectedTabChange by rememberUpdatedState(onSelectedTabChange)
+
+    val onTabSelected: (Int) -> Unit = { index ->
+        scope.launch {
+            pagerState.animateScrollToPage(
+                page = index,
+                animationSpec = tween(
+                    durationMillis = tabSwitchAnimationSpec.durationMs,
+                    easing = FastOutSlowInEasing
+                )
+            )
+        }
+    }
+    LaunchedEffect(pagerState, tabs.size) {
+        snapshotFlow {
+            resolveVideoContentEffectiveSelectedTabIndex(
+                currentPage = pagerState.currentPage,
+                targetPage = pagerState.targetPage,
+                isScrollInProgress = pagerState.isScrollInProgress,
+                pageCount = tabs.size
+            )
+        }
+            .distinctUntilChanged()
+            .collect { effectiveTabIndex ->
+                latestOnSelectedTabChange(effectiveTabIndex)
+            }
+    }
+    LaunchedEffect(introListState) {
+        snapshotFlow { false }
+            .distinctUntilChanged()
+            .collect(onIntroScrollThresholdChange)
+    }
+    LaunchedEffect(commentListState) {
+        snapshotFlow { commentListState.firstVisibleItemIndex to commentListState.firstVisibleItemScrollOffset }
+            .distinctUntilChanged()
+            .collect { state: Pair<Int, Int> ->
+                onCommentScrollStateChange(state.first, state.second)
+            }
+    }
+
+    // Tab 行固定显示：不跟手折叠，始终全高贴住播放器下沿（上滑联动只作用于播放器自身）。
+    // 采样层只挂在 Tab 页滚动内容上；排序栏/顶栏分段控件必须在捕获区外，避免 drawBackdrop 自引用导致 RenderThread 栈溢出。
+    val videoContentMiuixBackdrop = rememberMiuixLayerBackdrop()
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // Inline 弹幕设置不是 Dialog，必须在详情内容之后绘制，避免被列表盖住。
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            // Tab 行固定：始终全高显示，紧贴播放器下沿（播放器联动缩小时跟随上移）。
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                contentAlignment = Alignment.TopStart,
+            ) {
+                VideoContentTabBar(
+                    tabs = tabs,
+                    selectedTabIndex = pagerState.currentPage,
+                    onTabSelected = onTabSelected,
+                    onDanmakuSendClick = onDanmakuSendClick,
+                    danmakuEnabled = danmakuEnabled,
+                    onDanmakuToggle = onDanmakuToggle,
+                    onDanmakuSettingsClick = { showDanmakuSettings = true },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    isPlayerCollapsed = isPlayerCollapsed,
+                    onRestorePlayer = onRestorePlayer,
+                    miuixBackdrop = videoContentMiuixBackdrop,
+                    indicatorPositionProvider = {
+                        pagerState.currentPage + pagerState.currentPageOffsetFraction
+                    },
+                    isScrollInProgressProvider = { pagerState.isScrollInProgress },
+                )
+            }
+
+            HorizontalPager(
+                state = pagerState,
+                beyondViewportPageCount = resolveVideoDetailBeyondViewportPageCount(
+                    isVideoPlaying = isVideoPlaying,
+                    selectedTabIndex = pagerState.currentPage
+                ),
+                userScrollEnabled = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .verticalPriorityHorizontalPagerSwipe(
+                        state = pagerState,
+                        enabled = shouldEnableVideoContentHorizontalPagerSwipe(
+                            currentPage = pagerState.currentPage,
+                            commentPageIndex = 1,
+                            isPagerScrollInProgress = pagerState.isScrollInProgress,
+                        ),
+                    )
+            ) { page ->
+                when (page) {
+                    0 -> VideoIntroTab(
+                        listState = introListState,
+                        modifier = Modifier,
+                        chromeBackdrop = videoContentMiuixBackdrop,
+                        info = info,
+                        relatedVideos = relatedVideos,
+                        currentPageIndex = currentPageIndex,
+                        followingMids = followingMids,
+                        videoTags = videoTags,
+                        isFollowing = isFollowing,
+                        isFavorited = isFavorited,
+                        isLiked = isLiked,
+                        coinCount = coinCount,
+                        downloadProgress = downloadProgress,
+                        isInWatchLater = isInWatchLater,
+                        isLoggedIn = isLoggedIn,
+                        onFollowClick = onFollowClick,
+                        onFavoriteClick = onFavoriteClick,
+                        onLikeClick = onLikeClick,
+                        onCoinClick = onCoinClick,
+                        onTripleClick = onTripleClick,
+                        onCommentClick = { onTabSelected(1) },
+                        onPageSelect = onPageSelect,
+                        onUpClick = onUpClick,
+                        onRelatedVideoClick = onRelatedVideoClick,
+                        onOpenCollectionSheet = { showCollectionSheet = true },
+                        onDownloadClick = onDownloadClick,
+                        onWatchLaterClick = onWatchLaterClick,
+                        onShareClick = onShareClick,
+                        contentPadding = PaddingValues(bottom = bottomContentPadding),
+                        transitionEnabled = transitionEnabled,
+                        isQuickReturnLimitedForSharedElements = isQuickReturnLimitedForSharedElements,
+                        sourceRouteForSharedElement = sourceRouteForSharedElement,
+                        ownerFollowerCount = ownerFollowerCount,
+                        ownerVideoCount = ownerVideoCount,
+                        showUpBadge = showUpBadge,
+                        onFavoriteLongClick = onFavoriteLongClick,
+                        aiSummary = aiSummary,
+                        aiSummaryPrompt = aiSummaryPrompt,
+                        onRetryAiSummary = onRetryAiSummary,
+                        onCreateNoteDraftFromAiSummary = onCreateNoteDraftFromAiSummary,
+                        videoNoteState = videoNoteState,
+                        onOpenVideoNoteEditor = onOpenVideoNoteEditor,
+                        onRetryVideoNote = onRetryVideoNote,
+                        onDeleteVideoNoteClick = { confirmDeleteNote = true },
+                        onShareVideoNote = { document -> onShareVideoNote(document, false) },
+                        onPublicVideoNoteClick = onPublicVideoNoteClick,
+                        bgmInfo = bgmInfo,
+                        bgmInfoList = bgmInfoList,
+                        onlineCount = onlineCount,
+                        showOnlineCount = showOnlineCount,
+                        onTimestampClick = onTimestampClick,
+                        onBgmClick = onBgmClick,
+                        onDescriptionUrlClick = onDescriptionUrlClick,
+                        onSearchKeywordClick = onSearchKeywordClick,
+                        showInteractionActions = showInteractionActions,
+                        animateVideoDetailLayout = animateVideoDetailLayout
+                    )
+                    1 -> VideoCommentTab(
+                        listState = commentListState,
+                        modifier = Modifier,
+                        info = info,
+                        replies = replies,
+                        replyCount = replyCount,
+                        emoteMap = emoteMap,
+                        isRepliesLoading = isRepliesLoading,
+                        isRepliesEnd = isRepliesEnd,
+                        videoTags = videoTags,
+                        onUpClick = onUpClick,
+                        onSubReplyClick = onSubReplyClick,
+                        onCommentReplyClick = onCommentReplyClick,
+                        onLoadMoreReplies = onLoadMoreReplies,
+                        onImagePreview = { images, index, rect, textContent ->
+                            previewImages = images
+                            previewInitialIndex = index
+                            sourceRect = rect
+                            previewTextContent = textContent
+                            showImagePreview = true
+                        },
+                        onTimestampClick = onTimestampClick,
+                        showUpFlag = showUpFlag,
+                        contentPadding = PaddingValues(bottom = bottomContentPadding),
+                        currentMid = currentMid,
+                        dissolvingIds = dissolvingIds,
+                        onDeleteComment = onDeleteComment,
+                        onDissolveStart = onDissolveStart,
+                        onCommentLike = onCommentLike,
+                        likedComments = likedComments,
+                        onCommentUrlClick = onCommentUrlClick,
+                        onReportComment = onReportComment,
+                        onToggleTopComment = onToggleTopComment,
+                        showIdentityDecorations = showIdentityDecorations,
+                        lightweightCommentRendering = lightweightCommentRendering,
+                        chromeBackdrop = videoContentMiuixBackdrop,
+                    )
+                }
+            }
+        }
+
+        if (showImagePreview && previewImages.isNotEmpty()) {
+            ImagePreviewDialog(
+                images = previewImages,
+                initialIndex = previewInitialIndex,
+                sourceRect = sourceRect,
+                textContent = previewTextContent,
+                onDismiss = {
+                    showImagePreview = false
+                    previewTextContent = null
+                }
+            )
+        }
+
+        info.ugc_season?.let { season ->
+            if (showCollectionSheet) {
+                CollectionSheet(
+                    ugcSeason = season,
+                    currentBvid = info.bvid,
+                    currentCid = info.cid,
+                    onDismiss = { showCollectionSheet = false },
+                    onEpisodeClick = { episode ->
+                        showCollectionSheet = false
+                        onRelatedVideoClick(
+                            episode.bvid,
+                            buildVideoNavigationOptions(targetCid = episode.cid)
+                        )
+                    }
+                )
+            }
+        }
+
+        if (showDanmakuSettings) {
+            VideoDetailDanmakuSettingsPanel(
+                onDismiss = { showDanmakuSettings = false }
+            )
+        }
+
+        VideoNoteEditorSheet(
+            noteState = videoNoteState,
+            onDismiss = onCloseVideoNoteEditor,
+            onDocumentChange = onVideoNoteDocumentChange,
+            onInsertTimestamp = onInsertVideoNoteTimestamp,
+            onTimestampClick = onVideoNoteTimestampClick,
+            onShare = { document -> onShareVideoNote(document, videoNoteState.editorFromAiSummary) },
+            onSave = onSaveVideoNote
+        )
+
+        VideoNoteDeleteConfirmDialog(
+            visible = confirmDeleteNote,
+            deleting = videoNoteState.deleting,
+            onConfirm = {
+                confirmDeleteNote = false
+                onDeleteVideoNote()
+            },
+            onDismiss = { confirmDeleteNote = false }
+        )
+    }
+}
+
+// ... VideoIntroTab signature ...
+@Composable
+private fun VideoIntroTab(
+    listState: LazyListState,
+    modifier: Modifier,
+    info: ViewInfo,
+    relatedVideos: List<RelatedVideo>,
+    currentPageIndex: Int,
+    followingMids: Set<Long>,
+    videoTags: List<VideoTag>,
+    isFollowing: Boolean,
+    isFavorited: Boolean,
+    isLiked: Boolean,
+    coinCount: Int,
+    downloadProgress: Float,
+    isInWatchLater: Boolean,
+    isLoggedIn: Boolean = false,
+    onFollowClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
+    onLikeClick: () -> Unit,
+    onCoinClick: () -> Unit,
+    onTripleClick: () -> Unit,
+    onCommentClick: () -> Unit,
+    onPageSelect: (Int) -> Unit,
+    onUpClick: (Long) -> Unit,
+    onRelatedVideoClick: (String, android.os.Bundle?) -> Unit,
+    onOpenCollectionSheet: () -> Unit,
+    onDownloadClick: () -> Unit,
+    onWatchLaterClick: () -> Unit,
+    onShareClick: () -> Unit = {},
+    onDescriptionUrlClick: ((String) -> Unit)? = null,
+    onSearchKeywordClick: (String) -> Unit = {},
+    contentPadding: PaddingValues,
+    transitionEnabled: Boolean = false,  // 🔗 共享元素过渡开关
+    isQuickReturnLimitedForSharedElements: Boolean = false,
+    sourceRouteForSharedElement: String? = null,
+    ownerFollowerCount: Int? = null,
+    ownerVideoCount: Int? = null,
+    showUpBadge: Boolean = true,
+    onFavoriteLongClick: () -> Unit = {},
+    aiSummary: AiSummaryData? = null,
+    aiSummaryPrompt: com.android.purebilibili.feature.video.viewmodel.AiSummaryPromptState? = null,
+    onRetryAiSummary: () -> Unit = {},
+    onCreateNoteDraftFromAiSummary: () -> Unit = {},
+    videoNoteState: VideoNoteUiState = VideoNoteUiState(),
+    onOpenVideoNoteEditor: () -> Unit = {},
+    onRetryVideoNote: () -> Unit = {},
+    onDeleteVideoNoteClick: () -> Unit = {},
+    onShareVideoNote: (VideoNoteEditorDocument) -> Unit = {},
+    onPublicVideoNoteClick: (Long, String) -> Unit = { _, _ -> },
+    bgmInfo: BgmInfo? = null,
+    bgmInfoList: List<BgmInfo> = emptyList(),
+    onTimestampClick: ((Long) -> Unit)? = null,
+    onBgmClick: (BgmInfo) -> Unit = {},
+    onlineCount: String = "",
+    showOnlineCount: Boolean = true,
+    showInteractionActions: Boolean = true,
+    animateVideoDetailLayout: Boolean = true,
+    chromeBackdrop: LayerBackdrop? = null
+) {
+    val hasPages = info.pages.size > 1
+    var hiddenRelatedBvids by remember(info.bvid) { mutableStateOf(emptySet<String>()) }
+    val visibleRelatedVideos = remember(relatedVideos, hiddenRelatedBvids) {
+        filterRelatedVideosByHiddenBvids(relatedVideos, hiddenRelatedBvids)
+    }
+    val relatedVideoCardLayout = rememberRelatedVideoCardLayout()
+    LazyColumn(
+        state = listState,
+        modifier = modifier
+            .fillMaxSize()
+            .then(
+                if (chromeBackdrop != null) {
+                    Modifier.miuixLayerBackdrop(chromeBackdrop)
+                } else {
+                    Modifier
+                }
+            ),
+        contentPadding = contentPadding
+    ) {
+        // 1. 移入的 Header 区域
+        item {
+            VideoHeaderContent(
+                info = info,
+                videoTags = videoTags,
+                isFollowing = isFollowing,
+                isFavorited = isFavorited,
+                isLiked = isLiked,
+                coinCount = coinCount,
+                downloadProgress = downloadProgress,
+                isInWatchLater = isInWatchLater,
+                isLoggedIn = isLoggedIn,
+                onFollowClick = onFollowClick,
+                onFavoriteClick = onFavoriteClick,
+                onLikeClick = onLikeClick,
+                onCoinClick = onCoinClick,
+                onTripleClick = onTripleClick,
+                onCommentClick = onCommentClick,
+                onUpClick = onUpClick,
+                onOpenCollectionSheet = onOpenCollectionSheet,
+                onDownloadClick = onDownloadClick,
+                onWatchLaterClick = onWatchLaterClick,
+                onShareClick = onShareClick,
+
+                onGloballyPositioned = { },
+                transitionEnabled = transitionEnabled,  // 🔗 传递共享元素开关
+                isQuickReturnLimitedForSharedElements = isQuickReturnLimitedForSharedElements,
+                sourceRouteForSharedElement = sourceRouteForSharedElement,
+                ownerFollowerCount = ownerFollowerCount,
+                ownerVideoCount = ownerVideoCount,
+                onFavoriteLongClick = onFavoriteLongClick,
+                aiSummary = aiSummary,
+                aiSummaryPrompt = aiSummaryPrompt,
+                onRetryAiSummary = onRetryAiSummary,
+                onCreateNoteDraftFromAiSummary = onCreateNoteDraftFromAiSummary,
+                videoNoteState = videoNoteState,
+                onOpenVideoNoteEditor = onOpenVideoNoteEditor,
+                onRetryVideoNote = onRetryVideoNote,
+                onDeleteVideoNoteClick = onDeleteVideoNoteClick,
+                onShareVideoNote = onShareVideoNote,
+                onPublicVideoNoteClick = onPublicVideoNoteClick,
+                bgmInfo = bgmInfo,
+                bgmInfoList = bgmInfoList,
+                relatedVideos = relatedVideos,
+                onlineCount = onlineCount,
+                showOnlineCount = showOnlineCount,
+                onTimestampClick = onTimestampClick,
+                onBgmClick = onBgmClick,
+                onDescriptionUrlClick = onDescriptionUrlClick,
+                onRelatedVideoClick = onRelatedVideoClick,
+                onSearchKeywordClick = onSearchKeywordClick,
+                showInteractionActions = showInteractionActions,
+                animateVideoDetailLayout = animateVideoDetailLayout
+            )
+        }
+        if (hasPages) {
+            item {
+                PagesSelector(
+                    pages = info.pages,
+                    currentPageIndex = currentPageIndex,
+                    onPageSelect = onPageSelect
+                )
+            }
+        }
+
+        item {
+            VideoRecommendationHeader()
+        }
+
+        val relatedRows = chunkRelatedVideosForHomeStyleGrid(visibleRelatedVideos)
+        itemsIndexed(
+            items = relatedRows,
+            key = { rowIndex, row ->
+                val first = row.firstOrNull()
+                resolveIndexedVideoLazyKey(
+                    namespace = "video_related_row",
+                    index = rowIndex,
+                    bvid = first?.bvid.orEmpty(),
+                    aid = first?.aid ?: 0L,
+                    cid = first?.cid ?: 0L
+                )
+            }
+        ) { _, row ->
+            CompositionLocalProvider(
+                LocalVideoCardSharedElementSourceRoute provides "video/${info.bvid}"
+            ) {
+                RelatedVideoGridRow(
+                    videos = row,
+                    cardLayout = relatedVideoCardLayout,
+                    followingMids = followingMids,
+                    showUpBadge = showUpBadge,
+                    onVideoClick = { video ->
+                        val navOptions = buildVideoNavigationOptions(
+                            targetCid = video.cid,
+                            coverUrl = video.pic
+                        )
+                        onRelatedVideoClick(video.bvid, navOptions)
+                    },
+                    onVideoHidden = { video ->
+                        hiddenRelatedBvids = hiddenRelatedBvids + video.bvid
+                    }
+                )
+            }
+        }
+    }
+}
+
+// ... VideoCommentTab signature ...
+@Composable
+internal fun VideoCommentTab(
+    listState: LazyListState,
+    modifier: Modifier,
+    info: ViewInfo,
+    replies: List<ReplyItem>,
+    replyCount: Int,
+    emoteMap: Map<String, String>,
+    isRepliesLoading: Boolean,
+    isRepliesEnd: Boolean,
+    videoTags: List<VideoTag>,
+    onUpClick: (Long) -> Unit,
+    onSubReplyClick: (ReplyItem, Long) -> Unit,
+    onCommentReplyClick: (ReplyItem) -> Unit,
+    onLoadMoreReplies: () -> Unit,
+    onImagePreview: (List<String>, Int, Rect?, ImagePreviewTextContent?) -> Unit,
+    onTimestampClick: ((Long) -> Unit)?,
+    contentPadding: PaddingValues,
+    // [新增] 参数
+    currentMid: Long,
+    showUpFlag: Boolean,
+    dissolvingIds: Set<Long>,
+    onDeleteComment: (Long) -> Unit,
+    onDissolveStart: (Long) -> Unit,
+    // [新增] 点赞回调
+    onCommentLike: (Long) -> Unit,
+    likedComments: Set<Long>,
+    onCommentUrlClick: (String) -> Unit,
+    onReportComment: (Long, Int) -> Unit,
+    onToggleTopComment: (ReplyItem) -> Unit,
+    showIdentityDecorations: Boolean,
+    lightweightCommentRendering: Boolean,
+    chromeBackdrop: LayerBackdrop? = null,
+) {
+    val commentAppearance = rememberVideoCommentAppearance()
+    val scope = rememberCoroutineScope()
+    val shouldShowBackToTop by remember(listState) {
+        derivedStateOf {
+            shouldShowVideoCommentBackToTop(
+                firstVisibleItemIndex = listState.firstVisibleItemIndex,
+                firstVisibleItemScrollOffset = listState.firstVisibleItemScrollOffset
+            )
+        }
+    }
+    val shouldLoadMore by remember(
+        listState,
+        replies.size,
+        replyCount,
+        isRepliesLoading,
+        isRepliesEnd
+    ) {
+        derivedStateOf {
+            shouldLoadMoreVideoComments(
+                lastVisibleItemIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1,
+                totalItemsCount = listState.layoutInfo.totalItemsCount,
+                isLoading = isRepliesLoading,
+                // 置顶/热评会额外插入列表，已渲染条数不能推断服务端分页已结束。
+                isEnd = isRepliesEnd
+            )
+        }
+    }
+    LaunchedEffect(shouldLoadMore) {
+        if (shouldLoadMore) {
+            onLoadMoreReplies()
+        }
+    }
+    Column(modifier = modifier.fillMaxSize()) {
+        // 评论数量已显示在 Tab 标签（「评论 N」）上，此处不再重复展示顶部标题栏
+        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (chromeBackdrop != null) {
+                            Modifier.miuixLayerBackdrop(chromeBackdrop)
+                        } else {
+                            Modifier
+                        }
+                    ),
+                contentPadding = contentPadding
+            ) {
+            if (isRepliesLoading && replies.isEmpty()) {
+                item {
+                    com.android.purebilibili.core.ui.skeleton.CommentListColumnSkeleton()
+                }
+            } else if (replies.isEmpty()) {
+                item {
+                    Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                        // replyCount 来自详情/游标 all_count：>0 却列表空 = 最热链路空成功，勿误报「暂无」
+                        AppText(
+                            text = if (replyCount > 0) {
+                                "评论暂时无法加载，可切换「最新」或稍后重试"
+                            } else {
+                                "暂无评论"
+                            },
+                            color = commentAppearance.secondaryTextColor
+                        )
+                    }
+                }
+            } else {
+                items(
+                    items = replies,
+                    key = { it.rpid },
+                    contentType = { resolveReplyItemContentType(it) }
+                ) { reply ->
+                    // [新增] 使用 DissolvableVideoCard 包裹
+                    com.android.purebilibili.core.ui.animation.MaybeDissolvableVideoCard(
+                        isDissolving = reply.rpid in dissolvingIds,
+                        onDissolveComplete = { onDeleteComment(reply.rpid) },
+                        cardId = "comment_${reply.rpid}",
+                        modifier = Modifier.padding(bottom = 1.dp) // 小间距防止裁剪
+                    ) {
+                        ReplyItemView(
+                            showUpFlag = showUpFlag,
+                            item = reply,
+                            upMid = info.owner.mid,
+                            emoteMap = emoteMap,
+                            lightweightMode = lightweightCommentRendering,
+                            showIdentityDecorations = showIdentityDecorations,
+                            onClick = {},
+                            onSubClick = onSubReplyClick,
+                            onTimestampClick = onTimestampClick,
+                            maxTimestampMs = info.pages.firstOrNull { it.cid == info.cid }?.duration?.times(1000L)
+                                ?: info.pages.firstOrNull()?.duration?.times(1000L),
+                            onImagePreview = { images, index, rect, textContent ->
+                                onImagePreview(images, index, rect, textContent)
+                            },
+                            // [新增] 点赞事件
+                            onLikeClick = { onCommentLike(reply.rpid) },
+                            onReplyClick = { onCommentReplyClick(reply) },
+                            onReportClick = { reason -> onReportComment(reply.rpid, reason) },
+                            canToggleTop = shouldShowReplyTopAction(
+                                currentMid = currentMid,
+                                upMid = info.owner.mid,
+                                item = reply
+                            ),
+                            onToggleTopClick = { onToggleTopComment(reply) },
+                            // [修复] 正确传递点赞状态 (API数据 或 本地乐观更新)
+                            isLiked = reply.action == 1 || reply.rpid in likedComments,
+                            // [新增] 仅当评论 mid 与当前登录用户 mid 一致时显示删除按钮
+                            onDeleteClick = if (currentMid > 0 && reply.mid == currentMid) {
+                                { onDissolveStart(reply.rpid) }
+                            } else null,
+                            // [新增] URL 点击跳转
+                            onUrlClick = onCommentUrlClick,
+                            // [新增] 头像点击
+                            onAvatarClick = { mid -> mid.toLongOrNull()?.let { onUpClick(it) } }
+                        )
+                    }
+                }
+
+                // 加载更多
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        when {
+                            isRepliesLoading -> AdaptiveLoadingIndicator()
+                            isRepliesEnd -> {
+                                AppText("—— end ——", color = commentAppearance.secondaryTextColor, fontSize = 12.sp)
+                            }
+                            // 当 shouldLoadMore 为 true 时才显示加载指示器
+                            shouldLoadMore -> AdaptiveLoadingIndicator()
+                        }
+                    }
+                }
+            }
+            }
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = rememberBackToTopButtonEnabled() && shouldShowBackToTop,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(
+                        end = 20.dp,
+                        bottom = contentPadding.calculateBottomPadding() + 12.dp
+                    ),
+                enter = fadeIn(animationSpec = tween(180)) + scaleIn(initialScale = 0.92f),
+                exit = fadeOut(animationSpec = tween(140)) + scaleOut(targetScale = 0.92f)
+            ) {
+                AppSmallFloatingActionButton(
+                    onClick = {
+                        scope.launch {
+                            listState.animateScrollToItem(0)
+                        }
+                    },
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
+                    contentColor = MaterialTheme.colorScheme.primary
+                ) {
+                    AppIcon(
+                        imageVector = rememberAppChevronUpIcon(),
+                        contentDescription = "回到顶部"
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+internal fun LandscapeCommentPanel(
+    info: ViewInfo,
+    listState: LazyListState,
+    replies: List<ReplyItem>,
+    replyCount: Int,
+    emoteMap: Map<String, String>,
+    isRepliesLoading: Boolean,
+    isRepliesEnd: Boolean,
+    videoTags: List<VideoTag>,
+    sortMode: CommentSortMode,
+    currentMid: Long,
+    showUpFlag: Boolean,
+    showIdentityDecorations: Boolean,
+    dissolvingIds: Set<Long>,
+    likedComments: Set<Long>,
+    onSortModeChange: (CommentSortMode) -> Unit,
+    onUpClick: (Long) -> Unit,
+    onSubReplyClick: (ReplyItem, Long) -> Unit,
+    onCommentReplyClick: (ReplyItem) -> Unit,
+    onLoadMoreReplies: () -> Unit,
+    onDeleteComment: (Long) -> Unit,
+    onDissolveStart: (Long) -> Unit,
+    onCommentLike: (Long) -> Unit,
+    onCommentUrlClick: (String) -> Unit,
+    onReportComment: (Long, Int) -> Unit,
+    onToggleTopComment: (ReplyItem) -> Unit,
+    onTimestampClick: ((Long) -> Unit)?,
+    onDismiss: () -> Unit,
+    onSwitchSide: () -> Unit,
+    isOnLeft: Boolean,
+    drawerWidth: Dp,
+    threadContent: (@Composable ((List<String>, Int, Rect?, ImagePreviewTextContent?) -> Unit) -> Unit)? = null,
+    modifier: Modifier = Modifier,
+) {
+    var previewImages by remember { mutableStateOf(emptyList<String>()) }
+    var previewInitialIndex by remember { mutableIntStateOf(0) }
+    var previewSourceRect by remember { mutableStateOf<Rect?>(null) }
+    var previewTextContent by remember { mutableStateOf<ImagePreviewTextContent?>(null) }
+    var showImagePreview by remember { mutableStateOf(false) }
+    val commentAppearance = rememberVideoCommentAppearance()
+
+    LandscapeSidePanel(
+        visible = true,
+        edge = if (isOnLeft) LandscapeSidePanelEdge.Start else LandscapeSidePanelEdge.End,
+        width = drawerWidth,
+        onDismiss = onDismiss,
+        modifier = modifier,
+    ) { requestDismiss ->
+        AppSurface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.surface,
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    AppText("评论 $replyCount", style = MaterialTheme.typography.titleMedium)
+                    CommentSortFilterBar(
+                        sortMode = sortMode,
+                        onSortModeChange = onSortModeChange,
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    AppTextButton(onClick = onSwitchSide) { AppText(if (isOnLeft) "移至右侧" else "移至左侧") }
+                    AppTextButton(onClick = requestDismiss) { AppText("关闭") }
+                }
+                AppHorizontalDivider(color = commentAppearance.secondaryTextColor.copy(alpha = 0.18f))
+                if (threadContent != null) {
+                    threadContent { images, index, rect, textContent ->
+                        previewImages = images
+                        previewInitialIndex = index
+                        previewSourceRect = rect
+                        previewTextContent = textContent
+                        showImagePreview = true
+                    }
+                } else {
+                    VideoCommentTab(
+                        listState = listState,
+                        modifier = Modifier.weight(1f),
+                        info = info,
+                        replies = replies,
+                        replyCount = replyCount,
+                        emoteMap = emoteMap,
+                        isRepliesLoading = isRepliesLoading,
+                        isRepliesEnd = isRepliesEnd,
+                        videoTags = videoTags,
+                        onUpClick = onUpClick,
+                        onSubReplyClick = onSubReplyClick,
+                        onCommentReplyClick = onCommentReplyClick,
+                        onLoadMoreReplies = onLoadMoreReplies,
+                        onImagePreview = { images, index, rect, textContent ->
+                            previewImages = images
+                            previewInitialIndex = index
+                            previewSourceRect = rect
+                            previewTextContent = textContent
+                            showImagePreview = true
+                        },
+                        onTimestampClick = onTimestampClick,
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        currentMid = currentMid,
+                        showUpFlag = showUpFlag,
+                        dissolvingIds = dissolvingIds,
+                        onDeleteComment = onDeleteComment,
+                        onDissolveStart = onDissolveStart,
+                        onCommentLike = onCommentLike,
+                        likedComments = likedComments,
+                        onCommentUrlClick = onCommentUrlClick,
+                        onReportComment = onReportComment,
+                        onToggleTopComment = onToggleTopComment,
+                        showIdentityDecorations = showIdentityDecorations,
+                        lightweightCommentRendering = false,
+                    )
+                }
+            }
+        }
+    }
+    if (showImagePreview && previewImages.isNotEmpty()) {
+        ImagePreviewDialog(
+            images = previewImages,
+            initialIndex = previewInitialIndex,
+            sourceRect = previewSourceRect,
+            textContent = previewTextContent,
+            onDismiss = { showImagePreview = false },
+        )
+    }
+}
+
+@Composable
+private fun VideoHeaderContent(
+    info: ViewInfo,
+    videoTags: List<VideoTag>,
+    isFollowing: Boolean,
+    isFavorited: Boolean,
+    isLiked: Boolean,
+    coinCount: Int,
+    downloadProgress: Float,
+    isInWatchLater: Boolean,
+    isLoggedIn: Boolean = false,
+    onFollowClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
+    onLikeClick: () -> Unit,
+    onCoinClick: () -> Unit,
+    onTripleClick: () -> Unit,
+    onCommentClick: () -> Unit,
+    onUpClick: (Long) -> Unit,
+    onOpenCollectionSheet: () -> Unit,
+    onDownloadClick: () -> Unit,
+    onWatchLaterClick: () -> Unit,
+    onShareClick: () -> Unit = {},
+    onGloballyPositioned: (Float) -> Unit,
+    transitionEnabled: Boolean = false,  // 🔗 共享元素过渡开关
+    isQuickReturnLimitedForSharedElements: Boolean = false,
+    sourceRouteForSharedElement: String? = null,
+    ownerFollowerCount: Int? = null,
+    ownerVideoCount: Int? = null,
+    onFavoriteLongClick: () -> Unit = {},
+    aiSummary: AiSummaryData? = null,
+    aiSummaryPrompt: com.android.purebilibili.feature.video.viewmodel.AiSummaryPromptState? = null,
+    onRetryAiSummary: () -> Unit = {},
+    onCreateNoteDraftFromAiSummary: () -> Unit = {},
+    videoNoteState: VideoNoteUiState = VideoNoteUiState(),
+    onOpenVideoNoteEditor: () -> Unit = {},
+    onRetryVideoNote: () -> Unit = {},
+    onDeleteVideoNoteClick: () -> Unit = {},
+    onShareVideoNote: (VideoNoteEditorDocument) -> Unit = {},
+    onPublicVideoNoteClick: (Long, String) -> Unit = { _, _ -> },
+    bgmInfo: BgmInfo? = null,
+    bgmInfoList: List<BgmInfo> = emptyList(),
+    relatedVideos: List<RelatedVideo> = emptyList(),
+    onTimestampClick: ((Long) -> Unit)? = null,
+    onBgmClick: (BgmInfo) -> Unit = {},
+    onDescriptionUrlClick: ((String) -> Unit)? = null,
+    onRelatedVideoClick: (String, android.os.Bundle?) -> Unit = { _, _ -> },
+    onSearchKeywordClick: (String) -> Unit = {},
+    onlineCount: String = "",
+    showOnlineCount: Boolean = true,
+    showInteractionActions: Boolean = true,
+    animateVideoDetailLayout: Boolean = true
+) {
+    val context = LocalContext.current
+    val videoAiSummaryEntryEnabled by com.android.purebilibili.core.store.SettingsManager
+        .getVideoAiSummaryEntryEnabled(context)
+        .collectAsStateWithLifecycle(initialValue = true
+        )
+    val videoNoteEnabled by com.android.purebilibili.core.store.SettingsManager
+        .getVideoNoteEnabled(context)
+        .collectAsStateWithLifecycle(initialValue = true
+        )
+    val videoNoteDefaultCollapsed by com.android.purebilibili.core.store.SettingsManager
+        .getVideoNoteDefaultCollapsed(context)
+        .collectAsStateWithLifecycle(initialValue = false
+        )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface) // 🎨 [修复] 与 TabBar 统一使用容器背景色，消除割裂感
+            .onGloballyPositioned { coordinates ->
+                onGloballyPositioned(coordinates.size.height.toFloat())
+            }
+    ) {
+        UpInfoSection(
+            info = info,
+            isFollowing = isFollowing,
+            onFollowClick = onFollowClick,
+            onUpClick = onUpClick,
+            showOwnerAvatar = true,
+            followerCount = ownerFollowerCount,
+            videoCount = ownerVideoCount,
+            transitionEnabled = transitionEnabled,  // 🔗 传递共享元素开关
+            isQuickReturnLimitedForSharedElements = isQuickReturnLimitedForSharedElements,
+            sourceRouteForSharedElement = sourceRouteForSharedElement
+        )
+
+        VideoTitleWithDesc(
+            info = info,
+            videoTags = videoTags,
+            transitionEnabled = transitionEnabled,  // 🔗 传递共享元素开关
+            isQuickReturnLimitedForSharedElements = isQuickReturnLimitedForSharedElements,
+            sourceRouteForSharedElement = sourceRouteForSharedElement,
+            bgmList = resolveDisplayBgmList(
+                bgmInfo = bgmInfo,
+                bgmInfoList = bgmInfoList
+            ),
+            onlineCount = onlineCount,
+            showOnlineCount = showOnlineCount,
+            onBgmClick = onBgmClick,
+            onDescriptionUrlClick = onDescriptionUrlClick,
+            onRelatedVideoClick = onRelatedVideoClick,
+            animateLayout = animateVideoDetailLayout,
+            onTagClick = onSearchKeywordClick
+        )
+
+        // [新增] AI Summary
+        if (shouldShowAiSummaryEntry(
+                aiSummary = aiSummary,
+                isAiSummaryEntryEnabled = videoAiSummaryEntryEnabled
+            )
+        ) {
+            AiSummaryCard(
+                aiSummary = aiSummary,
+                onTimestampClick = onTimestampClick,
+                onCreateNoteDraftClick = onCreateNoteDraftFromAiSummary,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        } else if (videoAiSummaryEntryEnabled && aiSummaryPrompt != null) {
+            AiSummaryPromptCard(
+                promptState = aiSummaryPrompt,
+                onActionClick = onRetryAiSummary,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
+        if (shouldShowVideoNoteCard(videoNoteEnabled)) {
+            VideoNoteCard(
+                noteState = videoNoteState,
+                isLoggedIn = isLoggedIn,
+                onCreateOrEditClick = onOpenVideoNoteEditor,
+                onRetryClick = onRetryVideoNote,
+                onDeleteClick = onDeleteVideoNoteClick,
+                onShareClick = onShareVideoNote,
+                onPublicNoteClick = onPublicVideoNoteClick,
+                defaultCollapsed = videoNoteDefaultCollapsed,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
+        if (showInteractionActions) {
+            ActionButtonsRow(
+                info = info,
+                isFavorited = isFavorited,
+                isLiked = isLiked,
+                coinCount = coinCount,
+                downloadProgress = downloadProgress,
+                isInWatchLater = isInWatchLater,
+                onFavoriteClick = onFavoriteClick,
+                onLikeClick = onLikeClick,
+                onCoinClick = onCoinClick,
+                onTripleClick = onTripleClick,
+                onCommentClick = onCommentClick,
+                onDownloadClick = onDownloadClick,
+                onWatchLaterClick = onWatchLaterClick,
+                onFavoriteLongClick = onFavoriteLongClick,
+                onShareClick = onShareClick,
+                showCommentAction = false,
+            )
+        }
+
+        info.ugc_season?.let { season ->
+            CollectionRow(
+                ugcSeason = season,
+                currentBvid = info.bvid,
+                currentCid = info.cid,
+                onClick = onOpenCollectionSheet
+            )
+        }
+    }
+}
+
+@Composable
+private fun VideoDetailDanmakuSettingsPanel(
+    onDismiss: () -> Unit
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val danmakuScope = com.android.purebilibili.core.store.DanmakuSettingsScope.PORTRAIT
+    val danmakuSettings by SettingsManager
+        .getDanmakuSettings(context, danmakuScope)
+        .collectAsStateWithLifecycle(initialValue = DanmakuSettings(),
+            context = kotlin.coroutines.EmptyCoroutineContext
+        )
+
+    var localOpacity by remember(danmakuSettings.opacity) { mutableFloatStateOf(danmakuSettings.opacity) }
+    var localFontScale by remember(danmakuSettings.fontScale) { mutableFloatStateOf(danmakuSettings.fontScale) }
+    var localSpeed by remember(danmakuSettings.speed) { mutableFloatStateOf(danmakuSettings.speed) }
+    var localDisplayArea by remember(danmakuSettings.displayArea) { mutableFloatStateOf(danmakuSettings.displayArea) }
+    var localMergeDuplicates by remember(danmakuSettings.mergeDuplicates) { mutableStateOf(danmakuSettings.mergeDuplicates) }
+    var localDuplicateMergeWindowMs by remember(danmakuSettings.duplicateMergeWindowMs) {
+        mutableIntStateOf(danmakuSettings.duplicateMergeWindowMs)
+    }
+    var localDuplicateMergeCountThreshold by remember(danmakuSettings.duplicateMergeCountThreshold) {
+        mutableIntStateOf(danmakuSettings.duplicateMergeCountThreshold)
+    }
+    var localAllowScroll by remember(danmakuSettings.allowScroll) { mutableStateOf(danmakuSettings.allowScroll) }
+    var localAllowTop by remember(danmakuSettings.allowTop) { mutableStateOf(danmakuSettings.allowTop) }
+    var localAllowBottom by remember(danmakuSettings.allowBottom) { mutableStateOf(danmakuSettings.allowBottom) }
+    var localAllowColorful by remember(danmakuSettings.allowColorful) { mutableStateOf(danmakuSettings.allowColorful) }
+    var localAllowSpecial by remember(danmakuSettings.allowSpecial) { mutableStateOf(danmakuSettings.allowSpecial) }
+    var localHideInteractiveCommands by remember(danmakuSettings.hideInteractiveCommands) {
+        mutableStateOf(danmakuSettings.hideInteractiveCommands)
+    }
+    var localPortraitDisplayAreaMode by remember(danmakuSettings.portraitDisplayAreaMode) {
+        mutableStateOf(danmakuSettings.portraitDisplayAreaMode)
+    }
+    var localBlockRulesRaw by remember(danmakuSettings.blockRulesRaw) { mutableStateOf(danmakuSettings.blockRulesRaw) }
+
+    DanmakuSettingsPanel(
+        isFullscreen = false,
+        settingsScope = danmakuScope,
+        opacity = localOpacity,
+        fontScale = localFontScale,
+        speed = localSpeed,
+        displayArea = localDisplayArea,
+        mergeDuplicates = localMergeDuplicates,
+        duplicateMergeWindowMs = localDuplicateMergeWindowMs,
+        duplicateMergeCountThreshold = localDuplicateMergeCountThreshold,
+        allowScroll = localAllowScroll,
+        allowTop = localAllowTop,
+        allowBottom = localAllowBottom,
+        allowColorful = localAllowColorful,
+        allowSpecial = localAllowSpecial,
+        hideInteractiveCommands = localHideInteractiveCommands,
+        portraitDisplayAreaMode = localPortraitDisplayAreaMode,
+        showBlockRuleEditor = true,
+        showSmartOcclusionSection = false,
+        blockRulesRaw = localBlockRulesRaw,
+        smartOcclusion = danmakuSettings.smartOcclusion,
+        onOpacityChange = {
+            localOpacity = it
+            scope.launch { SettingsManager.setDanmakuOpacity(context, it, danmakuScope) }
+        },
+        onFontScaleChange = {
+            localFontScale = it
+            scope.launch { SettingsManager.setDanmakuFontScale(context, it, danmakuScope) }
+        },
+        onSpeedChange = {
+            localSpeed = it
+            scope.launch { SettingsManager.setDanmakuSpeed(context, it, danmakuScope) }
+        },
+        onDisplayAreaChange = {
+            localDisplayArea = it
+            scope.launch { SettingsManager.setDanmakuArea(context, it, danmakuScope) }
+        },
+        onMergeDuplicatesChange = {
+            localMergeDuplicates = it
+            scope.launch { SettingsManager.setDanmakuMergeDuplicates(context, it, danmakuScope) }
+        },
+        onDuplicateMergeWindowMsChange = {
+            localDuplicateMergeWindowMs = it
+            scope.launch { SettingsManager.setDanmakuDuplicateMergeWindowMs(context, it, danmakuScope) }
+        },
+        onDuplicateMergeCountThresholdChange = {
+            localDuplicateMergeCountThreshold = it
+            scope.launch { SettingsManager.setDanmakuDuplicateMergeCountThreshold(context, it, danmakuScope) }
+        },
+        onAllowScrollChange = {
+            localAllowScroll = it
+            scope.launch { SettingsManager.setDanmakuAllowScroll(context, it, danmakuScope) }
+        },
+        onAllowTopChange = {
+            localAllowTop = it
+            scope.launch { SettingsManager.setDanmakuAllowTop(context, it, danmakuScope) }
+        },
+        onAllowBottomChange = {
+            localAllowBottom = it
+            scope.launch { SettingsManager.setDanmakuAllowBottom(context, it, danmakuScope) }
+        },
+        onAllowColorfulChange = {
+            localAllowColorful = it
+            scope.launch { SettingsManager.setDanmakuAllowColorful(context, it, danmakuScope) }
+        },
+        onAllowSpecialChange = {
+            localAllowSpecial = it
+            scope.launch { SettingsManager.setDanmakuAllowSpecial(context, it, danmakuScope) }
+        },
+        onHideInteractiveCommandsChange = {
+            localHideInteractiveCommands = it
+            scope.launch { SettingsManager.setDanmakuHideInteractiveCommands(context, it) }
+        },
+        onPortraitDisplayAreaModeChange = {
+            localPortraitDisplayAreaMode = it
+            scope.launch { SettingsManager.setPortraitDanmakuDisplayAreaMode(context, it) }
+        },
+        onBlockRulesRawChange = {
+            localBlockRulesRaw = it
+            scope.launch { SettingsManager.setDanmakuBlockRulesRaw(context, it, danmakuScope) }
+        },
+        onDismiss = onDismiss
+    )
+}
+
+/**
+ * Tab 栏组件
+ */
+@Composable
+private fun VideoContentTabBar(
+    tabs: List<String>,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
+    onDanmakuSendClick: () -> Unit,
+    danmakuEnabled: Boolean,
+    onDanmakuToggle: () -> Unit,
+    onDanmakuSettingsClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    isPlayerCollapsed: Boolean = false,
+    onRestorePlayer: () -> Unit = {},
+    miuixBackdrop: MiuixBackdrop? = null,
+    indicatorPositionProvider: (() -> Float)? = null,
+    isScrollInProgressProvider: () -> Boolean = { false },
+) {
+    val context = LocalContext.current
+    val homeSettings by SettingsManager
+        .getHomeSettings(context)
+        .collectAsStateWithLifecycle(initialValue = HomeSettings())
+    val configuration = LocalConfiguration.current
+    val layoutSpec = remember(configuration.screenWidthDp) {
+        resolveVideoContentTabBarLayoutSpec(widthDp = configuration.screenWidthDp)
+    }
+    val danmakuActionLayoutPolicy = remember(configuration.screenWidthDp) {
+        resolveVideoContentTabBarDanmakuActionLayoutPolicy(widthDp = configuration.screenWidthDp)
+    }
+    val liquidChromeSpec = remember(
+        homeSettings.androidNativeLiquidGlassEnabled,
+        miuixBackdrop,
+        layoutSpec
+    ) {
+        resolveVideoContentTabBarLiquidChromeSpec(
+            androidNativeLiquidGlassEnabled = homeSettings.androidNativeLiquidGlassEnabled,
+            hasBackdrop = miuixBackdrop != null,
+            layoutSpec = layoutSpec,
+        )
+    }
+    // Tab 行下沿浅灰分割线颜色（始终显示）。
+    val tabDividerColor = MaterialTheme.colorScheme.outlineVariant
+    Column(
+        modifier = modifier
+            .drawBehind {
+                val lineY = size.height - 1.dp.toPx()
+                drawLine(
+                    color = tabDividerColor,
+                    start = Offset(0f, lineY),
+                    end = Offset(size.width, lineY),
+                    strokeWidth = 1.dp.toPx(),
+                )
+            }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(
+                    if (liquidChromeSpec.useTransparentTabRowBackground) {
+                        Modifier
+                    } else {
+                        Modifier.background(MaterialTheme.colorScheme.surface)
+                    }
+                )
+                .padding(horizontal = layoutSpec.containerHorizontalPaddingDp.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = if (liquidChromeSpec.reusesLiquidGlassDock) {
+                Arrangement.spacedBy(8.dp)
+            } else {
+                Arrangement.Start
+            }
+        ) {
+            BottomBarLiquidSegmentedControl(
+                items = tabs,
+                selectedIndex = selectedTabIndex,
+                onSelected = onTabSelected,
+                modifier = Modifier.wrapContentWidth()
+                    .padding(start = 0.dp, top = 2.dp, end = 8.dp, bottom = 2.dp),
+                // 固定 itemWidth：Android 下划线风格下 itemWidth==null 会 fillMaxWidth
+                // 撑满整行，把弹幕按钮/排序控件挤出屏幕。
+                // 88.dp 等宽：容纳「评论 1.2万」完整数量并拉开两 Tab 间距。
+                itemWidth = 88.dp,
+                height = liquidChromeSpec.segmentedControlHeightDp.dp,
+                indicatorHeight = liquidChromeSpec.segmentedControlIndicatorHeightDp.dp,
+                labelFontSize = liquidChromeSpec.labelFontSizeSp.sp,
+                miuixBackdrop = miuixBackdrop,
+                forceLiquidChrome = homeSettings.androidNativeLiquidGlassEnabled,
+                liquidGlassEffectsEnabled = liquidChromeSpec.liquidGlassEffectsEnabled,
+                // Avoid extra press refraction in this compact in-content chrome.
+                tapPressRefractionEnabled = false,
+                indicatorPositionProvider = indicatorPositionProvider,
+                isScrollInProgressProvider = isScrollInProgressProvider,
+                externalPagerMotionEffectsEnabled = liquidChromeSpec.reusesLiquidGlassDock,
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            // 弹幕三件套在所有 Tab 常驻（含评论 Tab）；"最新/最热"排序已移除
+            // [新增] 恢复画面按钮 (仅在播放器折叠时显示)
+            AnimatedVisibility(
+                visible = isPlayerCollapsed,
+                enter = fadeIn() + expandHorizontally(),
+                exit = fadeOut() + shrinkHorizontally()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .clip(AppShapes.container(ContainerLevel.Card))
+                        .background(MaterialTheme.colorScheme.primary)
+                        .clickable { onRestorePlayer() }
+                        .padding(horizontal = 10.dp, vertical = 6.dp)
+                ) {
+                    AppIcon(
+                        imageVector = rememberAppPlayIcon(),
+                        contentDescription = "恢复画面",
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(12.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    AppText(
+                        text = "恢复画面",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            val danmakuToggleInteraction = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+            val danmakuActiveColor = MaterialTheme.colorScheme.primary
+            val danmakuInactiveColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.82f)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(end = danmakuActionLayoutPolicy.toggleTrailingPaddingDp.dp)
+                    .height(danmakuActionLayoutPolicy.secondaryControlHeightDp.dp)
+                    .clickable(
+                        interactionSource = danmakuToggleInteraction,
+                        indication = null,
+                        onClick = onDanmakuToggle
+                    )
+                    .padding(
+                        horizontal = danmakuActionLayoutPolicy.toggleHorizontalPaddingDp.dp,
+                        vertical = danmakuActionLayoutPolicy.toggleVerticalPaddingDp.dp
+                    )
+            ) {
+                AppIcon(
+                    imageVector = rememberAppCommentIcon(),
+                    contentDescription = if (danmakuEnabled) "关闭弹幕" else "开启弹幕",
+                    tint = if (danmakuEnabled) danmakuActiveColor else danmakuInactiveColor,
+                    modifier = Modifier.size(danmakuActionLayoutPolicy.toggleIconSizeDp.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                AppText(
+                    text = if (danmakuEnabled) "开" else "关",
+                    fontSize = danmakuActionLayoutPolicy.toggleTextSizeSp.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (danmakuEnabled) danmakuActiveColor else danmakuInactiveColor,
+                    modifier = Modifier.offset(x = 1.dp),
+                )
+            }
+
+            AnimatedVisibility(
+                visible = true,
+                enter = fadeIn() + expandHorizontally(expandFrom = Alignment.Start),
+                exit = fadeOut() + shrinkHorizontally(shrinkTowards = Alignment.Start)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .height(danmakuActionLayoutPolicy.secondaryControlHeightDp.dp)
+                        .clickable(onClick = onDanmakuSendClick)
+                        .padding(
+                            horizontal = danmakuActionLayoutPolicy.sendHorizontalPaddingDp.dp,
+                            vertical = danmakuActionLayoutPolicy.sendVerticalPaddingDp.dp
+                        )
+                ) {
+                    AppText(
+                        text = danmakuActionLayoutPolicy.sendLabel,
+                        fontSize = danmakuActionLayoutPolicy.sendTextSizeSp.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            AppSurface(
+                modifier = Modifier
+                    .padding(start = danmakuActionLayoutPolicy.settingsLeadingPaddingDp.dp)
+                    .size(danmakuActionLayoutPolicy.settingsButtonSizeDp.dp)
+                    .clickable(onClick = onDanmakuSettingsClick),
+                shape = RoundedCornerShape(danmakuActionLayoutPolicy.secondaryControlCornerRadiusDp.dp),
+                color = Color.Transparent
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    AppIcon(
+                        imageVector = rememberAppSettingsIcon(),
+                        contentDescription = "弹幕设置",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(danmakuActionLayoutPolicy.settingsIconSizeDp.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 推荐视频标题
+ */
+@Composable
+private fun VideoRecommendationHeader() {
+    Row(
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp) // 优化：减少底部间距，使视频卡片更紧凑
+            .padding(horizontal = 4.dp, vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AppText(
+            text = "相关推荐",
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+internal fun resolveFirstRelatedItemIndex(hasPages: Boolean): Int {
+    return if (hasPages) 3 else 2
+}
+
+/**
+ * 视频标签行
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun VideoTagsRow(
+    tags: List<VideoTag>,
+    onTagClick: (String) -> Unit = {}
+) {
+    FlowRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        tags.take(10).forEach { tag ->
+            VideoTagChip(
+                tagName = tag.tag_name,
+                onClick = onTagClick
+            )
+        }
+    }
+}
+
+/**
+ * 视频标签芯片
+ */
+@Composable
+fun VideoTagChip(
+    tagName: String,
+    onClick: (String) -> Unit = {}
+) {
+    AppSurface(
+        onClick = { onClick(tagName) },
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
+        shape = AppShapes.container(ContainerLevel.Dialog)
+    ) {
+        AppText(
+            text = tagName,
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 6.dp)
+                .copyOnLongPress(tagName, "标签")
+        )
+    }
+}

@@ -1,0 +1,116 @@
+package com.android.purebilibili.navigation
+
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.MutatePriority
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
+import kotlin.math.abs
+
+/**
+ * 底栏 HorizontalPager 状态。切页由 UserInput 优先级接管 Pager。
+ */
+internal class MainBottomPagerState(
+    val pagerState: PagerState,
+    private val coroutineScope: CoroutineScope
+) {
+    var selectedPage by mutableIntStateOf(pagerState.currentPage)
+        private set
+
+    var isNavigating by mutableStateOf(false)
+        private set
+
+    var navigationStartPage by mutableIntStateOf(pagerState.currentPage)
+        private set
+
+    private var navJob: Job? = null
+
+    /**
+     * MainPagerState 目标页切换：
+     * - 先更新 [selectedPage]（底栏指示器跟目标页）；
+     * - 再在 Pager 的 UserInput mutation 中逐帧滚动到目标，避免反向切页被旧状态取消。
+     */
+    fun switchToPage(targetIndex: Int) {
+        val lastPage = pagerState.pageCount - 1
+        if (lastPage < 0) return
+        val safeTargetIndex = targetIndex.coerceIn(0, lastPage)
+        if (safeTargetIndex == selectedPage) return
+
+        navJob?.cancel()
+
+        navigationStartPage = pagerState.currentPage
+        selectedPage = safeTargetIndex
+        isNavigating = true
+
+        navJob = coroutineScope.launch {
+            val myJob = coroutineContext.job
+            try {
+                pagerState.scroll(MutatePriority.UserInput) {
+                    val distance = abs(safeTargetIndex - pagerState.currentPage).coerceAtLeast(2)
+                    val duration = resolveBottomPagerNavigationDurationMillis(
+                        pageDistance = distance,
+                    )
+                    val layoutInfo = pagerState.layoutInfo
+                    val pageSize = layoutInfo.pageSize + layoutInfo.pageSpacing
+                    val currentDistanceInPages =
+                        safeTargetIndex - pagerState.currentPage - pagerState.currentPageOffsetFraction
+                    val scrollPixels = currentDistanceInPages * pageSize
+
+                    var previousValue = 0f
+                    animate(
+                        initialValue = 0f,
+                        targetValue = scrollPixels,
+                        animationSpec = tween(
+                            easing = EaseInOut,
+                            durationMillis = duration,
+                        ),
+                    ) { currentValue, _ ->
+                        previousValue += scrollBy(currentValue - previousValue)
+                    }
+                }
+
+                if (pagerState.currentPage != safeTargetIndex) {
+                    pagerState.scrollToPage(safeTargetIndex)
+                }
+            } finally {
+                if (navJob == myJob) {
+                    isNavigating = false
+                    if (pagerState.currentPage != safeTargetIndex) {
+                        selectedPage = pagerState.currentPage
+                    }
+                    navigationStartPage = pagerState.currentPage
+                }
+            }
+        }
+    }
+
+    fun syncPage() {
+        if (!isNavigating && selectedPage != pagerState.currentPage) {
+            selectedPage = pagerState.currentPage
+        }
+    }
+}
+
+@Composable
+internal fun rememberMainBottomPagerState(
+    pagerState: PagerState,
+    coroutineScope: CoroutineScope = rememberCoroutineScope()
+): MainBottomPagerState {
+    return remember(pagerState, coroutineScope) {
+        MainBottomPagerState(
+            pagerState = pagerState,
+            coroutineScope = coroutineScope
+        )
+    }
+}

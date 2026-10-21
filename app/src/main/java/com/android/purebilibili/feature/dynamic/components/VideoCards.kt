@@ -1,0 +1,404 @@
+package com.android.purebilibili.feature.dynamic.components
+
+import com.android.purebilibili.core.ui.AppSpacingTokens
+
+import com.android.purebilibili.core.ui.MediaContrastPalette
+
+import com.android.purebilibili.core.ui.AppShapes
+import com.android.purebilibili.core.ui.ContainerLevel
+import com.android.purebilibili.core.ui.rememberAppPlayIcon
+
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import com.android.purebilibili.core.ui.components.AppIcon
+import androidx.compose.material3.MaterialTheme
+import com.android.purebilibili.core.ui.components.AppText
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.android.purebilibili.core.ui.LocalAnimatedVisibilityScope
+import com.android.purebilibili.core.ui.LocalSharedTransitionEnabled
+import com.android.purebilibili.core.ui.LocalSharedTransitionScope
+import com.android.purebilibili.core.ui.transition.LocalVideoCardSharedElementSourceRoute
+import com.android.purebilibili.core.ui.transition.LocalVideoSharedTransitionSpeedSettings
+import com.android.purebilibili.core.ui.transition.VideoCardSourceChromeSnapshot
+import com.android.purebilibili.core.ui.transition.VideoCardSourceLayout
+import com.android.purebilibili.core.ui.transition.resolveVideoCardSharedTransitionMotionSpec
+import com.android.purebilibili.core.ui.transition.resolveVideoSharedTransitionPlaybackIntent
+import com.android.purebilibili.core.ui.transition.resolveVideoSharedTransitionVisualSpec
+import com.android.purebilibili.core.store.SettingsManager
+import com.android.purebilibili.core.ui.transition.shouldUseVideoCardShellSharedBounds
+import com.android.purebilibili.core.ui.transition.videoCardShellSharedBoundsOrEmpty
+import com.android.purebilibili.core.util.CardPositionManager
+import com.android.purebilibili.feature.home.components.cards.videoCardShellReturnChromeAlpha
+import com.android.purebilibili.data.model.response.ArchiveMajor
+
+/**
+ * 对齐 BiliPai 的动态视频呈现：
+ * 1. 手机和平板都保持纵向视频卡
+ * 2. 封面使用 16:10 比例
+ * 3. 统计信息压到封面渐变层，正文只保留标题信息
+ */
+@Composable
+@OptIn(ExperimentalSharedTransitionApi::class)
+fun VideoCardLarge(
+    archive: ArchiveMajor,
+    onClick: () -> Unit,
+    publishTs: Long = 0L,
+    isCollection: Boolean = false,
+    collectionTitle: String = "",
+    cornerBadgeText: String? = null,
+    sharedElementKey: Any? = null
+) {
+    val context = LocalContext.current
+    val coverUrl = remember(archive.cover) { normalizeDynamicCoverUrl(archive.cover) }
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val screenWidthPx = remember(configuration.screenWidthDp, density) {
+        with(density) { configuration.screenWidthDp.dp.toPx() }
+    }
+    val screenHeightPx = remember(configuration.screenHeightDp, density) {
+        with(density) { configuration.screenHeightDp.dp.toPx() }
+    }
+    val sourceRoute = LocalVideoCardSharedElementSourceRoute.current
+    // [性能优化] 存储 LayoutCoordinates 引用而非 Rect，boundsInRoot() 仅在交互时惰性计算，
+    // 避免滚动期间每个可见卡每帧都做坐标树遍历（与首页 VideoCard 的做法对齐）。
+    val cardCoordsRef = remember { object { var value: androidx.compose.ui.layout.LayoutCoordinates? = null } }
+    val coverCoordsRef = remember { object { var value: androidx.compose.ui.layout.LayoutCoordinates? = null } }
+    val stationaryCoverRequest = remember(coverUrl) {
+        ImageRequest.Builder(context)
+            .data(coverUrl)
+            .addHeader("Referer", "https://www.bilibili.com/")
+            .crossfade(false)
+            .memoryCacheKey(coverUrl)
+            .diskCacheKey(coverUrl)
+            .build()
+    }
+    val triggerClick = {
+        cardCoordsRef.value?.takeIf { it.isAttached }?.boundsInRoot()?.let { bounds ->
+            CardPositionManager.recordVideoCardPosition(
+                bvid = archive.bvid,
+                sourceRoute = sourceRoute,
+                bounds = bounds,
+                screenWidth = screenWidthPx,
+                screenHeight = screenHeightPx,
+                density = density.density,
+                sourceCornerDp = 10,
+                coverBounds = coverCoordsRef.value?.takeIf { it.isAttached }?.boundsInRoot(),
+                sourceLayout = VideoCardSourceLayout.STACKED,
+                sourceChromeSnapshot = VideoCardSourceChromeSnapshot(
+                    title = archive.title,
+                    ownerName = collectionTitle.takeIf { isCollection }.orEmpty(),
+                    ownerFaceUrl = "",
+                    viewText = archive.stat.play,
+                    danmakuText = archive.stat.danmaku,
+                    durationText = archive.duration_text,
+                    infoPresentation = com.android.purebilibili.core.ui.transition
+                        .resolveVideoCardSourceInfoPresentation(
+                            publishTimeText = "",
+                            showStatsInInfo = true,
+                        ),
+                    coverUrl = coverUrl,
+                    coverCacheKey = coverUrl,
+                ),
+            )
+        }
+        onClick()
+    }
+
+    var modifier = Modifier
+        .fillMaxWidth()
+        .clickable(onClick = triggerClick)
+
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
+    val sharedTransitionEnabled = LocalSharedTransitionEnabled.current
+    val sharedTransitionSpeedSettings = LocalVideoSharedTransitionSpeedSettings.current
+    val sharedElementReady = sharedTransitionEnabled &&
+        archive.bvid.isNotBlank() &&
+        sourceRoute != null &&
+        sharedTransitionScope != null &&
+        animatedVisibilityScope != null
+    val sharedTransitionMotionSpec = remember(
+        sourceRoute,
+        sharedTransitionEnabled,
+        sharedTransitionSpeedSettings
+    ) {
+        resolveVideoCardSharedTransitionMotionSpec(
+            sourceRoute = sourceRoute,
+            transitionEnabled = sharedTransitionEnabled,
+            speedSettings = sharedTransitionSpeedSettings
+        )
+    }
+    val videoSharedPlaybackIntent = remember(context) {
+        resolveVideoSharedTransitionPlaybackIntent(
+            clickToPlayEnabled = SettingsManager.getClickToPlaySync(context)
+        )
+    }
+    val sharedTransitionVisualSpec = remember(sourceRoute, videoSharedPlaybackIntent) {
+        resolveVideoSharedTransitionVisualSpec(
+            sourceRoute = sourceRoute,
+            sourceCornerDp = 10,
+            playbackIntent = videoSharedPlaybackIntent
+        )
+    }
+    val coverShape = RoundedCornerShape(sharedTransitionVisualSpec.sourceCornerDp.dp)
+    val useCardShellSharedBounds = shouldUseVideoCardShellSharedBounds(
+        sourceRoute = sourceRoute,
+        transitionEnabled = sharedElementReady
+    )
+
+    Column(
+        modifier = modifier
+            .videoCardShellSharedBoundsOrEmpty(
+                enabled = useCardShellSharedBounds,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope,
+                bvid = archive.bvid,
+                sourceRoute = sourceRoute,
+                motionSpec = sharedTransitionMotionSpec,
+                clipShape = coverShape
+            )
+            .onGloballyPositioned { coordinates ->
+                cardCoordsRef.value = coordinates
+            }
+    ) {
+        VideoCardLargeCover(
+            archive = archive,
+            coverUrl = coverUrl,
+            coverRequest = stationaryCoverRequest,
+            isCollection = isCollection,
+            cornerBadgeText = cornerBadgeText,
+            coverShape = coverShape,
+            modifier = Modifier.onGloballyPositioned { coordinates ->
+                coverCoordsRef.value = coordinates
+            },
+        )
+        Column(
+            modifier = Modifier.videoCardShellReturnChromeAlpha(
+                enabled = useCardShellSharedBounds,
+                bvid = archive.bvid,
+                sourceRoute = sourceRoute,
+            )
+        ) {
+            Spacer(modifier = Modifier.height(AppSpacingTokens.ExtraSmall + AppSpacingTokens.Micro))
+            VideoCardLargeInfo(
+                archive = archive,
+                isCollection = isCollection,
+                collectionTitle = collectionTitle,
+                publishTs = publishTs
+            )
+        }
+    }
+}
+
+@Composable
+private fun VideoCardLargeCover(
+    archive: ArchiveMajor,
+    coverUrl: String,
+    coverRequest: ImageRequest,
+    isCollection: Boolean,
+    cornerBadgeText: String?,
+    coverShape: androidx.compose.ui.graphics.Shape,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .aspectRatio(16f / 10f)
+            .clip(coverShape)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        if (coverUrl.isNotEmpty()) {
+            AsyncImage(
+                model = coverRequest,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        val badgeText = cornerBadgeText ?: if (isCollection) "合集" else null
+        if (!badgeText.isNullOrBlank()) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(AppSpacingTokens.Small)
+                    .background(MaterialTheme.colorScheme.primary, AppShapes.container(ContainerLevel.Tag))
+                    .padding(horizontal = AppSpacingTokens.ExtraSmall + AppSpacingTokens.Micro, vertical = AppSpacingTokens.Micro)
+            ) {
+                AppText(
+                    text = badgeText,
+                    fontSize = MaterialTheme.typography.labelSmall.fontSize,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(AppSpacingTokens.TripleExtraLarge + AppSpacingTokens.ExtraLarge)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            MediaContrastPalette.Scrim.copy(alpha = 0.7f)
+                        )
+                    )
+                )
+        ) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .fillMaxWidth()
+                    .padding(start = AppSpacingTokens.Small + AppSpacingTokens.Micro, end = AppSpacingTokens.Small, bottom = AppSpacingTokens.Small),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (archive.duration_text.isNotBlank()) {
+                    Box(
+                        modifier = Modifier
+                            .background(MediaContrastPalette.Scrim.copy(alpha = 0.45f), AppShapes.container(ContainerLevel.Tag))
+                            .padding(horizontal = AppSpacingTokens.ExtraSmall + AppSpacingTokens.Micro, vertical = AppSpacingTokens.Micro)
+                    ) {
+                        AppText(
+                            text = archive.duration_text,
+                            fontSize = MaterialTheme.typography.labelSmall.fontSize,
+                            color = MediaContrastPalette.Foreground,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(AppSpacingTokens.ExtraSmall + AppSpacingTokens.Micro))
+                }
+
+                VideoCardLargeMetaText(text = "${archive.stat.play}播放")
+                Spacer(modifier = Modifier.size(AppSpacingTokens.ExtraSmall + AppSpacingTokens.Micro))
+                VideoCardLargeMetaText(text = "${archive.stat.danmaku}弹幕")
+                Spacer(modifier = Modifier.weight(1f))
+
+                Box(
+                    modifier = Modifier
+                        .size(AppSpacingTokens.DoubleExtraLarge + AppSpacingTokens.Micro)
+                        .background(MediaContrastPalette.Scrim.copy(alpha = 0.45f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AppIcon(
+                        imageVector = rememberAppPlayIcon(),
+                        contentDescription = null,
+                        tint = MediaContrastPalette.Foreground,
+                        modifier = Modifier.size(AppSpacingTokens.ExtraLarge - AppSpacingTokens.Micro)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun VideoCardLargeInfo(
+    archive: ArchiveMajor,
+    isCollection: Boolean,
+    collectionTitle: String,
+    publishTs: Long,
+    titleModifier: Modifier = Modifier
+) {
+    if (isCollection && collectionTitle.isNotBlank()) {
+        AppText(
+            text = collectionTitle,
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Spacer(modifier = Modifier.height(AppSpacingTokens.Micro))
+        AppText(
+            text = archive.title,
+            fontSize = MaterialTheme.typography.labelMedium.fontSize,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = titleModifier
+        )
+    } else {
+        AppText(
+            text = archive.title,
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            fontWeight = FontWeight.Bold,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = titleModifier
+        )
+    }
+}
+
+@Composable
+private fun VideoCardLargeMetaText(
+    text: String
+) {
+    AppText(
+        text = text,
+        fontSize = MaterialTheme.typography.labelSmall.fontSize,
+        color = MediaContrastPalette.Foreground,
+        maxLines = 1
+    )
+}
+
+@Composable
+fun VideoCardSmall(
+    archive: ArchiveMajor,
+    publishTs: Long = 0L,
+    onClick: () -> Unit
+) {
+    VideoCardLarge(
+        archive = archive,
+        onClick = onClick,
+        publishTs = publishTs
+    )
+}
+
+private fun normalizeDynamicCoverUrl(rawCover: String): String {
+    val raw = rawCover.trim()
+    return when {
+        raw.startsWith("https://") -> raw
+        raw.startsWith("http://") -> raw.replace("http://", "https://")
+        raw.startsWith("//") -> "https:$raw"
+        raw.isNotEmpty() -> "https://$raw"
+        else -> ""
+    }
+}

@@ -1,0 +1,184 @@
+package com.android.purebilibili.feature.cast
+import com.android.purebilibili.core.ui.components.AppIcon
+import com.android.purebilibili.core.ui.components.AppText
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Cast
+import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import com.android.purebilibili.core.plugin.CastPluginApi
+import com.android.purebilibili.core.plugin.CastPluginRoute
+import com.android.purebilibili.core.plugin.PluginManager
+import kotlinx.coroutines.flow.combine
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.android.purebilibili.core.ui.AdaptiveLoadingIndicator
+import com.android.purebilibili.core.ui.AppAlertDialog
+import com.android.purebilibili.core.ui.components.AppIconButton
+import com.android.purebilibili.core.ui.components.AppListItem
+import com.android.purebilibili.core.ui.components.AppTextButton
+
+private data class PluginRouteEntry(
+    val plugin: CastPluginApi,
+    val route: CastPluginRoute
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DeviceListDialog(
+    onDismissRequest: () -> Unit,
+    onPluginCastDeviceSelected: (CastPluginApi, CastPluginRoute) -> Unit = { _, _ -> }
+) {
+    val context = LocalContext.current
+
+    // Generic cast plugin routes
+    val allPlugins by PluginManager.pluginsFlow.collectAsStateWithLifecycle()
+    val castPluginInfos = remember(allPlugins) {
+        allPlugins.mapNotNull { info ->
+            (info.plugin as? CastPluginApi)?.let { info to it }
+        }
+    }
+    val castPlugins = remember(castPluginInfos) {
+        castPluginInfos.filter { it.first.enabled }.map { it.second }
+    }
+    val hasDisabledCastPlugins = remember(castPluginInfos) {
+        castPluginInfos.any { !it.first.enabled }
+    }
+
+    val pluginRouteEntries by produceState(emptyList<PluginRouteEntry>(), castPlugins) {
+        if (castPlugins.isEmpty()) {
+            value = emptyList()
+            return@produceState
+        }
+        combine(castPlugins.map { it.routes }) { arrays ->
+            arrays.flatMapIndexed { index, routes ->
+                routes.map { PluginRouteEntry(castPlugins[index], it) }
+            }
+        }.collect { value = it }
+    }
+
+    val isDiscovering by produceState(false, castPlugins) {
+        if (castPlugins.isEmpty()) {
+            value = false
+            return@produceState
+        }
+        combine(castPlugins.map { it.isDiscovering }) { states ->
+            states.any { it }
+        }.collect { value = it }
+    }
+
+    DisposableEffect(castPlugins) {
+        castPlugins.forEach { it.startRouteDiscovery(context) }
+        onDispose {
+            castPlugins.forEach { it.stopRouteDiscovery() }
+        }
+    }
+
+    AppAlertDialog(
+        onDismissRequest = onDismissRequest,
+        icon = { AppIcon(Icons.Rounded.Cast, null) },
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                AppText("选择投屏设备")
+                Spacer(Modifier.weight(1f))
+                AppIconButton(
+                    enabled = !isDiscovering,
+                    onClick = {
+                        if (!isDiscovering) {
+                            castPlugins.forEach { it.refreshRouteDiscovery(context) }
+                        }
+                    }
+                ) {
+                    AppIcon(Icons.Rounded.Refresh, "刷新")
+                }
+            }
+        },
+        text = {
+            val hasDevices = pluginRouteEntries.isNotEmpty()
+
+            if (castPlugins.isEmpty() && hasDisabledCastPlugins) {
+                Box(Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        AppText("投屏插件未启用", style = MaterialTheme.typography.bodyMedium)
+                        AppText(
+                            "请前往 设置 > 插件，启用 DLNA 或 Google Cast",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            } else if (!hasDevices && !isDiscovering) {
+                Box(Modifier.fillMaxWidth().heightIn(min = 120.dp), contentAlignment = Alignment.Center) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    ) {
+                        AppText("未找到设备", style = MaterialTheme.typography.bodyMedium)
+                        Spacer(Modifier.height(6.dp))
+                        AppText(
+                            "排查建议：\n" +
+                                "1. 手机与电视/盒子同一 Wi‑Fi（勿用访客网络/AP 隔离）\n" +
+                                "2. 系统设置中允许 BiliPai「附近设备/本地网络」权限\n" +
+                                "3. 关闭 VPN；双卡手机请确认流量未抢走局域网\n" +
+                                "4. DLNA 需接收端开启 DLNA/UPnP（CastFlow 选 DLNA 接收）\n" +
+                                "5. 小米自带投屏多为 Miracast，不一定支持 DLNA\n" +
+                                "6. Google Cast 需接收端支持 Chromecast 且手机有 GMS",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            } else if (!hasDevices && isDiscovering) {
+                Box(Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        AdaptiveLoadingIndicator(size = 32.dp)
+                        Spacer(Modifier.height(8.dp))
+                        AppText("搜索设备中...", style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp)) {
+                    items(pluginRouteEntries, key = { "${it.plugin.id}:${it.route.routeId}" }) { entry ->
+                        val plugin = entry.plugin
+                        val route = entry.route
+                        AppListItem(
+                            headlineContent = { AppText(route.name) },
+                            supportingContent = { AppText(route.description ?: plugin.name) },
+                            leadingContent = { AppIcon(route.icon ?: plugin.icon ?: Icons.Rounded.Cast, null) },
+                            modifier = Modifier
+                                .clickable { onPluginCastDeviceSelected(plugin, route) }
+                                .fillMaxWidth()
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                AppTextButton(
+                    onClick = {
+                        com.android.purebilibili.core.util.LogCollector.exportAndShare(context)
+                    }
+                ) {
+                    AppText("导出日志")
+                }
+
+                AppTextButton(onClick = onDismissRequest) {
+                    AppText("取消")
+                }
+            }
+        }
+    )
+}

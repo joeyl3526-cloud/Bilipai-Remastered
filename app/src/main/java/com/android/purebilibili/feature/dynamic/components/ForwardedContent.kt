@@ -1,0 +1,261 @@
+// 文件路径: feature/dynamic/components/ForwardedContent.kt
+package com.android.purebilibili.feature.dynamic.components
+import com.android.purebilibili.core.ui.components.AppText
+
+import com.android.purebilibili.core.ui.AppSpacingTokens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil.ImageLoader
+import com.android.purebilibili.data.model.response.DynamicItem
+import com.android.purebilibili.data.model.response.DrawMajor
+import com.android.purebilibili.data.model.response.OpusMajor
+
+internal data class ForwardedImagePreviewState(
+    val images: List<String>,
+    val initialIndex: Int
+)
+
+internal fun resolveForwardedDrawPreviewState(
+    draw: DrawMajor,
+    clickedIndex: Int
+): ForwardedImagePreviewState? {
+    return resolveForwardedImagePreviewState(
+        images = draw.items.map { it.src },
+        clickedIndex = clickedIndex
+    )
+}
+
+internal fun resolveForwardedOpusPreviewState(
+    opus: OpusMajor,
+    clickedIndex: Int
+): ForwardedImagePreviewState? {
+    return resolveForwardedImagePreviewState(
+        images = opus.pics.map { it.url },
+        clickedIndex = clickedIndex
+    )
+}
+
+private fun resolveForwardedImagePreviewState(
+    images: List<String>,
+    clickedIndex: Int
+): ForwardedImagePreviewState? {
+    if (clickedIndex !in images.indices) return null
+    if (images.isEmpty()) return null
+    return ForwardedImagePreviewState(
+        images = images,
+        initialIndex = clickedIndex
+    )
+}
+
+/**
+ *  转发的原始内容
+ */
+@Composable
+fun ForwardedContent(
+    orig: DynamicItem,
+    onVideoClick: (String) -> Unit,
+    onBangumiClick: (Long, Long) -> Unit,
+    onUserClick: (Long) -> Unit,
+    onDynamicDetailClick: ((String) -> Unit)? = null,
+    gifImageLoader: ImageLoader,
+    defaultPreviewTextVisible: Boolean = true
+) {
+    val author = orig.modules.module_author
+    val content = orig.modules.module_dynamic
+    var previewState by remember { mutableStateOf<ForwardedImagePreviewState?>(null) }
+    var previewSourceRect by remember { mutableStateOf<Rect?>(null) }
+    val contentHasImages = content?.major?.draw?.items?.isNotEmpty() == true ||
+        content?.major?.opus?.pics?.isNotEmpty() == true
+    val visibleDynamicDesc = content?.desc?.let { desc ->
+        resolveDynamicDescForImages(desc, hasImages = contentHasImages)
+    }
+    val visibleOpusSummaryDesc = remember(content?.major?.opus?.summary, content?.major?.opus?.pics) {
+        val opus = content?.major?.opus ?: return@remember null
+        opus.summary?.let { summary ->
+            resolveDynamicOpusSummaryDescForImages(
+                text = summary.text,
+                richTextNodes = summary.rich_text_nodes,
+                hasImages = opus.pics.isNotEmpty()
+            )
+        }
+    }
+    val previewTextContent = remember(author?.name, visibleDynamicDesc?.text, visibleOpusSummaryDesc?.text) {
+        val bodyText = visibleDynamicDesc?.text.takeUnless { it.isNullOrBlank() }
+            ?: visibleOpusSummaryDesc?.text.orEmpty()
+        ImagePreviewTextContent(
+            headline = author?.name.orEmpty(),
+            body = bodyText
+        )
+    }
+    val origDynamicId = remember(orig.id_str) { orig.id_str.trim() }
+    val openOrigDynamic = remember(origDynamicId, onDynamicDetailClick) {
+        {
+            if (origDynamicId.isNotEmpty()) {
+                onDynamicDetailClick?.invoke(origDynamicId)
+            }
+        }
+    }
+    
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f))
+            // Tap the forward card (not @ / video / images) → open the original dynamic.
+            .clickable(
+                enabled = onDynamicDetailClick != null && origDynamicId.isNotEmpty(),
+                onClick = openOrigDynamic
+            )
+            .padding(horizontal = AppSpacingTokens.Large - AppSpacingTokens.Micro / 2, vertical = AppSpacingTokens.Small)
+    ) {
+        // 原作者
+        if (author != null) {
+            val authorTimeText = remember(author.pub_time, author.pub_ts) {
+                resolveDynamicAuthorTimeText(
+                    pubTime = author.pub_time,
+                    pubTs = author.pub_ts
+                )
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                AppText(
+                    "@${author.name}",
+                    fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.primary, // 主题自适应颜色
+                    modifier = Modifier.clickable(enabled = author.mid > 0L) {
+                        onUserClick(author.mid)
+                    }
+                )
+                Spacer(modifier = Modifier.width(AppSpacingTokens.Small))
+                AppText(
+                    authorTimeText,
+                    fontSize = MaterialTheme.typography.labelSmall.fontSize,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.5f)
+                )
+            }
+            Spacer(modifier = Modifier.height(AppSpacingTokens.Small))
+        }
+        
+        // 原文字内容 - 使用 RichTextContent 支持表情；点空白文字打开原动态
+        val preferredDesc = resolvePreferredDynamicDesc(
+            primary = visibleDynamicDesc,
+            fallback = visibleOpusSummaryDesc
+        )
+        preferredDesc?.let { desc ->
+            if (shouldRenderDynamicRichText(desc)) {
+                RichTextContent(
+                    desc = desc,
+                    onUserClick = onUserClick,
+                    onBlankTap = openOrigDynamic.takeIf {
+                        onDynamicDetailClick != null && origDynamicId.isNotEmpty()
+                    }
+                )
+                Spacer(modifier = Modifier.height(AppSpacingTokens.Small))
+            }
+        }
+        
+        // 原视频
+        content?.major?.archive?.let { archive ->
+            val playableBvid = resolveArchivePlayableBvid(archive)
+            VideoCardLarge(
+                archive = archive,
+                publishTs = author?.pub_ts ?: 0L,
+                cornerBadgeText = resolveDynamicArchiveBadgeLabel(archive),
+                onClick = { playableBvid?.let(onVideoClick) }
+            )
+            Spacer(modifier = Modifier.height(AppSpacingTokens.Small))
+        }
+
+        content?.major?.pgc?.let { pgc ->
+            val bangumiTarget = resolveArchiveBangumiTarget(pgc)
+            VideoCardLarge(
+                archive = pgc,
+                publishTs = author?.pub_ts ?: 0L,
+                cornerBadgeText = "番剧",
+                onClick = { bangumiTarget?.let { onBangumiClick(it.seasonId, it.epId) } }
+            )
+            Spacer(modifier = Modifier.height(AppSpacingTokens.Small))
+        }
+        
+        // 原图片（与主卡一致：列表预览最多 9 张，避免拼大图被裁成 2×2）
+        content?.major?.draw?.let { draw ->
+            DrawGridV2(
+                items = draw.items,
+                gifImageLoader = gifImageLoader,
+                maxDisplayImages = resolveDynamicOpusPreviewImageLimit(isDetail = false),
+                onImageClick = { index, rect ->
+                    val state = resolveForwardedDrawPreviewState(draw, index) ?: return@DrawGridV2
+                    previewState = state
+                    previewSourceRect = rect
+                }
+            )
+            Spacer(modifier = Modifier.height(AppSpacingTokens.Small))
+        }
+        
+        //  [新增] 原 Opus 图文动态（正文已在上方 preferredDesc 渲染，这里只补图）
+        content?.major?.opus?.let { opus ->
+            // 显示图片
+            if (opus.pics.isNotEmpty()) {
+                val drawItems = opus.pics.map { pic ->
+                    com.android.purebilibili.data.model.response.DrawItem(
+                        src = pic.url,
+                        width = pic.width,
+                        height = pic.height
+                    )
+                }
+                DrawGridV2(
+                    items = drawItems,
+                    gifImageLoader = gifImageLoader,
+                    maxDisplayImages = resolveDynamicOpusPreviewImageLimit(isDetail = false),
+                    onImageClick = { index, rect ->
+                        val state = resolveForwardedOpusPreviewState(opus, index) ?: return@DrawGridV2
+                        previewState = state
+                        previewSourceRect = rect
+                    }
+                )
+                Spacer(modifier = Modifier.height(AppSpacingTokens.Small))
+            }
+        }
+
+        content?.major?.ugc_season?.let { season ->
+            val seasonArchive = resolveUgcSeasonArchiveFallback(season)
+            val playableBvid = resolveUgcSeasonPlayableBvid(season)
+            if (seasonArchive != null) {
+                VideoCardLarge(
+                    archive = seasonArchive,
+                    publishTs = author?.pub_ts ?: 0L,
+                    isCollection = true,
+                    collectionTitle = season.title,
+                    onClick = { playableBvid?.let(onVideoClick) }
+                )
+            }
+        }
+    }
+
+    previewState?.let { state ->
+        ImagePreviewDialog(
+            images = state.images,
+            initialIndex = state.initialIndex,
+            sourceRect = previewSourceRect,
+            textContent = previewTextContent,
+            defaultTextVisible = defaultPreviewTextVisible,
+            onDismiss = {
+                previewState = null
+                previewSourceRect = null
+            }
+        )
+    }
+}

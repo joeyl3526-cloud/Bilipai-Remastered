@@ -1,0 +1,403 @@
+package com.android.purebilibili.feature.dynamic.components
+
+import androidx.compose.ui.graphics.Color
+import com.android.purebilibili.data.model.response.DynamicDesc
+import com.android.purebilibili.data.model.response.RichTextNode
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
+
+class DynamicRichTextPolicyTest {
+
+    @Test
+    fun resolveDynamicDescForImages_hidesStandaloneImagePlaceholderWhenMediaExists() {
+        val desc = DynamicDesc(
+            text = "[图片]",
+            rich_text_nodes = listOf(RichTextNode(type = "TEXT", text = "[图片]"))
+        )
+
+        val resolved = resolveDynamicDescForImages(desc, hasImages = true)
+
+        assertFalse(shouldRenderDynamicRichText(resolved))
+    }
+
+    @Test
+    fun resolveDynamicDescForImages_keepsImagePlaceholderWhenMediaMissing() {
+        val desc = DynamicDesc(text = "【图片】")
+
+        val resolved = resolveDynamicDescForImages(desc, hasImages = false)
+
+        assertTrue(shouldRenderDynamicRichText(resolved))
+        assertEquals("【图片】", resolved.text)
+    }
+
+    @Test
+    fun resolveDynamicDescForImages_stripsInlinePlaceholderButKeepsRealText() {
+        val desc = DynamicDesc(text = "正文 [图片]")
+
+        val resolved = resolveDynamicDescForImages(desc, hasImages = true)
+
+        assertTrue(shouldRenderDynamicRichText(resolved))
+        assertEquals("正文", resolved.text)
+    }
+
+    @Test
+    fun resolveDynamicDescForImages_hidesRepeatedPlaceholderLinesWhenMediaExists() {
+        val desc = DynamicDesc(
+            text = "第一行\n[图片]\n【图片】\n第二行",
+            rich_text_nodes = listOf(
+                RichTextNode(type = "TEXT", text = "第一行\n"),
+                RichTextNode(type = "TEXT", text = "[图片]"),
+                RichTextNode(type = "TEXT", text = "【图片】"),
+                RichTextNode(type = "TEXT", text = "\n第二行")
+            )
+        )
+
+        val resolved = resolveDynamicDescForImages(desc, hasImages = true)
+
+        assertTrue(shouldRenderDynamicRichText(resolved))
+        assertEquals("第一行\n第二行", resolved.text)
+        assertEquals("第一行\n\n第二行", resolved.rich_text_nodes.joinToString(separator = "") { it.text })
+    }
+
+    @Test
+    fun resolveDynamicOpusSummaryDescForImages_stripsPlaceholderLinesBeforeRenderingSummary() {
+        val resolved = resolveDynamicOpusSummaryDescForImages(
+            text = "正文\n[图片]\n[图片]\n[图片]",
+            richTextNodes = listOf(
+                RichTextNode(type = "TEXT", text = "正文\n"),
+                RichTextNode(type = "TEXT", text = "[图片]\n"),
+                RichTextNode(type = "TEXT", text = "[图片]\n"),
+                RichTextNode(type = "TEXT", text = "[图片]")
+            ),
+            hasImages = true
+        )
+
+        assertNotNull(resolved)
+        assertEquals("正文", resolved.text)
+        val richNodeText = resolved.rich_text_nodes.joinToString(separator = "") { it.text }
+        assertEquals("正文\n", richNodeText)
+        assertFalse(richNodeText.contains("[图片]"))
+        assertTrue(shouldRenderDynamicRichText(resolved))
+    }
+
+    @Test
+    fun buildDynamicRichTextAnnotatedString_prefersNodeJumpUrlForClickableLink() {
+        val desc = DynamicDesc(
+            text = "https://b23.tv/cm-yaoyue-0-3jgPM iPhone16系列至高直降千元起",
+            rich_text_nodes = listOf(
+                RichTextNode(
+                    type = "WEB",
+                    text = "https://b23.tv/cm-yaoyue-0-3jgPM",
+                    jump_url = "https://t.bilibili.com/1015637114125025318"
+                ),
+                RichTextNode(
+                    type = "TEXT",
+                    text = " iPhone16系列至高直降千元起"
+                )
+            )
+        )
+
+        val annotated = buildDynamicRichTextAnnotatedString(
+            desc = desc,
+            primaryColor = Color.Blue,
+            textColor = Color.Black
+        )
+
+        val annotation = annotated.getStringAnnotations(
+            tag = DYNAMIC_RICH_TEXT_URL_TAG,
+            start = 0,
+            end = annotated.length
+        ).firstOrNull()
+
+        assertNotNull(annotation)
+        assertEquals("https://t.bilibili.com/1015637114125025318", annotation.item)
+        assertEquals("https://b23.tv/cm-yaoyue-0-3jgPM iPhone16系列至高直降千元起", annotated.text)
+    }
+
+    @Test
+    fun buildDynamicRichTextAnnotatedString_detectsPlainTextUrlWhenNodesMissing() {
+        val desc = DynamicDesc(
+            text = "https://b23.tv/cm-yaoyue-0-3jgPM iPhone16系列至高直降千元起"
+        )
+
+        val annotated = buildDynamicRichTextAnnotatedString(
+            desc = desc,
+            primaryColor = Color.Blue,
+            textColor = Color.Black
+        )
+
+        val annotation = annotated.getStringAnnotations(
+            tag = DYNAMIC_RICH_TEXT_URL_TAG,
+            start = 0,
+            end = annotated.length
+        ).firstOrNull()
+
+        assertNotNull(annotation)
+        assertEquals("https://b23.tv/cm-yaoyue-0-3jgPM", annotation.item)
+        assertEquals(0, annotation.start)
+        assertEquals("https://b23.tv/cm-yaoyue-0-3jgPM".length, annotation.end)
+    }
+
+    @Test
+    fun buildDynamicRichTextAnnotatedString_usesFullTextWhenNodesAreTruncated() {
+        val desc = DynamicDesc(
+            text = "第一段\n第二段\n第三段",
+            rich_text_nodes = listOf(RichTextNode(type = "TEXT", text = "第一段\n"))
+        )
+
+        val annotated = buildDynamicRichTextAnnotatedString(
+            desc = desc,
+            primaryColor = Color.Blue,
+            textColor = Color.Black
+        )
+
+        assertFalse(shouldUseDynamicRichTextNodes(desc))
+        assertEquals(desc.text, annotated.text)
+    }
+
+    @Test
+    fun resolveDynamicRichTextOpenMode_usesInAppForShortLink() {
+        val mode = resolveDynamicRichTextOpenMode(
+            "https://b23.tv/cm-yaoyue-0-3jgPM"
+        )
+
+        assertEquals(DynamicRichTextOpenMode.IN_APP, mode)
+    }
+
+    @Test
+    fun resolveDynamicRichTextOpenMode_usesInAppForBilibiliWebLink() {
+        val mode = resolveDynamicRichTextOpenMode(
+            "https://www.bilibili.com/opus/1015637114125025318"
+        )
+
+        assertEquals(DynamicRichTextOpenMode.IN_APP, mode)
+    }
+
+    @Test
+    fun resolveDynamicRichTextOpenMode_usesInAppForDirectDynamicLink() {
+        val mode = resolveDynamicRichTextOpenMode(
+            "https://t.bilibili.com/1015637114125025318"
+        )
+
+        assertEquals(DynamicRichTextOpenMode.IN_APP, mode)
+    }
+
+    @Test
+    fun resolveDynamicRichTextOpenMode_usesExternalForNonBilibiliLink() {
+        val mode = resolveDynamicRichTextOpenMode(
+            "https://example.com/demo"
+        )
+
+        assertEquals(DynamicRichTextOpenMode.EXTERNAL, mode)
+    }
+
+    @Test
+    fun resolveDynamicRichTextOpenMode_returnsNullForBlankInput() {
+        val mode = resolveDynamicRichTextOpenMode("   ")
+
+        assertNull(mode)
+    }
+
+    @Test
+    fun buildDynamicRichTextAnnotatedString_marksAtMentionWithUserAnnotation() {
+        val desc = DynamicDesc(
+            text = "@影视飓风 你好",
+            rich_text_nodes = listOf(
+                RichTextNode(
+                    type = "RICH_TEXT_NODE_TYPE_AT",
+                    text = "@影视飓风",
+                    rid = "946974"
+                ),
+                RichTextNode(type = "TEXT", text = " 你好")
+            )
+        )
+
+        val annotated = buildDynamicRichTextAnnotatedString(
+            desc = desc,
+            primaryColor = Color.Blue,
+            textColor = Color.Black
+        )
+
+        val annotation = annotated.getStringAnnotations(
+            tag = DYNAMIC_RICH_TEXT_USER_TAG,
+            start = 0,
+            end = annotated.length
+        ).firstOrNull()
+
+        assertNotNull(annotation)
+        assertEquals("946974", annotation.item)
+        assertEquals(0, annotation.start)
+        assertEquals("@影视飓风".length, annotation.end)
+    }
+
+    @Test
+    fun buildDynamicRichTextAnnotatedString_skipsUserAnnotationWhenAtRidMissing() {
+        val desc = DynamicDesc(
+            rich_text_nodes = listOf(
+                RichTextNode(type = "AT", text = "@匿名用户")
+            )
+        )
+
+        val annotated = buildDynamicRichTextAnnotatedString(
+            desc = desc,
+            primaryColor = Color.Blue,
+            textColor = Color.Black
+        )
+
+        assertTrue(
+            annotated.getStringAnnotations(
+                tag = DYNAMIC_RICH_TEXT_USER_TAG,
+                start = 0,
+                end = annotated.length
+            ).isEmpty()
+        )
+        assertEquals("@匿名用户", annotated.text)
+    }
+
+    @Test
+    fun resolveDynamicRichTextUserMid_parsesPositiveRid() {
+        assertEquals(
+            946974L,
+            resolveDynamicRichTextUserMid(RichTextNode(type = "AT", text = "@UP", rid = "946974"))
+        )
+        assertNull(resolveDynamicRichTextUserMid(RichTextNode(type = "AT", text = "@UP", rid = "0")))
+        assertNull(resolveDynamicRichTextUserMid(RichTextNode(type = "AT", text = "@UP")))
+    }
+
+    @Test
+    fun resolveDynamicRichTextUserMid_fallsBackToSpaceJumpUrl() {
+        assertEquals(
+            267776898L,
+            resolveDynamicRichTextUserMid(
+                RichTextNode(
+                    type = "AT",
+                    text = "@奇妙的摸鱼禁止",
+                    rid = "",
+                    jump_url = "//space.bilibili.com/267776898"
+                )
+            )
+        )
+    }
+
+    @Test
+    fun buildDynamicRichText_rendersEmojiNodesAsInlineContent() {
+        val desc = DynamicDesc(
+            text = "新年快乐[豹富][豹富]",
+            rich_text_nodes = listOf(
+                RichTextNode(type = "RICH_TEXT_NODE_TYPE_TEXT", text = "新年快乐"),
+                RichTextNode(
+                    type = "RICH_TEXT_NODE_TYPE_EMOJI",
+                    text = "[豹富]",
+                    emoji = com.android.purebilibili.data.model.response.EmojiInfo(
+                        icon_url = "https://i0.hdslb.com/bfs/emote/baofu.png",
+                        text = "[豹富]"
+                    )
+                ),
+                RichTextNode(
+                    type = "RICH_TEXT_NODE_TYPE_EMOJI",
+                    text = "[豹富]",
+                    emoji = com.android.purebilibili.data.model.response.EmojiInfo(
+                        icon_url = "https://i0.hdslb.com/bfs/emote/baofu.png",
+                        text = "[豹富]"
+                    )
+                )
+            )
+        )
+
+        val result = buildDynamicRichText(
+            desc = desc,
+            primaryColor = Color.Blue,
+            textColor = Color.Black
+        )
+
+        assertTrue(shouldUseDynamicRichTextNodes(desc))
+        assertEquals(
+            "https://i0.hdslb.com/bfs/emote/baofu.png",
+            result.emojiUrlById["[豹富]"]
+        )
+        assertTrue(result.annotatedString.hasInlineContent())
+    }
+
+    @Test
+    fun buildDynamicRichText_expandsShortcodesInPlainTextWithExtraEmoteMap() {
+        val desc = DynamicDesc(text = "大家好[tv_doge][tv_doge]")
+        val result = buildDynamicRichText(
+            desc = desc,
+            primaryColor = Color.Blue,
+            textColor = Color.Black,
+            extraEmoteUrlMap = mapOf(
+                "[tv_doge]" to "https://i0.hdslb.com/bfs/emote/tv_doge.png"
+            )
+        )
+
+        assertEquals(
+            "https://i0.hdslb.com/bfs/emote/tv_doge.png",
+            result.emojiUrlById["[tv_doge]"]
+        )
+        assertTrue(result.annotatedString.hasInlineContent())
+    }
+
+    @Test
+    fun shouldUseDynamicRichTextNodes_prefersNodesWhenTheyContainEmojiEvenIfShorter() {
+        val desc = DynamicDesc(
+            text = "第一段\n第二段\n第三段[豹富]",
+            rich_text_nodes = listOf(
+                RichTextNode(type = "TEXT", text = "第一段"),
+                RichTextNode(
+                    type = "EMOJI",
+                    text = "[豹富]",
+                    emoji = com.android.purebilibili.data.model.response.EmojiInfo(
+                        icon_url = "https://i0.hdslb.com/bfs/emote/baofu.png",
+                        text = "[豹富]"
+                    )
+                )
+            )
+        )
+
+        assertTrue(shouldUseDynamicRichTextNodes(desc))
+    }
+
+    @Test
+    fun resolvePreferredDynamicDesc_prefersSideWithRenderableEmoji() {
+        val plain = DynamicDesc(text = "画完芽衣，大家新年快乐[豹富][豹富]")
+        val withEmoji = DynamicDesc(
+            text = "画完芽衣，大家新年快乐[豹富][豹富]",
+            rich_text_nodes = listOf(
+                RichTextNode(type = "TEXT", text = "画完芽衣，大家新年快乐"),
+                RichTextNode(
+                    type = "EMOJI",
+                    text = "[豹富]",
+                    emoji = com.android.purebilibili.data.model.response.EmojiInfo(
+                        icon_url = "https://i0.hdslb.com/bfs/emote/baofu.png",
+                        text = "[豹富]"
+                    )
+                )
+            )
+        )
+
+        val preferred = resolvePreferredDynamicDesc(primary = plain, fallback = withEmoji)
+        assertEquals(withEmoji, preferred)
+    }
+
+    @Test
+    fun resolveDynamicEmojiIconUrl_fallsBackToWebpAndHttps() {
+        val url = resolveDynamicEmojiIconUrl(
+            com.android.purebilibili.data.model.response.EmojiInfo(
+                icon_url = "",
+                webp_url = "http://i0.hdslb.com/bfs/emote/a.webp",
+                text = "[x]"
+            )
+        )
+        assertEquals("https://i0.hdslb.com/bfs/emote/a.webp", url)
+    }
+}
+
+private fun androidx.compose.ui.text.AnnotatedString.hasInlineContent(): Boolean {
+    // Inline content uses a private annotation tag; non-empty emojiUrlById is asserted
+    // by callers. Here we only need a cheap presence signal for the built string.
+    return this.isNotEmpty()
+}

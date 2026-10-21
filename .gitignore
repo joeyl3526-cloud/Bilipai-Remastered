@@ -1,0 +1,115 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# 🔥 忽略所有 build 目录
+**/build/
+
+# 🔥 忽略 Kotlin 编译器临时文件和错误日志
+*.compiler.options
+.kotlin/
+*.log
+
+# 🔥 忽略敏感配置文件
+*.keystore
+*.jks
+google-services.json
+signing.properties
+keystore.properties
+
+# 🔥 忽略其他临时文件
+*.tmp
+*.bak
+*.swp
+*~
+
+# 🔥 忽略 IDE 相关
+.idea/
+.vscode/
+*.ipr
+*.iws
+
+# 🔥 忽略测试报告
+/reports/
+
+# 🔥 忽略 APK 和发布文件
+*.apk
+*.aab
+**/release/
+app/release/
+
+# 🔥 忽略 AI/Agent 相关文件
+.agent/
+.trae/
+.codegraph/
+.gemini/
+.cursor/
+.claude/
+.worktrees/
+*.ai.md
+*.txt
+bilipai_log_*.txt
+!AI.txt
+!llm.txt
+
+# Bilibili API files
+bilibili-API-collect/
+
+# 🔥 Ignore external projects/useless files
+/.external/
+/.local/
+external/
+AndroidLiquidGlass/
+SimpMusic/
+Telegram/
+TMessagesProj/
+
+# Backup directory
+BiliPai_BusinessCode_Backup/
+
+# Local icon references used during UI icon planning
+/icons/
+
+# Docs / plans should not be pushed
+docs/
+**/docs/
+docs/plans/
+**/docs/plans/
+docs/releases/raw/
+report.md
+*.md
+!llms.txt
+!README.md
+!README_EN.md
+!AGENTS.md
+!CHANGELOG.md
+!docs/
+docs/*
+!docs/README_UPSTREAM.md
+!docs/BiliPai_新版本复现总手册.md
+!docs/GOOGLE_CAST_PLUGIN.md
+!docs/DLNA_CAST_PLUGIN.md
+!docs/images/
+!docs/images/screenshot*.png
+!docs/wiki/
+!docs/wiki/*.md
+!docs/wiki/ui-design/
+!docs/wiki/ui-design/**/*.md
+.omx/
+
+# Local Reasonix session settings and metadata
+.reasonix/
+reasonix.toml
+local.properties
